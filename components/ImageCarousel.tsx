@@ -1,4 +1,4 @@
-// ✅ Enhanced ImageCarousel: Grid View + Overlay + Image Viewer Modal + Keyboard Navigation + Mobile Friendly
+// ✅ Enhanced ImageCarousel: Grid View + Overlay + Image Viewer Modal + Keyboard Navigation + Mobile Friendly + Click Overlay Close
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import urlFor from "../lib/urlFor";
@@ -39,18 +39,14 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
   }, [isViewerOpen]);
 
   useEffect(() => {
-    if (isViewerOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
+    document.body.style.overflow = isViewerOpen ? "hidden" : "unset";
     return () => {
       document.body.style.overflow = "unset";
     };
   }, [isViewerOpen]);
 
   return (
-    <div className="grid grid-cols-4 grid-rows-2 gap-4 max-sm:grid-cols-2 max-sm:grid-rows-auto">
+    <div className="grid grid-cols-4 grid-rows-2 gap-4 max-sm:grid-cols-2 max-sm:grid-rows-none">
       {/* Large Primary Image */}
       {images[0] && (
         <div
@@ -133,22 +129,36 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
 
       {/* Fullscreen Image Viewer Modal */}
       {isViewerOpen && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center px-2">
+        <div
+          className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center px-2"
+          onClick={closeViewer}
+        >
+          <div
+            className="absolute inset-0"
+            onClick={closeViewer}
+          ></div>
+
           <button
-            className="absolute top-4 right-4 text-white text-2xl"
+            className="absolute top-4 right-4 text-white text-2xl z-50"
             onClick={closeViewer}
           >
             &times;
           </button>
 
           <button
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-3xl"
-            onClick={prevImage}
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-3xl z-50"
+            onClick={(e) => {
+              e.stopPropagation();
+              prevImage();
+            }}
           >
             <AiFillLeftCircle size={40} />
           </button>
 
-          <div className="relative w-full max-w-5xl h-[80vh]">
+          <div
+            className="relative w-full max-w-5xl h-[80vh] z-50"
+            onClick={(e) => e.stopPropagation()}
+          >
             <Image
               src={urlFor(images[currentIndex].asset).url()}
               alt={`Image ${currentIndex + 1}`}
@@ -158,8 +168,11 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
           </div>
 
           <button
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-3xl"
-            onClick={nextImage}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-3xl z-50"
+            onClick={(e) => {
+              e.stopPropagation();
+              nextImage();
+            }}
           >
             <AiFillRightCircle size={40} />
           </button>
