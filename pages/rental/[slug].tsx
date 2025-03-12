@@ -57,11 +57,15 @@ const RentalDetails = ({ rentals, allImages }: any) => {
         <h1 className="text-xl text-gray-600">{rentals.propertyType.typeName} for Rent in {rentals.location.locationName}</h1>
       </div>
 
+      <div className="space-y-4 mb-6">
+        <ImageCarousel images={allImages} />
+      </div>
+      
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Property Details */}
         <div className="lg:col-span-2">
           <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <ImageCarousel images={allImages} />
+            
 
             <div className="mt-6">
               <h2 className="text-3xl font-bold text-gray-900 mb-2">{rentals.title}</h2>
