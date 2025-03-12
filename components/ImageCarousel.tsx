@@ -28,11 +28,11 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div className="grid grid-cols-4 grid-rows-2 gap-4">
       {/* Large Primary Image */}
       {images[0] && (
         <div
-          className="sm:row-span-2 sm:col-span-2 relative w-full h-72 sm:h-full rounded-lg overflow-hidden cursor-pointer"
+          className="col-span-2 row-span-2 relative w-full h-96 sm:h-full rounded-lg overflow-hidden cursor-pointer"
           onClick={() => openViewer(0)}
         >
           <Image
@@ -44,32 +44,70 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
         </div>
       )}
 
-      {/* Thumbnails */}
-      <div className="grid grid-cols-2 sm:grid-cols-1 gap-4">
-        {images.slice(1, 5).map((img, index) => (
-          <div
-            key={index + 1}
-            className="relative h-36 sm:h-32 w-full rounded-lg overflow-hidden cursor-pointer"
-            onClick={() => openViewer(index + 1)}
-          >
-            <Image
-              src={urlFor(img.asset).url()}
-              alt={`Image ${index + 2}`}
-              fill
-              className="object-cover"
-            />
-            {/* Overlay for last thumbnail if there are more */}
-            {index === 3 && images.length > 5 && (
-              <div
-                className="absolute inset-0 bg-black bg-opacity-60 text-white flex items-center justify-center text-lg font-semibold"
-                onClick={() => openViewer(4)}
-              >
-                +{images.length - 4} more
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+      {/* Thumbnails in specific grid positions */}
+      {images[1] && (
+        <div
+          className="col-start-3 row-start-1 relative h-44 w-full rounded-lg overflow-hidden cursor-pointer"
+          onClick={() => openViewer(1)}
+        >
+          <Image
+            src={urlFor(images[1].asset).url()}
+            alt="Image 2"
+            fill
+            className="object-cover"
+          />
+        </div>
+      )}
+
+      {images[2] && (
+        <div
+          className="col-start-4 row-start-1 relative h-44 w-full rounded-lg overflow-hidden cursor-pointer"
+          onClick={() => openViewer(2)}
+        >
+          <Image
+            src={urlFor(images[2].asset).url()}
+            alt="Image 3"
+            fill
+            className="object-cover"
+          />
+        </div>
+      )}
+
+      {images[3] && (
+        <div
+          className="col-start-3 row-start-2 relative h-44 w-full rounded-lg overflow-hidden cursor-pointer"
+          onClick={() => openViewer(3)}
+        >
+          <Image
+            src={urlFor(images[3].asset).url()}
+            alt="Image 4"
+            fill
+            className="object-cover"
+          />
+        </div>
+      )}
+
+      {images[4] && (
+        <div
+          className="col-start-4 row-start-2 relative h-44 w-full rounded-lg overflow-hidden cursor-pointer"
+          onClick={() => openViewer(4)}
+        >
+          <Image
+            src={urlFor(images[4].asset).url()}
+            alt="Image 5"
+            fill
+            className="object-cover"
+          />
+          {images.length > 5 && (
+            <div
+              className="absolute inset-0 bg-black bg-opacity-60 text-white flex items-center justify-center text-lg font-semibold"
+              onClick={() => openViewer(4)}
+            >
+              +{images.length - 5} more
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Fullscreen Image Viewer Modal */}
       {isViewerOpen && (
