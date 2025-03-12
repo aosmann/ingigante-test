@@ -1,11 +1,7 @@
 import Head from "next/head";
 import { NextStudio } from "next-sanity/studio";
-import { NextStudioHead } from "next-sanity/studio/head";
-
 import config from "../../sanity.config";
-
 import { StudioProvider, StudioLayout } from "sanity";
-
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle(({ theme }) => ({
@@ -16,7 +12,8 @@ export default function StudioPage() {
   return (
     <>
       <Head>
-        <NextStudioHead favicons={false} />
+        <title>Sanity Studio</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <NextStudio config={config}>
         <StudioProvider config={config}>
