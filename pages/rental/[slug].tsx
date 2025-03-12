@@ -1,4 +1,4 @@
-// ✅ FULL RentalDetails Page Redesign + Custom Image Grid Gallery
+// ✅ FULL RentalDetails Page Redesign Based on Example Design
 import { PortableText } from "@portabletext/react";
 import Head from "next/head";
 import Link from "next/link";
@@ -8,6 +8,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { MdOutlineArrowBack } from "react-icons/md";
 import { client, client_with_token } from "../../lib/sanity.client";
 import Map from "../../components/Map";
+import ImageCarousel from "../../components/ImageCarousel";
 import RichTextComponent from "../../components/RichTextComponent";
 
 export const getServerSideProps = async (pageContext) => {
@@ -56,32 +57,13 @@ const RentalDetails = ({ rentals, allImages }: any) => {
         <h1 className="text-xl text-gray-600">{rentals.propertyType.typeName} for Rent in {rentals.location.locationName}</h1>
       </div>
 
-      {/* Gallery Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-        {allImages.slice(0, 5).map((img: any, index: number) => (
-          <div key={index} className="relative h-[250px] md:h-[300px] lg:h-[350px] overflow-hidden rounded-lg">
-            <Image
-              src={img.asset?.url || img}
-              alt={`Property image ${index + 1}`}
-              layout="fill"
-              objectFit="cover"
-              className="rounded-lg"
-            />
-            {index === 4 && allImages.length > 5 && (
-              <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-xl font-semibold">
-                +{allImages.length - 5} more
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* Content Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Property Details */}
         <div className="lg:col-span-2">
           <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <div className="mt-4">
+            <ImageCarousel images={allImages} />
+
+            <div className="mt-6">
               <h2 className="text-3xl font-bold text-gray-900 mb-2">{rentals.title}</h2>
               <p className="text-xl text-primary font-semibold">${rentals.price} / {rentals.category}</p>
               <p className="text-gray-600">{rentals.location.locationName}</p>
@@ -125,7 +107,6 @@ const RentalDetails = ({ rentals, allImages }: any) => {
         <div className="lg:col-span-1">
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Interested in this property?</h2>
-            <Toaster />
             <form onSubmit={submitContact} ref={formRef} className="space-y-4">
               <input type="text" required name="firstName" placeholder="First Name" value={formData.firstName} onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary" />
               <input type="text" required name="lastName" placeholder="Last Name" value={formData.lastName} onChange={(e) => setFormData({ ...formData, lastName: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary" />
