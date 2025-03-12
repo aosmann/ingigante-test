@@ -153,7 +153,7 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
           </button>
 
           <div
-            className="relative w-full max-w-5xl h-[80vh] z-50"
+            className="relative w-full max-w-5xl h-[80vh] z-40"
             onClick={(e) => e.stopPropagation()}
           >
             <Image
