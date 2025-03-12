@@ -54,7 +54,7 @@ const RentalDetails = ({ rentals, allImages }: any) => {
         <Link href="/rentals" className="flex items-center text-gray-600 hover:text-primary">
           <MdOutlineArrowBack className="mr-2" /> Back
         </Link>
-        <h1 className="text-xl text-gray-600">{rentals.propertyType.typeName} for Rent in {rentals.location.locationName}</h1>
+        <h1 className="text-2xl text-gray-600">{rentals.propertyType.typeName} for Rent in {rentals.location.locationName}</h1>
       </div>
 
       <div className="space-y-4 mb-6">
@@ -67,7 +67,7 @@ const RentalDetails = ({ rentals, allImages }: any) => {
           <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
             
 
-            <div className="mt-6">
+            <div>
               <h2 className="text-3xl font-bold text-gray-900 mb-2">{rentals.title}</h2>
               <p className="text-xl text-primary font-semibold">${rentals.price} / {rentals.category}</p>
               <p className="text-gray-600">{rentals.location.locationName}</p>
