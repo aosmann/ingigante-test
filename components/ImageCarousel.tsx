@@ -1,4 +1,4 @@
-// ✅ Enhanced ImageCarousel: Grid View + Overlay + Image Viewer Modal + Keyboard Navigation + Mobile Friendly + Click Overlay Close
+// ✅ Enhanced ImageCarousel: Grid View + Overlay + Image Viewer Modal + Keyboard Navigation + Mobile Friendly + Overlay Click Close
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import urlFor from "../lib/urlFor";
@@ -46,7 +46,7 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
   }, [isViewerOpen]);
 
   return (
-    <div className="grid grid-cols-4 grid-rows-2 gap-4 max-sm:grid-cols-2 max-sm:grid-rows-none">
+    <div className="grid grid-cols-4 grid-rows-2 gap-4 max-sm:grid-cols-2 max-sm:grid-rows-auto">
       {/* Large Primary Image */}
       {images[0] && (
         <div
@@ -133,10 +133,7 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
           className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center px-2"
           onClick={closeViewer}
         >
-          <div
-            className="absolute inset-0"
-            onClick={closeViewer}
-          ></div>
+          <div className="absolute inset-0" onClick={closeViewer}></div>
 
           <button
             className="absolute top-4 right-4 text-white text-2xl z-50"
