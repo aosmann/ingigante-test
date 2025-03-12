@@ -45,7 +45,7 @@ const RentalDetails = ({ rentals, allImages }: any) => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-[#f4fafb]">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <Head>
         <title>{rentals.propertyType.typeName} for Rent in {rentals.location.locationName}, Nicaragua</title>
       </Head>
