@@ -1,5 +1,5 @@
-// ✅ Enhanced ImageCarousel: Grid View + Overlay + Image Viewer Modal
-import React, { useState } from "react";
+// ✅ Enhanced ImageCarousel: Grid View + Overlay + Image Viewer Modal + Keyboard Navigation + Mobile Friendly
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import urlFor from "../lib/urlFor";
 import { AiFillLeftCircle, AiFillRightCircle } from "react-icons/ai";
@@ -27,12 +27,34 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
     setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isViewerOpen) return;
+      if (e.key === "Escape") closeViewer();
+      else if (e.key === "ArrowRight") nextImage();
+      else if (e.key === "ArrowLeft") prevImage();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isViewerOpen]);
+
+  useEffect(() => {
+    if (isViewerOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isViewerOpen]);
+
   return (
-    <div className="grid grid-cols-4 grid-rows-2 gap-4">
+    <div className="grid grid-cols-4 grid-rows-2 gap-4 max-sm:grid-cols-2 max-sm:grid-rows-auto">
       {/* Large Primary Image */}
       {images[0] && (
         <div
-          className="col-span-2 row-span-2 relative w-full h-96 sm:h-full rounded-lg overflow-hidden cursor-pointer"
+          className="col-span-2 row-span-2 max-sm:col-span-2 max-sm:row-span-1 relative w-full h-96 sm:h-full rounded-lg overflow-hidden cursor-pointer"
           onClick={() => openViewer(0)}
         >
           <Image
@@ -47,7 +69,7 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
       {/* Thumbnails in specific grid positions */}
       {images[1] && (
         <div
-          className="col-start-3 row-start-1 relative h-44 w-full rounded-lg overflow-hidden cursor-pointer"
+          className="col-start-3 row-start-1 max-sm:col-span-1 relative h-44 w-full rounded-lg overflow-hidden cursor-pointer"
           onClick={() => openViewer(1)}
         >
           <Image
@@ -61,7 +83,7 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
 
       {images[2] && (
         <div
-          className="col-start-4 row-start-1 relative h-44 w-full rounded-lg overflow-hidden cursor-pointer"
+          className="col-start-4 row-start-1 max-sm:col-span-1 relative h-44 w-full rounded-lg overflow-hidden cursor-pointer"
           onClick={() => openViewer(2)}
         >
           <Image
@@ -75,7 +97,7 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
 
       {images[3] && (
         <div
-          className="col-start-3 row-start-2 relative h-44 w-full rounded-lg overflow-hidden cursor-pointer"
+          className="col-start-3 row-start-2 max-sm:col-span-1 relative h-44 w-full rounded-lg overflow-hidden cursor-pointer"
           onClick={() => openViewer(3)}
         >
           <Image
@@ -89,7 +111,7 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
 
       {images[4] && (
         <div
-          className="col-start-4 row-start-2 relative h-44 w-full rounded-lg overflow-hidden cursor-pointer"
+          className="col-start-4 row-start-2 max-sm:col-span-1 relative h-44 w-full rounded-lg overflow-hidden cursor-pointer"
           onClick={() => openViewer(4)}
         >
           <Image
@@ -111,7 +133,7 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
 
       {/* Fullscreen Image Viewer Modal */}
       {isViewerOpen && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center px-2">
           <button
             className="absolute top-4 right-4 text-white text-2xl"
             onClick={closeViewer}
@@ -126,7 +148,7 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
             <AiFillLeftCircle size={40} />
           </button>
 
-          <div className="relative w-[90%] max-w-4xl h-[80%]">
+          <div className="relative w-full max-w-5xl h-[80vh]">
             <Image
               src={urlFor(images[currentIndex].asset).url()}
               alt={`Image ${currentIndex + 1}`}
