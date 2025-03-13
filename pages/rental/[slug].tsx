@@ -6,7 +6,7 @@ import Image from "next/image";
 import React, { useRef, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { MdOutlineArrowBack } from "react-icons/md";
-import { LuBedDouble, LuBath, LuRuler, LuCar } from "react-icons/lu";
+import { Car, Bath, BedDouble, Ruler } from "lucide-react";
 import { client, client_with_token } from "../../lib/sanity.client";
 import Map from "../../components/Map";
 import ImageCarousel from "../../components/ImageCarousel";
@@ -83,31 +83,31 @@ const RentalDetails = ({ rentals, allImages }: any) => {
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-6 text-gray-700">
                 {rentals.rooms && (
                   <div className="flex items-center gap-2">
-                    <LuBedDouble className="h-5 w-5" />
+                    <BedDouble className="h-5 w-5" />
                     <span>{rentals.rooms} rooms</span>
                   </div>
                 )}
                 {rentals.bathrooms && (
                   <div className="flex items-center gap-2">
-                    <LuBath className="h-5 w-5" />
+                    <Bath className="h-5 w-5" />
                     <span>{rentals.bathrooms} bathrooms</span>
                   </div>
                 )}
                 {rentals.area_usable && (
                   <div className="flex items-center gap-2">
-                    <LuRuler className="h-5 w-5" />
+                    <Ruler className="h-5 w-5" />
                     <span>{rentals.area_usable} m² usable</span>
                   </div>
                 )}
                 {rentals.area_total && (
                   <div className="flex items-center gap-2">
-                    <LuRuler className="h-5 w-5" />
+                    <Ruler className="h-5 w-5" />
                     <span>{rentals.area_total} m² total</span>
                   </div>
                 )}
                 {rentals.parking === "Yes" && (
                   <div className="flex items-center gap-2">
-                    <LuCar className="h-5 w-5" />
+                    <Car className="h-5 w-5" />
                     <span>Parking available</span>
                   </div>
                 )}
