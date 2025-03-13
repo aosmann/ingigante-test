@@ -78,7 +78,7 @@ const RentalDetails = ({ rentals, allImages }: any) => {
                 )}
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-6 text-gray-700 py-6 border-y border-gray-200">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-6 text-gray-700 py-6 border-y border-gray-200 text-sm">
                 {rentals.rooms && (
                   <div className="flex items-center gap-2">
                     <BedDouble className="h-5 w-5" />

@@ -250,12 +250,16 @@ left: -10px; /* Adjust left position */
   h1,
   h2,
   h3,
-  h4 {
-    /* font-family: var(--merri-font); */
-    font-family: "DM Serif Text", serif;
-  }
+  h4,
   p{
     font-family: var(--seravek-web);
     letter-spacing: 0.025rem;
   }
 }
+
+/*
+{
+    font-family: var(--merri-font);
+    font-family: "DM Serif Text", serif;
+  }
+*/
