@@ -322,13 +322,13 @@ const rentals = ({ rentals, features, types, locations }) => {
                     </button>
 
                     {/* Property Type Badge */}
-                    <div className="absolute bottom-3 left-3 bg-primary text-white text-xs px-3 py-1 rounded-md">
+                    <div className="absolute bottom-3 left-3 bg-[#008975] text-white text-xs px-3 py-1 rounded-md">
                       {property.propertyType.typeName}
                     </div>
 
                     {/* Beachfront Tag (if applicable) */}
                     {property.beachfront && (
-                      <div className="absolute bottom-3 right-3 bg-[#28b0d6] text-white text-xs px-3 py-1 rounded-md">
+                      <div className="absolute bottom-3 right-3 bg-[#0171d0] text-white text-xs px-3 py-1 rounded-md">
                         Beachfront
                       </div>
                     )}
@@ -343,7 +343,7 @@ const rentals = ({ rentals, features, types, locations }) => {
                     <p className="text-sm text-gray-600 line-clamp-1 min-h-[1.25rem]">{property.location.locationName}, Nicaragua</p>
 
                     {/* Price */}
-                    <p className="text-lg font-bold text-[#09553a]">
+                    <p className="text-lg font-bold text-[#008975]">
                       ${property.price.toLocaleString()} / {property.category === "month" ? "month" : "day"}
                     </p>
 
