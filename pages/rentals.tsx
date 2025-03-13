@@ -84,6 +84,15 @@ const rentals = ({ rentals, features, types, locations }) => {
       return dateB - dateA; // Descending order
     });
 
+    // Optional fallback sort if backend didn’t handle sorting
+    if (sortByPrice === "price") {
+      sortedData = [...data].sort((a, b) => {
+        const priceA = a.price || 0;
+        const priceB = b.price || 0;
+        return sortDescending ? priceB - priceA : priceA - priceB;
+      });
+    }
+
       
       setRentalsList(sortedData);
     }
