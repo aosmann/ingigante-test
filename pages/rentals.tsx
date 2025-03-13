@@ -327,7 +327,7 @@ const rentals = ({ rentals, features, types, locations }) => {
                     </div>
 
                     {/* Beachfront Tag (if applicable) */}
-                    {property.beachfront && (
+                    {property.beachfront === "Yes" && (
                       <div className="absolute bottom-3 right-3 bg-[#0171d0] text-white text-xs px-3 py-1 rounded-md">
                         Beachfront
                       </div>
