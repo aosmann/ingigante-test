@@ -82,13 +82,13 @@ const RentalDetails = ({ rentals, allImages }: any) => {
                 {rentals.rooms && (
                   <div className="flex items-center gap-2">
                     <BedDouble className="h-5 w-5" />
-                    <span>{rentals.rooms} rooms</span>
+                    <span>{rentals.rooms} Rooms</span>
                   </div>
                 )}
                 {rentals.bathrooms && (
                   <div className="flex items-center gap-2">
                     <Bath className="h-5 w-5" />
-                    <span>{rentals.bathrooms} bathrooms</span>
+                    <span>{rentals.bathrooms} Bathrooms</span>
                   </div>
                 )}
                 {rentals.area_total && (
