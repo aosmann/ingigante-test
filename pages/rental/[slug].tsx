@@ -91,12 +91,6 @@ const RentalDetails = ({ rentals, allImages }: any) => {
                     <span>{rentals.bathrooms} bathrooms</span>
                   </div>
                 )}
-                {rentals.area_usable && (
-                  <div className="flex items-center gap-2">
-                    <Ruler className="h-5 w-5" />
-                    <span>{rentals.area_usable} m² usable</span>
-                  </div>
-                )}
                 {rentals.area_total && (
                   <div className="flex items-center gap-2">
                     <Ruler className="h-5 w-5" />
@@ -106,7 +100,7 @@ const RentalDetails = ({ rentals, allImages }: any) => {
                 {rentals.parking === "Yes" && (
                   <div className="flex items-center gap-2">
                     <Car className="h-5 w-5" />
-                    <span>Parking available</span>
+                    <span>Parking</span>
                   </div>
                 )}
               </div>
