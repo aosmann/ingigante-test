@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
+import { BedDouble, Bath, Ruler, Heart } from "lucide-react";
 import React, { useEffect, useId, useRef, useState } from "react";
 import { FiChevronDown, FiSearch } from "react-icons/fi";
 import { client } from "../lib/sanity.client";
@@ -302,48 +303,71 @@ const rentals = ({ rentals, features, types, locations }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8 px-4">
           {rentalsList.length > 0 ? (
             rentalsList.map((property) => (
-              <Link href={`/rental/${property.slug.current}`}>
-                <div
-                  className="max-w-sm rounded overflow-hidden shadow-md mx-auto h-full flex flex-col"
-                  key={property._id}
-                >
-                  <Image
-                    src={`${urlFor(
-                      property.mainImage
-                    ).url()}?w=390&h=290&fit=crop&crop=center`}
-                    alt="card"
-                    className="object-cover lg:object-center"
-                    width={390}
-                    height={290}
-                    priority
-                  />
-                  
-                  <div className="px-6 py-4">
-                    <h1 className="font-bold text-[20px]">{property.title}</h1>
-                  </div>            
+              <Link href={`/rental/${property.slug.current}`} className="block">
+                <div className="bg-white rounded-lg shadow-lg overflow-hidden transition hover:shadow-xl duration-300">
+                  {/* Image Section */}
+                  <div className="relative">
+                    <Image
+                      src={`${urlFor(property.mainImage).url()}?w=390&h=290&fit=crop&crop=center`}
+                      alt={property.title}
+                      className="object-cover w-full h-[250px]"
+                      width={390}
+                      height={290}
+                      priority
+                    />
 
-                  {/* Flash Text (On demand) */}
-                  {property.flash_text && (
-                    <div className="flex items-center px-6">
-                      <p className="rounded px-2 font-normal bg-[#ffebeb] text-[#ff0000] w-fit">
-                        {property.flash_text}
-                      </p>
+                    {/* Favorite Button */}
+                    <button className="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md hover:scale-110 transition">
+                      <Heart className="h-5 w-5 text-gray-600" />
+                    </button>
+
+                    {/* Property Type Badge */}
+                    <div className="absolute bottom-3 left-3 bg-green-700 text-white text-xs px-3 py-1 rounded-md">
+                      {property.propertyType.typeName}
                     </div>
-                  )}
-                  
-                  <div className="px-6 py-4 text-[17px] mt-auto">
-                    <p className="text-secondary">
-                      {"$"}{property.price} {"/"}
-                      {property.category === "month" ? "month" : "day"}
+
+                    {/* Beachfront Tag (if applicable) */}
+                    {property.beachfront && (
+                      <div className="absolute bottom-3 right-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-md">
+                        Beachfront
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Content Section */}
+                  <div className="p-4 space-y-2">
+                    {/* Title */}
+                    <h2 className="text-lg font-bold text-gray-900 line-clamp-2 leading-snug">{property.title}</h2>
+
+                    {/* Location */}
+                    <p className="text-sm text-gray-600 line-clamp-1">{property.location.locationName}, Nicaragua</p>
+
+                    {/* Price */}
+                    <p className="text-lg font-bold text-green-700">
+                      ${property.price.toLocaleString()} / {property.category === "month" ? "month" : "day"}
                     </p>
 
-                    <p>
-                      {property.propertyType.typeName} {" in "}{" "}
-                      {property.location.locationName}
-                      {", Nicaragua"}
-                    </p>
-                    
-                    
+                    {/* Features */}
+                    <div className="flex flex-wrap items-center text-sm text-gray-700 mt-2 gap-x-4 gap-y-2">
+                      {property.rooms && (
+                        <div className="flex items-center gap-1">
+                          <BedDouble className="h-4 w-4" />
+                          <span>{property.rooms} beds</span>
+                        </div>
+                      )}
+                      {property.bathrooms && (
+                        <div className="flex items-center gap-1">
+                          <Bath className="h-4 w-4" />
+                          <span>{property.bathrooms} baths</span>
+                        </div>
+                      )}
+                      {property.area_total && (
+                        <div className="flex items-center gap-1">
+                          <Ruler className="h-4 w-4" />
+                          <span>{property.area_total} sqft</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </Link>
