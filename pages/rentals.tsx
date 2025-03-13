@@ -304,7 +304,7 @@ const rentals = ({ rentals, features, types, locations }) => {
           {rentalsList.length > 0 ? (
             rentalsList.map((property) => (
               <Link href={`/rental/${property.slug.current}`} className="block">
-                <div className="bg-white rounded-lg shadow-lg overflow-hidden transition hover:shadow-xl duration-300">
+                <div className="bg-white rounded-lg shadow-lg overflow-hidden transition hover:shadow-xl duration-300 h-full flex flex-col justify-between">
                   {/* Image Section */}
                   <div className="relative">
                     <Image
@@ -322,28 +322,28 @@ const rentals = ({ rentals, features, types, locations }) => {
                     </button>
 
                     {/* Property Type Badge */}
-                    <div className="absolute bottom-3 left-3 bg-green-700 text-white text-xs px-3 py-1 rounded-md">
+                    <div className="absolute bottom-3 left-3 bg-primary text-white text-xs px-3 py-1 rounded-md">
                       {property.propertyType.typeName}
                     </div>
 
                     {/* Beachfront Tag (if applicable) */}
                     {property.beachfront && (
-                      <div className="absolute bottom-3 right-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-md">
+                      <div className="absolute bottom-3 right-3 bg-[#28b0d6] text-white text-xs px-3 py-1 rounded-md">
                         Beachfront
                       </div>
                     )}
                   </div>
 
                   {/* Content Section */}
-                  <div className="p-4 space-y-2">
+                  <div className="flex flex-col justify-between h-full p-4 space-y-2">
                     {/* Title */}
-                    <h2 className="text-lg font-bold text-gray-900 line-clamp-2 leading-snug">{property.title}</h2>
+                    <h2 className="text-lg font-bold text-gray-900 line-clamp-2 leading-snug min-h-[3rem]">{property.title}</h2>
 
                     {/* Location */}
-                    <p className="text-sm text-gray-600 line-clamp-1">{property.location.locationName}, Nicaragua</p>
+                    <p className="text-sm text-gray-600 line-clamp-1 min-h-[1.25rem]">{property.location.locationName}, Nicaragua</p>
 
                     {/* Price */}
-                    <p className="text-lg font-bold text-green-700">
+                    <p className="text-lg font-bold text-[#09553a]">
                       ${property.price.toLocaleString()} / {property.category === "month" ? "month" : "day"}
                     </p>
 
