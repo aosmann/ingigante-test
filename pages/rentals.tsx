@@ -76,15 +76,24 @@ const rentals = ({ rentals, features, types, locations }) => {
         feature,
         priceCategory,
       });
-
-      // Sort data by `updatedAt` or `createdAt` in descending order
-    const sortedData = data.sort((a, b) => {
-      const dateA = new Date(a._updatedAt || a._createdAt);
-      const dateB = new Date(b._updatedAt || b._createdAt);
-      return dateB - dateA; // Descending order
-    });
-
-      
+  
+      let sortedData;
+      if (sortByPrice === "price") {
+        sortedData = data.sort((a, b) => {
+          // Ensure property.price exists and is a number
+          const priceA = a.price || 0;
+          const priceB = b.price || 0;
+          return sortDescending ? priceB - priceA : priceA - priceB;
+        });
+      } else {
+        // Default sorting by date (updatedAt or createdAt)
+        sortedData = data.sort((a, b) => {
+          const dateA = new Date(a._updatedAt || a._createdAt);
+          const dateB = new Date(b._updatedAt || b._createdAt);
+          return dateB - dateA; // Descending order
+        });
+      }
+  
       setRentalsList(sortedData);
     }
     fetchProperties();
@@ -131,8 +140,13 @@ const rentals = ({ rentals, features, types, locations }) => {
 
   function handleSortChange(event) {
     const value = event.value;
-    setSortByPrice(value);
-    setSortDescending(value);
+    if (value === "price") {
+      setSortByPrice("price");
+      setSortDescending(false);
+    } else if (value === "price-desc") {
+      setSortByPrice("price");
+      setSortDescending(true);
+    }
   }
 
   const featureOptions = featuresList.map((item) => ({
