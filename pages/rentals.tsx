@@ -85,7 +85,7 @@ const rentals = ({ rentals, features, types, locations }) => {
     });
 
       
-      setRentalsList(data);
+      setRentalsList(sortedData);
     }
     fetchProperties();
   }, [
