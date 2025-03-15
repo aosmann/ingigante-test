@@ -1,22 +1,24 @@
-// ✅ FULL RentalDetails Page Redesign Based on Example Design
+// ✅ FULL RentalDetails Page Redesign With Performance Optimization
 import { PortableText } from "@portabletext/react";
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { MdOutlineArrowBack } from "react-icons/md";
 import { Car, Bath, BedDouble, Ruler } from "lucide-react";
+import dynamic from "next/dynamic";
 import { client, client_with_token } from "../../lib/sanity.client";
-import Map from "../../components/Map";
-import ImageCarousel from "../../components/ImageCarousel";
 import RichTextComponent from "../../components/RichTextComponent";
+
+const Map = dynamic(() => import("../../components/Map"), { ssr: false });
+const ImageCarousel = dynamic(() => import("../../components/ImageCarousel"), { ssr: false, loading: () => <p>Loading images...</p> });
 
 export const getServerSideProps = async (pageContext) => {
   const pageSlug = pageContext.query.slug;
   const query = `*[ _type == "propertiesRent" && slug.current == $pageSlug][0]{ _id, ..., location->, propertyType-> }`;
   const rentals = await client.fetch(query, { pageSlug });
-  let allImages = rentals.images.concat(rentals.mainImage);
+  const allImages = rentals?.images?.concat(rentals.mainImage) || [];
   if (!rentals) return { props: null, notFound: true };
   return { props: { rentals, allImages } };
 };
@@ -49,6 +51,7 @@ const RentalDetails = ({ rentals, allImages }: any) => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <Head>
         <title>{rentals.propertyType.typeName} for Rent in {rentals.location.locationName}, Nicaragua</title>
+        {allImages[0] && <link rel="preload" as="image" href={`${allImages[0].asset?.url || allImages[0].url}?w=1000&quality=70`} />}
       </Head>
 
       <div className="space-y-4 mb-6">
@@ -59,73 +62,69 @@ const RentalDetails = ({ rentals, allImages }: any) => {
       </div>
 
       <div className="space-y-4 mb-6">
-        <ImageCarousel images={allImages} />
+        <ImageCarousel images={allImages.map(img => ({ ...img, url: `${img.asset ? img.asset.url : img.url}?w=1000&quality=70` }))} />
       </div>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Property Details */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">        
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">{rentals.title}</h2>
-              <p className="text-xl text-primary font-semibold">${rentals.price} / {rentals.category}</p>
-              <p className="text-gray-600">{rentals.location.locationName}</p>
+          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">{rentals.title}</h2>
+            <p className="text-xl text-primary font-semibold">${rentals.price} / {rentals.category}</p>
+            <p className="text-gray-600">{rentals.location.locationName}</p>
 
-              <div className="mt-4 flex flex-wrap gap-2">
-                <span className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm font-medium">{rentals.propertyType.typeName}</span>
-                {rentals.beachfront === "Yes" && (
-                  <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">Beachfront</span>
-                )}
-              </div>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <span className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm font-medium">{rentals.propertyType.typeName}</span>
+              {rentals.beachfront === "Yes" && (
+                <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">Beachfront</span>
+              )}
+            </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-6 text-gray-700 py-6 border-y border-gray-200 text-sm">
-                {rentals.rooms && (
-                  <div className="flex items-center gap-2">
-                    <BedDouble className="h-5 w-5" />
-                    <span>{rentals.rooms} Rooms</span>
-                  </div>
-                )}
-                {rentals.bathrooms && (
-                  <div className="flex items-center gap-2">
-                    <Bath className="h-5 w-5" />
-                    <span>{rentals.bathrooms} Bathrooms</span>
-                  </div>
-                )}
-                {rentals.area_total && (
-                  <div className="flex items-center gap-2">
-                    <Ruler className="h-5 w-5" />
-                    <span>{rentals.area_total} m² total</span>
-                  </div>
-                )}
-                {rentals.parking === "Yes" && (
-                  <div className="flex items-center gap-2">
-                    <Car className="h-5 w-5" />
-                    <span>Parking</span>
-                  </div>
-                )}
-              </div>
-
-              <div className="mt-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-2">Description</h2>
-                <div className="text-gray-700 text-sm leading-relaxed">
-                  <PortableText value={rentals.overview} components={RichTextComponent} />
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-6 text-gray-700 py-6 border-y border-gray-200 text-sm">
+              {rentals.rooms && (
+                <div className="flex items-center gap-2">
+                  <BedDouble className="h-5 w-5" />
+                  <span>{rentals.rooms} Rooms</span>
                 </div>
-                {rentals.vrview && (
-                  <div className="mt-4">
-                    <iframe width="100%" height="400" src={rentals.vrview} allowFullScreen></iframe>
-                  </div>
-                )}
-              </div>
+              )}
+              {rentals.bathrooms && (
+                <div className="flex items-center gap-2">
+                  <Bath className="h-5 w-5" />
+                  <span>{rentals.bathrooms} Bathrooms</span>
+                </div>
+              )}
+              {rentals.area_total && (
+                <div className="flex items-center gap-2">
+                  <Ruler className="h-5 w-5" />
+                  <span>{rentals.area_total} m² total</span>
+                </div>
+              )}
+              {rentals.parking === "Yes" && (
+                <div className="flex items-center gap-2">
+                  <Car className="h-5 w-5" />
+                  <span>Parking</span>
+                </div>
+              )}
+            </div>
 
-              <div className="mt-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-2">Map</h2>
-                <Map location={rentals.maplocation} />
+            <div className="mt-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">Description</h2>
+              <div className="text-gray-700 text-sm leading-relaxed">
+                <PortableText value={rentals.overview} components={RichTextComponent} />
               </div>
+              {rentals.vrview && (
+                <div className="mt-4">
+                  <iframe width="100%" height="400" src={rentals.vrview} allowFullScreen></iframe>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">Map</h2>
+              <Map location={rentals.maplocation} />
             </div>
           </div>
-
         </div>
-
 
         {/* Contact Form Sidebar */}
         <div className="lg:col-span-1">
