@@ -50,6 +50,14 @@ export const getStaticProps: GetStaticProps = async (context) => {
   };
 };
 
+interface HomeProps {
+  properties: any[]; // you can replace `any` with your actual data type if you have one
+  ourteam: any[];
+  references: any[];
+  faq: any[];
+  propertyType: any[];
+  locations: any[];
+}
 function Home({
   properties,
   ourteam,
@@ -57,7 +65,7 @@ function Home({
   faq,
   propertyType,
   locations,
-}) {
+}: HomeProps) {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center overflow-x-hidden	">
       <Head>
