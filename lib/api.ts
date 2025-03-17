@@ -13,12 +13,13 @@ export async function getProperties({
   location = null,
 }) {
   let query = `*[_type == "properties"`;
-  let params = {};
-
+  let params: Record<string, any> = {}; // ✅ fix here
+  
   if (searchQuery) {
     query += ` && title match $searchTerm`;
     params.searchTerm = searchQuery;
   }
+  
 
   if (category) {
     query += ` && propertyType->typeName == $categoryID`;
