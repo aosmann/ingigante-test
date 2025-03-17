@@ -619,7 +619,7 @@ function PropertyDetails({ property, images }: any) {
           {/* Fullscreen thumbnails */}
           <div className="absolute bottom-4 left-0 right-0">
             <div className="flex justify-center gap-2 px-4 overflow-x-auto pb-2">
-              {images.map((image, index) => (
+            {images.map((image: any, index: number) => (
                 <button
                   key={image._ref}
                   onClick={() => handleThumbnailClick(index)}
