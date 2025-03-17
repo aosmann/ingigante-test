@@ -8,30 +8,33 @@ import { client_with_token } from "../lib/sanity.client";
 const contact = () => {
   const formRef = useRef();
 
-  const submitContact = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-  
-    const newContact = {
-      _type: "contactForm",
-      firstName: (e.target as HTMLFormElement)[0].value,
-      lastName: (e.target as HTMLFormElement)[1].value,
-      email: (e.target as HTMLFormElement)[2].value,
-      phone: (e.target as HTMLFormElement)[3].value,
-      message: (e.target as HTMLFormElement)[4].value,
-    };
-    
-    client_with_token
-      .create(newContact)
-      .then((result) => {
-        toast.success("Thank you for your message. We will get back shortly!", {
-          duration: 3000,
-        });
-        formRef.current.reset();
-      })
-      .catch((error) => {
-        toast.error("Something went wrong! Please try again");
-      });
+const submitContact = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  const formData = new FormData(e.currentTarget);
+
+  const newContact = {
+    _type: "contactForm",
+    firstName: formData.get("firstName") as string,
+    lastName: formData.get("lastName") as string,
+    email: formData.get("email") as string,
+    phone: formData.get("phone") as string,
+    message: formData.get("comment") as string,
   };
+
+  client_with_token
+    .create(newContact)
+    .then(() => {
+      toast.success("Thank you for your message. We will get back shortly!", {
+        duration: 3000,
+      });
+      formRef.current?.reset(); // ✅ also safer
+    })
+    .catch(() => {
+      toast.error("Something went wrong! Please try again");
+    });
+  };
+
   return (
     <div className="min-h-screen w-full bg-primary flex flex-col items-center justify-center px-4 py-4">
       <Head>
