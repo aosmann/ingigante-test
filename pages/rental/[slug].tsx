@@ -10,11 +10,12 @@ import { Car, Bath, BedDouble, Ruler } from "lucide-react";
 import dynamic from "next/dynamic";
 import { client, client_with_token } from "../../lib/sanity.client";
 import RichTextComponent from "../../components/RichTextComponent";
+import { GetServerSidePropsContext } from "next";
 
 const Map = dynamic(() => import("../../components/Map"), { ssr: false });
 const ImageCarousel = dynamic(() => import("../../components/ImageCarousel"), { ssr: false, loading: () => <p>Loading images...</p> });
 
-export const getServerSideProps = async (pageContext) => {
+export const getServerSideProps = async (pageContext: GetServerSidePropsContext) => {
   const pageSlug = pageContext.query.slug;
   const query = `*[ _type == "propertiesRent" && slug.current == $pageSlug][0]{ _id, ..., location->, propertyType-> }`;
   const rentals = await client.fetch(query, { pageSlug });
@@ -24,7 +25,7 @@ export const getServerSideProps = async (pageContext) => {
 };
 
 const RentalDetails = ({ rentals, allImages }: any) => {
-  const formRef = useRef();
+  const formRef = useRef<HTMLFormElement>(null);
   const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '', phone: '', message: '' });
 
   const submitContact = async (e: any) => {
