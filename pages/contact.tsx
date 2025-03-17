@@ -1,8 +1,8 @@
 import Image from "next/image";
 import React from "react";
 import contact1 from "../public/assets/images/contact.png";
+import React, { useState, useRef } from "react"; // make sure this is at the top
 
-import { useState, useRef } from "react";
 // import { sendContactForm } from "../services";
 import Head from "next/head";
 
@@ -12,17 +12,18 @@ import { client_with_token } from "../lib/sanity.client";
 const contact = () => {
   const formRef = useRef();
 
-  const submitContact = async (e) => {
+  const submitContact = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+  
     const newContact = {
       _type: "contactForm",
-      firstName: e.target[0].value,
-      lastName: e.target[1].value,
-      email: e.target[2].value,
-      phone: e.target[3].value,
-      message: e.target[4].value,
+      firstName: (e.target as HTMLFormElement)[0].value,
+      lastName: (e.target as HTMLFormElement)[1].value,
+      email: (e.target as HTMLFormElement)[2].value,
+      phone: (e.target as HTMLFormElement)[3].value,
+      message: (e.target as HTMLFormElement)[4].value,
     };
+    
     client_with_token
       .create(newContact)
       .then((result) => {
@@ -34,22 +35,6 @@ const contact = () => {
       .catch((error) => {
         toast.error("Something went wrong! Please try again");
       });
-
-    // const res = await sendContactForm({
-    //   firstName: e.target[0].value,
-    //   lastName: e.target[1].value,
-    //   email: e.target[2].value,
-    //   phone: e.target[3].value,
-    //   comment: e.target[4].value,
-    // });
-    // if (res == 0) {
-    //   toast.success("Thank you for your message. We will get back shortly!", {
-    //     duration: 3000,
-    //   });
-    //   formRef.current.reset();
-    // } else {
-    //   toast.error("Something went wrong! Please try again");
-    // }
   };
   return (
     <div className="min-h-screen w-full bg-primary flex flex-col items-center justify-center px-4 py-4">
