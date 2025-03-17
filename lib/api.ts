@@ -82,3 +82,46 @@ export async function getProperties(params: GetPropertiesParams): Promise<Proper
   const response = await client.fetch(query, queryParams);
   return response;
 }
+
+export async function getPropertiesRent(params: {
+  category?: string;
+  sortByPrice?: string;
+  sortDescending?: boolean;
+  searchQuery?: string;
+  priceMin?: number;
+  priceMax?: number;
+  location?: string;
+  feature?: string;
+  priceCategory?: string;
+}) {
+  const filters = [];
+
+  if (params.category) filters.push(`propertyType->typeName match "${params.category}"`);
+  if (params.location) filters.push(`location->locationName match "${params.location}"`);
+  if (params.feature) filters.push(`features[]->featureName match "${params.feature}"`);
+  if (params.priceCategory) filters.push(`category == "${params.priceCategory}"`);
+  if (params.priceMin) filters.push(`price >= ${params.priceMin}`);
+  if (params.priceMax) filters.push(`price <= ${params.priceMax}`);
+  if (params.searchQuery)
+    filters.push(`title match "*${params.searchQuery}*"`);
+
+  const whereClause = filters.length > 0 ? `&& ${filters.join(" && ")}` : "";
+
+  const query = `*[_type == "propertiesRent" ${whereClause}]{
+    _id,
+    title,
+    slug,
+    price,
+    category,
+    location->,
+    propertyType->,
+    rooms,
+    bathrooms,
+    area_total,
+    beachfront,
+    mainImage
+  }`;
+
+  const results = await client.fetch(query);
+  return results;
+}
