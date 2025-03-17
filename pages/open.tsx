@@ -8,8 +8,9 @@ export default function open() {
   const [category, setCategory] = useState(null);
   const [minBedrooms, setMinBedrooms] = useState(null);
   const [minBathrooms, setMinBathrooms] = useState(null);
-  const [sortByPrice, setSortByPrice] = useState(false);
-  const [sortDescending, setSortDescending] = useState(false);
+  const [sortByPrice, setSortByPrice] = useState<null | boolean>(null);
+  const [sortDescending, setSortDescending] = useState<null | boolean>(null);
+
 
   useEffect(() => {
     async function fetchProperties() {
@@ -39,8 +40,17 @@ export default function open() {
 
   function handleSortChange(event) {
     const value = event.target.value;
-    setSortByPrice(value === "sellPrice");
-    setSortDescending(value === "sellPrice-desc");
+  
+    if (value === "sellPrice") {
+      setSortByPrice(true);
+      setSortDescending(false);
+    } else if (value === "sellPrice-desc") {
+      setSortByPrice(true);
+      setSortDescending(true);
+    } else {
+      setSortByPrice(null);
+      setSortDescending(null);
+    }
   }
 
   return (
