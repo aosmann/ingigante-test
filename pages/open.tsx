@@ -1,25 +1,22 @@
 // pages/open.tsx
-
 import { useEffect, useState } from "react";
 import { getProperties } from "../lib/api";
 
-// Define property type (adjust as per your actual schema from Sanity)
 interface Property {
   _id: string;
   title: string;
   sellPrice: number;
   bedrooms: number;
   bathrooms: number;
-  // Add more fields if needed (e.g., location, propertyType)
 }
 
 export default function OpenPage() {
   const [properties, setProperties] = useState<Property[]>([]);
-  const [category, setCategory] = useState<string | null>(null);
-  const [minBedrooms, setMinBedrooms] = useState<number | null>(null);
-  const [minBathrooms, setMinBathrooms] = useState<number | null>(null);
-  const [sortByPrice, setSortByPrice] = useState<boolean | null>(null);
-  const [sortDescending, setSortDescending] = useState<boolean | null>(null);
+  const [category, setCategory] = useState<string | undefined>(undefined);
+  const [minBedrooms, setMinBedrooms] = useState<number | undefined>(undefined);
+  const [minBathrooms, setMinBathrooms] = useState<number | undefined>(undefined);
+  const [sortByPrice, setSortByPrice] = useState<boolean | undefined>(undefined);
+  const [sortDescending, setSortDescending] = useState<boolean | undefined>(undefined);
 
   useEffect(() => {
     const fetchProperties = async () => {
@@ -36,22 +33,22 @@ export default function OpenPage() {
         console.error("Error fetching properties:", error);
       }
     };
-
     fetchProperties();
   }, [category, minBedrooms, minBathrooms, sortByPrice, sortDescending]);
 
   const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setCategory(event.target.value || null);
+    const value = event.target.value;
+    setCategory(value || undefined);
   };
 
   const handleBedroomsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value);
-    setMinBedrooms(isNaN(value) ? null : value);
+    setMinBedrooms(isNaN(value) ? undefined : value);
   };
 
   const handleBathroomsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value);
-    setMinBathrooms(isNaN(value) ? null : value);
+    setMinBathrooms(isNaN(value) ? undefined : value);
   };
 
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -63,8 +60,8 @@ export default function OpenPage() {
       setSortByPrice(true);
       setSortDescending(true);
     } else {
-      setSortByPrice(null);
-      setSortDescending(null);
+      setSortByPrice(undefined);
+      setSortDescending(undefined);
     }
   };
 
