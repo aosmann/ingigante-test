@@ -273,55 +273,55 @@ const Rentals = ({ rentals, features, types, locations }: RentalsPageProps) => {
           <p className="text-center mt-4 mb-4 opacity-50">Filter Settings</p>
           <div className="md:flex md:flex-row md:space-x-4">
             <div className="relative mb-6 md:mb-0 md:w-1/4">
-              <Select<SelectOption>
-                defaultValue={typeOptions.find(opt => opt.value === category) || null}
+              <Select
+                value={typeOptions.find(opt => opt.value === category)}
                 onChange={handleCategoryChange}
                 options={typeOptions}
                 placeholder="Type"
                 isSearchable={false}
               />
-
-              <Select<SelectOption>
-                defaultValue={featureOptions.find(opt => opt.value === feature) || null}
+            </div>
+            <div className="relative mb-6 md:mb-0 md:w-1/4">
+              <Select
+                value={featureOptions.find(opt => opt.value === feature)}
                 onChange={handleFeature}
                 options={featureOptions}
                 placeholder="Feature"
                 isSearchable={false}
               />
-
-              <Select<SelectOption>
-                defaultValue={locationOptions.find(opt => opt.value === location) || null}
+            </div>
+            <div className="relative mb-6 md:mb-0 md:w-1/4">
+              <Select
+                value={locationOptions.find(opt => opt.value === location)}
                 onChange={handleLocationChange}
                 options={locationOptions}
                 placeholder="Location"
                 isSearchable={false}
               />
-
-              <Select<SelectOption>
-                defaultValue={priceCategories.find(opt => opt.value === priceCategory) || null}
+            </div>
+            <div className="relative mb-6 md:mb-0 md:w-1/4">
+              <Select
+                value={priceCategories.find(opt => opt.value === priceCategory)}
                 onChange={handlePriceCategoryChange}
                 options={priceCategories}
                 placeholder="Price Category"
                 isSearchable={false}
               />
-
-              <div className="relative mb-6 md:mb-0 md:w-1/4">
-                <p className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none opacity-40">
-                  $
-                </p>
-                <input
-                  type="number"
-                  placeholder="Price max."
-                  className="w-full pl-6 rounded-md border border-gray-300 "
-                  onChange={handlePriceMaxChange}
-                />
-              </div>
-
-              <div className="relative mb-6 md:mb-0 md:w-1/4">
-              <Select<SelectOption>
-                defaultValue={
+            </div>
+            <div className="relative mb-6 md:mb-0 md:w-1/4">
+              <p className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none opacity-40">$</p>
+              <input
+                type="number"
+                placeholder="Price max."
+                className="w-full pl-6 rounded-md border border-gray-300"
+                onChange={handlePriceMaxChange}
+              />
+            </div>
+            <div className="relative mb-6 md:mb-0 md:w-1/4">
+              <Select
+                value={
                   sortByPrice
-                    ? sortOptions.find((opt) =>
+                    ? sortOptions.find(opt =>
                         sortDescending ? opt.value === "price-desc" : opt.value === "price"
                       ) || null
                     : null
@@ -332,8 +332,8 @@ const Rentals = ({ rentals, features, types, locations }: RentalsPageProps) => {
                 isSearchable={false}
               />
             </div>
-            </div>
           </div>
+
         </div>
       
         <div className="max-w-7xl w-full mt-14">
