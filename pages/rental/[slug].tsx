@@ -42,7 +42,7 @@ const RentalDetails = ({ rentals, allImages }: any) => {
     client_with_token.create(newContact)
       .then(() => {
         toast.success("Thank you for your message. We will get back shortly!");
-        formRef.current.reset();
+        formRef.current?.reset();
         setFormData({ firstName: '', lastName: '', email: '', phone: '', message: '' });
       })
       .catch(() => toast.error("Something went wrong. Please try again."));
@@ -63,7 +63,7 @@ const RentalDetails = ({ rentals, allImages }: any) => {
       </div>
 
       <div className="space-y-4 mb-6">
-        <ImageCarousel images={allImages.map(img => ({ ...img, url: `${img.asset ? img.asset.url : img.url}?w=1000&quality=70` }))} />
+        <ImageCarousel  images={allImages.map((img: { asset?: { url?: string }; url?: string }) => ({ ...img, url: `${img.asset?.url || img.url}?w=1000&quality=70`, }))} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
