@@ -83,45 +83,28 @@ export async function getProperties(params: GetPropertiesParams): Promise<Proper
   return response;
 }
 
-export async function getPropertiesRent(params: {
-  category?: string;
-  sortByPrice?: string;
-  sortDescending?: boolean;
+export interface GetPropertiesRentParams {
+  category?: string | null;
+  sortByPrice?: string | null;
+  sortDescending?: boolean | null;
   searchQuery?: string;
-  priceMin?: number;
-  priceMax?: number;
-  location?: string;
-  feature?: string;
-  priceCategory?: string;
-}) {
-  const filters = [];
+  priceMin?: number | null;
+  priceMax?: number | null;
+  location?: string | null;
+  feature?: string | null;
+  priceCategory?: string | null;
+}
 
-  if (params.category) filters.push(`propertyType->typeName match "${params.category}"`);
-  if (params.location) filters.push(`location->locationName match "${params.location}"`);
-  if (params.feature) filters.push(`features[]->featureName match "${params.feature}"`);
-  if (params.priceCategory) filters.push(`category == "${params.priceCategory}"`);
-  if (params.priceMin) filters.push(`price >= ${params.priceMin}`);
-  if (params.priceMax) filters.push(`price <= ${params.priceMax}`);
-  if (params.searchQuery)
-    filters.push(`title match "*${params.searchQuery}*"`);
-
-  const whereClause = filters.length > 0 ? `&& ${filters.join(" && ")}` : "";
-
-  const query = `*[_type == "propertiesRent" ${whereClause}]{
-    _id,
-    title,
-    slug,
-    price,
-    category,
-    location->,
-    propertyType->,
-    rooms,
-    bathrooms,
-    area_total,
-    beachfront,
-    mainImage
-  }`;
-
-  const results = await client.fetch(query);
-  return results;
+export async function getPropertiesRent({
+  category,
+  sortByPrice,
+  sortDescending,
+  searchQuery,
+  priceMin,
+  priceMax,
+  location,
+  feature,
+  priceCategory,
+}: GetPropertiesRentParams) {
+  // Build and execute GROQ query with these filters
 }
