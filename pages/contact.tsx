@@ -6,7 +6,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { client_with_token } from "../lib/sanity.client";
 
 const contact = () => {
-  const formRef = useRef();
+  const formRef = useRef<HTMLFormElement>(null);
 
 const submitContact = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
