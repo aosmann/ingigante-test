@@ -2,8 +2,19 @@ import React from "react";
 import Slider from "react-slick";
 import { GoQuote } from "react-icons/go";
 
-const Reference = ({ references }) => {
-  var settings = {
+interface ReferenceItem {
+  _id: string;
+  clientName: string;
+  referenceText: string;
+  propertyName: string;
+}
+
+interface ReferenceProps {
+  references: ReferenceItem[];
+}
+
+const Reference: React.FC<ReferenceProps> = ({ references }) => {
+  const settings = {
     dots: true,
     infinite: true,
     slidesToShow: 2,
@@ -39,6 +50,7 @@ const Reference = ({ references }) => {
       },
     ],
   };
+
   return (
     <section className="text-primary bg-white mt-10 mb-10 items-center justify-center xl:flex py-14">
       <div className="max-w-7xl px-4">
@@ -56,9 +68,7 @@ const Reference = ({ references }) => {
                   <p className="text-justify">{reference.referenceText}</p>
                 </div>
                 <div className="pt-6 border-t border-gray-200 mt-6">
-                  <h3 className="text-[20px] font-bold">
-                    {reference.clientName}
-                  </h3>
+                  <h3 className="text-[20px] font-bold">{reference.clientName}</h3>
                   <p>{reference.propertyName}</p>
                 </div>
               </div>
