@@ -309,16 +309,17 @@ function PropertyDetails({ property, images }: any) {
                   components={RichTextComponent}
                 />
 
-                {property.vrview ? (
-                  <iframe
-                    height="400px"
-                    width="100%"
-                    allowFullScreen="true"
-                    src={property.vrview}
-                  ></iframe>
-                ) : (
-                  ""
-                )}
+                  {property.vrview ? (
+                    <iframe
+                      height="400px"
+                      width="100%"
+                      allowFullScreen
+                      src={property.vrview}
+                    ></iframe>
+                  ) : (
+                    ""
+                  )}
+
 
                 <Link href={"/contact"} className="underline block sm:hidden">
                   Contact Us {">"}
