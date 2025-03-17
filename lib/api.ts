@@ -84,7 +84,7 @@ export async function getPropertiesRent({
   priceCategory = null,
 }) {
   let query = `*[_type == "propertiesRent"`;
-  let params = {};
+  let params: Record<string, any> = {}; // ✅ fix here
 
   if (searchQuery) {
     query += ` && title match $searchTerm`;
