@@ -136,13 +136,13 @@ max-width: 95% !important;
 .slick-next,
 .slick-prev{
   z-index: 10 !important;
-  color: ##ffffff6e!important;
+  color: #ffffff6e!important;
   width: 50px !important;
   Height: 50px !important;
 }
 .next-slick-arrow,
 .prev-slick-arrow {
-  color: ##ffffff6e!important;
+  color: #ffffff6e!important;
 }
 
 .next-slick-arrow{
