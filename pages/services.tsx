@@ -33,7 +33,12 @@ export const getStaticProps: GetStaticProps = async () => {
   };
 };
 
-const Services = ({ references, services }) => {
+type ServicesPageProps = {
+  references: any[]; // Replace `any` with proper type later if needed
+  services: any[];   // Replace `any` with proper type later if needed
+};
+
+const Services = ({ references, services }: ServicesPageProps) => {
   return (
     <div className="min-h-screen">
       <Head>
@@ -94,17 +99,7 @@ const Services = ({ references, services }) => {
                 }   items-start space-y-6 sm:space-y-0 md:items-center relative`}
                 key={service._id}
               >
-                {/* <Image
-                  src={`${urlFor(
-                    service.image
-                  ).url()}?w=628&h=413&fit=crop&crop=center`}
-                  alt="card"
-                  width={628}
-                  height={413}
-                  style={{ objectFit: "cover" }}
-                  priority
-                /> */}
-
+               
                 <div className="lg:w-1/2">
                   <img
                     src={urlFor(service.image).url()}
@@ -136,32 +131,7 @@ const Services = ({ references, services }) => {
         </div>
       </section>
 
-      {/* <section className='text-primary flex px-4 xl:justify-center'>
-        <div className='flex flex-col items-center lg:flex-row-reverse lg:space-x-reverse lg:space-x-10 mt-12 mb-12 max-w-7xl '>
-          <Image
-            src={investment}
-            alt='about'
-            className='w-[350px] sm:w-[450px] md:w-[450px] lg:w-[500px] xl:w-[600px] 2xl:w-[650px]'
-          />
-          <div className='text-[17px] lg:w-[350px]'>
-            <h2 className='text-[35px] lg:text-[50px]'>Property Management</h2>
-            <div className=''>
-              <p>
-                We are a company that connects the world of real estate and
-                finance. We provide a complete service for the sale, purchase or
-                rental of real estate. Our advantage is more than 15 years of
-                experience and soil in attractive locat We have a connection to
-                all banks on the Slovak market, so we can solve everything under
-                one roof. By constantly innovating our business activities, we
-                move forward and we are able to offer truly
-              </p>
-              <Link href={'/contact'} className='underline font-bold'>
-                Contact Us {'>'}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section> */}
+      
       <Reference references={references} />
     </div>
   );
