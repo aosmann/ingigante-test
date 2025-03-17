@@ -1,5 +1,7 @@
-import { addDoc, collection, Timestamp } from "firebase/firestore/lite";
+import { ContactFormData } from "../components/contactForm";
+import { addDoc, collection, Timestamp } from "firebase/firestore";
 import { firestore } from "../firebaseConfig";
+
 
 export const sendContactForm = async ({
   firstName,
@@ -7,7 +9,7 @@ export const sendContactForm = async ({
   email,
   phone,
   comment,
-}) => {
+}: ContactFormData) => {
   try {
     const ref = collection(firestore, "contact");
     await addDoc(ref, {
