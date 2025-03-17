@@ -1,46 +1,61 @@
-// pages/index.js
+// pages/open.tsx
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getProperties } from "../lib/api";
 
-export default function open() {
-  const [properties, setProperties] = useState([]);
-  const [category, setCategory] = useState(null);
-  const [minBedrooms, setMinBedrooms] = useState(null);
-  const [minBathrooms, setMinBathrooms] = useState(null);
-  const [sortByPrice, setSortByPrice] = useState<null | boolean>(null);
-  const [sortDescending, setSortDescending] = useState<null | boolean>(null);
+// Define property type (adjust as per your actual schema from Sanity)
+interface Property {
+  _id: string;
+  title: string;
+  sellPrice: number;
+  bedrooms: number;
+  bathrooms: number;
+  // Add more fields if needed (e.g., location, propertyType)
+}
 
+export default function OpenPage() {
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [category, setCategory] = useState<string | null>(null);
+  const [minBedrooms, setMinBedrooms] = useState<number | null>(null);
+  const [minBathrooms, setMinBathrooms] = useState<number | null>(null);
+  const [sortByPrice, setSortByPrice] = useState<boolean | null>(null);
+  const [sortDescending, setSortDescending] = useState<boolean | null>(null);
 
   useEffect(() => {
-    async function fetchProperties() {
-      const data = await getProperties({
-        category,
-        minBedrooms,
-        minBathrooms,
-        sortByPrice,
-        sortDescending,
-      });
-      setProperties(data);
-    }
+    const fetchProperties = async () => {
+      try {
+        const data: Property[] = await getProperties({
+          category,
+          minBedrooms,
+          minBathrooms,
+          sortByPrice,
+          sortDescending,
+        });
+        setProperties(data);
+      } catch (error) {
+        console.error("Error fetching properties:", error);
+      }
+    };
+
     fetchProperties();
   }, [category, minBedrooms, minBathrooms, sortByPrice, sortDescending]);
 
-  function handleCategoryChange(event) {
-    setCategory(event.target.value);
-  }
+  const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setCategory(event.target.value || null);
+  };
 
-  function handleBedroomsChange(event) {
-    setMinBedrooms(parseInt(event.target.value) || null);
-  }
+  const handleBedroomsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(event.target.value);
+    setMinBedrooms(isNaN(value) ? null : value);
+  };
 
-  function handleBathroomsChange(event) {
-    setMinBathrooms(parseInt(event.target.value) || null);
-  }
+  const handleBathroomsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(event.target.value);
+    setMinBathrooms(isNaN(value) ? null : value);
+  };
 
-  function handleSortChange(event) {
+  const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
-  
     if (value === "sellPrice") {
       setSortByPrice(true);
       setSortDescending(false);
@@ -51,12 +66,12 @@ export default function open() {
       setSortByPrice(null);
       setSortDescending(null);
     }
-  }
+  };
 
   return (
     <div>
       <h1>Properties</h1>
-      <div>
+      <div style={{ marginBottom: "2rem" }}>
         <label>
           Category:
           <select value={category || ""} onChange={handleCategoryChange}>
@@ -70,7 +85,7 @@ export default function open() {
           Minimum Bedrooms:
           <input
             type="number"
-            value={minBedrooms || ""}
+            value={minBedrooms ?? ""}
             onChange={handleBedroomsChange}
           />
         </label>
@@ -78,7 +93,7 @@ export default function open() {
           Minimum Bathrooms:
           <input
             type="number"
-            value={minBathrooms || ""}
+            value={minBathrooms ?? ""}
             onChange={handleBathroomsChange}
           />
         </label>
@@ -89,7 +104,7 @@ export default function open() {
               sortByPrice
                 ? sortDescending
                   ? "sellPrice-desc"
-                  : "Price"
+                  : "sellPrice"
                 : "none"
             }
             onChange={handleSortChange}
@@ -100,14 +115,14 @@ export default function open() {
           </select>
         </label>
       </div>
+
       <ul>
         {properties.map((property) => (
           <li key={property._id}>
             <h2>{property.title}</h2>
-            <div>{property.sellPrice}</div>
+            <div>Price: ${property.sellPrice}</div>
             <div>{property.bedrooms} Bedrooms</div>
             <div>{property.bathrooms} Bathrooms</div>
-            {/* <div>Categories: {property.categories.map((category) => category.title).join(', ')}</div> */}
           </li>
         ))}
       </ul>
