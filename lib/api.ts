@@ -10,6 +10,13 @@ export interface Property {
   bathrooms: number;
   _createdAt?: string;
   _updatedAt?: string;
+  slug: {
+    current: string;
+  };
+  mainImage: any; // or a better type if you want, e.g. SanityImageSource
+  location: {
+    locationName: string;
+  };
   // Add more fields as needed
 }
 

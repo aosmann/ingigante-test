@@ -69,18 +69,10 @@ function sales({ propertiesList, types, locations }: SalesPageProps) {
     instanceId: useId(),
   }));
 
-  const sortOptions = [
-    { value: "sort", label: "Sort", instanceId: useId() },
-    {
-      value: "sellPrice",
-      label: "Price (low to high)",
-      instanceId: useId(),
-    },
-    {
-      value: "sellPrice-desc",
-      label: "Price (high to low)",
-      instanceId: useId(),
-    },
+  const sortOptions: SelectOption[] = [
+    { value: "sort", label: "Sort" },
+    { value: "sellPrice", label: "Price (low to high)" },
+    { value: "sellPrice-desc", label: "Price (high to low)" },
   ];
 
   const router = useRouter();
@@ -89,16 +81,18 @@ function sales({ propertiesList, types, locations }: SalesPageProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [minBedrooms, setMinBedrooms] = useState(null);
   const [minBathrooms, setMinBathrooms] = useState(null);
-  const [sortByPrice, setSortByPrice] = useState(null);
-  const [sortDescending, setSortDescending] = useState(null);
-  const [priceMin, setPriceMin] = useState(null);
-  const [priceMax, setPriceMax] = useState(null);
+  const [sortByPrice, setSortByPrice] = useState<boolean | null>(null);
+  const [sortDescending, setSortDescending] = useState<boolean | null>(null);
+  const [priceMin, setPriceMin] = useState<number | null>(null);
+  const [priceMax, setPriceMax] = useState<number | null>(null);
   const [category, setCategory] = useState<string | null>(
-    typeof router.query.cat === 'string' ? router.query.cat : null
+    typeof router.query.cat === "string" ? router.query.cat : null
   );
-    const [location, setLocation] = useState<string | null>(
-    typeof router.query.loc === 'string' ? router.query.loc : null
+  const [location, setLocation] = useState<string | null>(
+    typeof router.query.loc === "string" ? router.query.loc : null
   );
+  
+  
   
 
   useEffect(() => {
@@ -165,16 +159,17 @@ function sales({ propertiesList, types, locations }: SalesPageProps) {
     const value = event?.value ?? null;
   
     if (value === "sellPrice") {
-      setSortByPrice("sellPrice");
+      setSortByPrice(true); // ✅ boolean
       setSortDescending(false);
     } else if (value === "sellPrice-desc") {
-      setSortByPrice("sellPrice");
+      setSortByPrice(true); // ✅ boolean again
       setSortDescending(true);
     } else {
       setSortByPrice(null);
       setSortDescending(null);
     }
   }
+  
   
 
   return (
@@ -243,25 +238,24 @@ function sales({ propertiesList, types, locations }: SalesPageProps) {
           <p className="text-center mt-4 mb-4 opacity-50">Filter Settings</p>
           <div className="md:flex md:flex-row md:space-x-4">
             <div className="relative mb-6 md:mb-0 md:w-1/4">
-              <Select
-                defaultValue={category}
-                onChange={handleCategoryChange}
-                options={typeOptions}
-                placeholder="Type"
-                isSearchable={false}
-                // value={category}
-              />
+            <Select
+              value={typeOptions.find(opt => opt.value === category)}
+              onChange={handleCategoryChange}
+              options={typeOptions}
+              placeholder="Type"
+              isSearchable={false}
+            />
               
             </div>
             <div className="relative mb-6 md:mb-0 md:w-1/4">
-              <Select
-                defaultValue={location}
-                onChange={handleLocationChange}
-                options={locationOptions}
-                placeholder="Location"
-                isSearchable={false}
-                // value={loc}
-              />
+            <Select
+              value={locationOptions.find(opt => opt.value === location)}
+              onChange={handleLocationChange}
+              options={locationOptions}
+              placeholder="Location"
+              isSearchable={false}
+            />
+
               
             </div>
 
