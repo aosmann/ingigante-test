@@ -4,7 +4,21 @@ import urlFor from "../lib/urlFor";
 import Slider from "react-slick";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
-const Offers = ({ properties }: any) => {
+interface Property {
+  _id: string;
+  title: string;
+  slug: { current: string };
+  mainImage: any;
+  propertyType: { typeName: string };
+  location: { locationName: string };
+  sellPrice: number;
+}
+
+interface OffersProps {
+  properties: Property[];
+}
+
+const Offers = ({ properties }: OffersProps) => {
   const NextArrow = ({ onClick }: { onClick?: () => void }) => (
     <div
       className="absolute top-1/2 right-[-25px] transform -translate-y-1/2 z-10 cursor-pointer"
@@ -22,7 +36,8 @@ const Offers = ({ properties }: any) => {
       <FaArrowLeft size={20} />
     </div>
   );
-  var settings = {
+
+  const settings = {
     dots: false,
     infinite: true,
     slidesToShow: properties.length >= 4 ? 4 : properties.length,
@@ -31,8 +46,8 @@ const Offers = ({ properties }: any) => {
     autoplaySpeed: 4000,
     speed: 500,
     initialSlide: 0,
-    nextArrow: <NextArrow />, // Add custom next arrow
-    prevArrow: <PrevArrow />, // Add custom previous arrow
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
     responsive: [
       {
         breakpoint: 1024,
@@ -67,23 +82,20 @@ const Offers = ({ properties }: any) => {
         <div className="mb-10 px-4">
           <h2 className="text-[35px] font-bold">Featured Listings</h2>
           <p className="text-[16px] opacity-60">
-            Fulfill your career dreams, enjoy all the achievements of the city
-            center and luxury housing to the fullest
+            Fulfill your career dreams, enjoy all the achievements of the city center and luxury housing to the fullest
           </p>
         </div>
         <div className="max-w-7xl w-screen space-x-4">
           <Slider {...settings}>
-            {properties.map((property) => (
+            {properties.map((property: Property) => (
               <Link
-                href={`/property/${property.slug.current}`}
                 key={property._id}
+                href={`/property/${property.slug.current}`}
               >
                 <div className="max-w-sm h-[450px] rounded overflow-hidden mx-auto bg-white">
                   <div className="h-[290px]">
                     <Image
-                      src={`${urlFor(
-                        property.mainImage
-                      ).url()}?w=390&h=290&fit=crop&crop=center`}
+                      src={`${urlFor(property.mainImage).url()}?w=390&h=290&fit=crop&crop=center`}
                       alt="card"
                       className="object-cover lg:object-center w-full h-full"
                       width={390}
@@ -91,53 +103,22 @@ const Offers = ({ properties }: any) => {
                     />
                   </div>
                   <div className="px-6 py-4 text-left h-[80px]">
-                    <h1 className="text-[20px] line-clamp-2">
-                      {property.title}
-                    </h1>
-                  </div>
-                  <div className="px-6 py-4 text-[17px] text-left">
-                    <p className="opacity-60 pb-1">
-                      {property.propertyType.typeName}
-                    </p>
-                    <p className="opacity-60 pb-1">
-                      in {property.location.locationName}
-                    </p>
-                    <p className="text-secondary font-bold">
-                      {"$"}
-                      {property.sellPrice.toLocaleString()}
-                    </p>
-                  </div>
-                </div>
-
-                {/*
-                <div className="max-w-sm rounded overflow-hidden mx-auto bg-white">
-                  <Image
-                    src={`${urlFor(
-                      property.mainImage
-                    ).url()}?w=390&h=290&fit=crop&crop=center`}
-                    alt="card"
-                    className="object-cover lg:object-center"
-                    width={390}
-                    height={290}
-                  />
-                  <div className="px-6 py-4 text-left">
-                    <h1 className="text-[20px]">{property.title}</h1>
+                    <h1 className="text-[20px] line-clamp-2">{property.title}</h1>
                   </div>
                   <div className="px-6 py-4 text-[17px] text-left">
                     <p className="opacity-60 pb-1">{property.propertyType.typeName}</p>
                     <p className="opacity-60 pb-1">in {property.location.locationName}</p>
                     <p className="text-secondary font-bold">
-                      {"$"}{property.sellPrice.toLocaleString()}
+                      ${property.sellPrice.toLocaleString()}
                     </p>
                   </div>
-                  </div>
-                  */}
+                </div>
               </Link>
             ))}
           </Slider>
         </div>
         <div className="flex items-center justify-center mt-10">
-          <Link href={"/sales"}>
+          <Link href="/sales">
             <button className="py-2 px-4 border-primary border-2 rounded-md text-[16px]">
               Show Sale Listings
             </button>
