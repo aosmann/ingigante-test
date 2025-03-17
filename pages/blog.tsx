@@ -3,11 +3,14 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Reference from "../components/Reference";
-
 import { client } from "../lib/sanity.client";
-
 import BlogComponent from "../components/BlogComponent";
-import { GetStaticProps, GetStaticPaths, GetServerSideProps } from "next";
+import { GetStaticProps } from "next";
+
+type BlogPageProps = {
+  references: any[]; // (You can improve this by using a proper Reference type)
+  blogs: any[];      // (Likewise, consider defining a Blog type if your data structure is fixed)
+};
 
 export const getStaticProps: GetStaticProps = async () => {
   const references = await client.fetch(`*[_type == "references"]`);
@@ -22,26 +25,25 @@ export const getStaticProps: GetStaticProps = async () => {
   };
 };
 
-const blog = ({ references, blogs }) => {
+const Blog: React.FC<BlogPageProps> = ({ references, blogs }) => {
   return (
     <div className="min-h-screen">
       <Head>
         <title>Blog | Ingigante</title>
         <link rel="icon" href="/favicon.ico" />
-        
+
         {/* Google Tag Manager */}
-          <script async src="https://www.googletagmanager.com/gtag/js?id=AW-11184375903"></script>
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', 'AW-11184375903');
-              `,
-            }}
-          />
-        
+        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-11184375903"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'AW-11184375903');
+            `,
+          }}
+        />
         {/* Google Analytics Manager */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-TWF5MYQK4E"></script>
         <script
@@ -54,8 +56,8 @@ const blog = ({ references, blogs }) => {
             `,
           }}
         />
-        
       </Head>
+
       <div className='bg-[url("/assets/images/consulting.png")] bg-no-repeat bg-cover py-40 sm:py-25 text-secondary top-0'>
         <div className="flex flex-col justify-center items-center px-4">
           <div className="max-w-7xl w-full">
@@ -70,10 +72,11 @@ const blog = ({ references, blogs }) => {
           </div>
         </div>
       </div>
+
       <BlogComponent blogs={blogs} />
       <Reference references={references} />
     </div>
   );
 };
 
-export default blog;
+export default Blog;
