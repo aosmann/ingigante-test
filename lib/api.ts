@@ -1,12 +1,15 @@
 // lib/api.ts
 import { client } from "./sanity.client";
 
+
 export interface Property {
   _id: string;
   title: string;
   sellPrice: number;
   bedrooms: number;
   bathrooms: number;
+  _createdAt?: string;
+  _updatedAt?: string;
   // Add more fields as needed
 }
 
@@ -83,6 +86,7 @@ export async function getProperties(params: GetPropertiesParams): Promise<Proper
   return response;
 }
 
+
 export interface GetPropertiesRentParams {
   category?: string | null;
   sortByPrice?: string | null;
@@ -93,18 +97,67 @@ export interface GetPropertiesRentParams {
   location?: string | null;
   feature?: string | null;
   priceCategory?: string | null;
+  _createdAt?: string;
+  _updatedAt?: string;
 }
 
-export async function getPropertiesRent({
-  category,
-  sortByPrice,
-  sortDescending,
-  searchQuery,
-  priceMin,
-  priceMax,
-  location,
-  feature,
-  priceCategory,
-}: GetPropertiesRentParams) {
-  // Build and execute GROQ query with these filters
+export async function getPropertiesRent(params: GetPropertiesRentParams): Promise<Property[]> {
+  const {
+    category,
+    sortByPrice,
+    sortDescending,
+    searchQuery,
+    priceMin,
+    priceMax,
+    location,
+    feature,
+    priceCategory,
+  } = params;
+
+  let query = `*[_type == "propertiesRent"`;
+  let queryParams: Record<string, any> = {};
+
+  if (searchQuery) {
+    query += ` && title match $searchTerm`;
+    queryParams.searchTerm = searchQuery;
+  }
+  if (category) {
+    query += ` && propertyType->typeName == $categoryID`;
+    queryParams.categoryID = category;
+  }
+  if (priceMin) {
+    query += ` && sellPrice >= $priceMin`;
+    queryParams.priceMin = priceMin;
+  }
+  if (priceMax) {
+    query += ` && sellPrice <= $priceMax`;
+    queryParams.priceMax = priceMax;
+  }
+  if (location) {
+    query += ` && location->locationName == $location`;
+    queryParams.location = location;
+  }
+  if (feature) {
+    query += ` && features[]->featureName match $feature`;
+    queryParams.feature = feature;
+  }
+  if (priceCategory) {
+    query += ` && priceCategory == $priceCategory`;
+    queryParams.priceCategory = priceCategory;
+  }
+
+  query += `]`;
+
+  if (sortByPrice) {
+    query += ` | order(sellPrice ${sortDescending ? "desc" : "asc"})`;
+  }
+
+  query += ` {
+    ...,
+    location->,
+    propertyType->
+  }`;
+
+  const response: Property[] = await client.fetch(query, queryParams);
+  return response;
 }

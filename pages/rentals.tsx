@@ -10,6 +10,8 @@ import Select from "react-select";
 import { getPropertiesRent } from "../lib/api";
 import { useRouter } from "next/router";
 type SelectOption = { value: string; label: string };
+import type { Property } from "../lib/api";
+
 
 
 export const getStaticProps = async () => {
@@ -88,7 +90,7 @@ const Rentals = ({ rentals, features, types, locations }: RentalsPageProps) => {
 
   useEffect(() => {
     async function fetchProperties() {
-      const data = await getPropertiesRent({
+      const data = (await getPropertiesRent({
         category,
         sortByPrice,
         sortDescending,
@@ -98,25 +100,24 @@ const Rentals = ({ rentals, features, types, locations }: RentalsPageProps) => {
         location,
         feature,
         priceCategory,
-      });
-
-      let sortedData: PropertyType[];
+      })) as Property[];
+    
+      let sortedData: Property[] = data;
       if (sortByPrice === "price") {
-        sortedData = data.sort((a: PropertyType, b: PropertyType) => {
-          const priceA = a.price || 0;
-          const priceB = b.price || 0;
+        sortedData = data.sort((a, b) => {
+          const priceA = a.sellPrice || 0;
+          const priceB = b.sellPrice || 0;
           return sortDescending ? priceB - priceA : priceA - priceB;
         });
       } else {
-        sortedData = data.sort((a: PropertyType, b: PropertyType) => {
+        sortedData = data.sort((a, b) => {
           const dateA = new Date(a._updatedAt ?? a._createdAt ?? "").getTime();
           const dateB = new Date(b._updatedAt ?? b._createdAt ?? "").getTime();
-          return dateB - dateA; // Descending order
+          return dateB - dateA;
         });
       }
-
-      setRentalsList(sortedData);
     }
+    
     fetchProperties();
   }, [
     category,
