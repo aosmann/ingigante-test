@@ -1,11 +1,7 @@
 import Image from "next/image";
-import React from "react";
 import contact1 from "../public/assets/images/contact.png";
-import React, { useState, useRef } from "react"; // make sure this is at the top
-
-// import { sendContactForm } from "../services";
+import React, { useState, useRef } from "react";
 import Head from "next/head";
-
 import toast, { Toaster } from "react-hot-toast";
 import { client_with_token } from "../lib/sanity.client";
 
