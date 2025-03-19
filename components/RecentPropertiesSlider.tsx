@@ -35,10 +35,9 @@ const RecentPropertiesSlider: React.FC<RecentPropertiesSliderProps> = ({ title, 
 
   return (
     <section className="w-full py-10">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          
-          <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
+      <div className="flex items-center justify-between mb-4 border-t border-gray-200 pt-6">
+        <div className="items-center gap-3">
+          <p className="text-xl font-semibold text-gray-800">{title}</p>
           <p className="opacity-60">Discover our latest properties</p>
         </div>
         
