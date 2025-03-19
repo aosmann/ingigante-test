@@ -72,7 +72,7 @@ const RecentPropertiesSlider: React.FC<RecentPropertiesSliderProps> = ({ title, 
 
       <div
         ref={scrollRef}
-        className="flex space-x-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 scrollbar-hide"
+        className="flex space-x-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-6 scrollbar-hide"
       >
         {properties.map((property) => (
           <Link
