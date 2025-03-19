@@ -336,40 +336,44 @@ const rentals = ({ rentals, features, types, locations }) => {
 
                     {/* Content Section */}
                     <div className="flex flex-col justify-between h-full p-4 space-y-2">
-                      {/* Title */}
-                      <h2 className="text-lg font-bold text-gray-900 line-clamp-2 leading-snug min-h-[3rem]">{property.title}</h2>
+                      <div>
+                        {/* Title */}
+                        <h2 className="text-lg font-bold text-gray-900 line-clamp-2 leading-snug min-h-[3rem]">{property.title}</h2>
 
-                      {/* Location */}
-                      <p className="text-sm text-gray-600 line-clamp-1 min-h-[1.25rem]">{property.location.locationName}, Nicaragua</p>
-
+                        {/* Location */}
+                        <p className="text-sm text-gray-600 line-clamp-1 min-h-[1.25rem]">{property.location.locationName}, Nicaragua</p>
+                      </div>
+                      
                       {/* Price */}
-                      <p className="text-lg font-bold text-[#008975]">
-                        ${property.price.toLocaleString()} / {property.category === "month" ? "month" : "day"}
-                      </p>
+                      <div className="mt-auto">
+                        <p className="text-lg font-bold text-[#008975]">
+                          ${property.price.toLocaleString()} / {property.category === "month" ? "month" : "day"}
+                        </p>
 
-                      {/* Features */}
-                      <div className="flex flex-wrap items-center text-sm text-gray-700 mt-2 gap-x-4 gap-y-2 border-t border-gray-200 pt-4">
-                        {property.rooms && (
-                          <div className="flex items-center gap-1">
-                            <BedDouble className="h-4 w-4" />
-                            <span>{property.rooms} beds</span>
-                          </div>
-                        )}
-                        {property.bathrooms && (
-                          <div className="flex items-center gap-1">
-                            <Bath className="h-4 w-4" />
-                            <span>{property.bathrooms} baths</span>
-                          </div>
-                        )}
-                        {property.area_total && (
-                          <div className="flex items-center gap-1">
-                            <Ruler className="h-4 w-4" />
-                            <span>{property.area_total} sqft</span>
-                          </div>
-                        )}
+                        {/* Features */}
+                        <div className="flex flex-wrap items-center text-sm text-gray-700 mt-2 gap-x-4 gap-y-2 border-t border-gray-200 pt-4">
+                          {property.rooms && (
+                            <div className="flex items-center gap-1">
+                              <BedDouble className="h-4 w-4" />
+                              <span>{property.rooms} beds</span>
+                            </div>
+                          )}
+                          {property.bathrooms && (
+                            <div className="flex items-center gap-1">
+                              <Bath className="h-4 w-4" />
+                              <span>{property.bathrooms} baths</span>
+                            </div>
+                          )}
+                          {property.area_total && (
+                            <div className="flex items-center gap-1">
+                              <Ruler className="h-4 w-4" />
+                              <span>{property.area_total} sqft</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
+                </div>
               </Link>
             ))
           ) : (
