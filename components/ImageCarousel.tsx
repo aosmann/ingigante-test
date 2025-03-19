@@ -106,11 +106,11 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
       </div>
 
       <div className="mt-4 p-2 flex gap-2 overflow-x-auto pb-2 scrollbar-hide min-w-full lg:min-w-[50rem]">
-        {images.map((image, index) => (
+        {images.slice(0, 5).map((image, index) => (
           <button
             key={image._ref}
             onClick={() => handleThumbnailClick(index)}
-            className={`relative w-20 md:w-24 flex-shrink-0 overflow-hidden rounded-md transform transition-all duration-200 hover:scale-105 ${
+            className={`relative w-20 md:w-24 flex-shrink-0 overflow-hidden rounded-md transition-all duration-200 hover:scale-105 ${
               currentImageIndex === index
                 ? "ring-2 ring-offset-2 ring-blue-500 scale-105"
                 : "hover:ring-1 hover:ring-blue-300"
@@ -123,10 +123,17 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
               fill
               className="object-cover"
               sizes="96px"
+              loading="lazy"
             />
+            {index === 4 && images.length > 5 && !isFullscreen && (
+              <div className="absolute inset-0 bg-black bg-opacity-50 text-white text-sm flex items-center justify-center font-semibold">
+                +{images.length - 5} more
+              </div>
+            )}
           </button>
         ))}
       </div>
+
 
       {isFullscreen && (
         <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
