@@ -48,14 +48,13 @@ const RecentPropertiesSlider: React.FC<RecentPropertiesSliderProps> = ({ title, 
         </div>
 
         <div className="flex items-center gap-3">
-          {seeAllLink && (
-            <Link
-              href={seeAllLink}
-              className="text-sm text-primary underline hover:text-primary/80"
-            >
-              See All
-            </Link>
-          )}
+            {seeAllLink && (
+                <Link href={seeAllLink}>
+                    <button className="p-2 border border-gray-300 rounded-md hover:bg-gray-100 text-sm text-primary hover:text-primary/80">
+                    See All
+                    </button>
+                </Link>
+            )}
           <button
             onClick={() => scroll("left")}
             className="p-2 border border-gray-300 rounded-md hover:bg-gray-100"
