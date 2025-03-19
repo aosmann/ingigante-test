@@ -322,13 +322,13 @@ const rentals = ({ rentals, features, types, locations }) => {
                       </button>
 
                       {/* Property Type Badge */}
-                      <div className="absolute bottom-3 left-3 bg-[#008975] text-white text-xs px-3 py-1 rounded-md">
+                      <div className="absolute bottom-3 left-3 bg-[#008975] text-white text-xs px-3 py-1 rounded-md uppercase">
                         {property.propertyType.typeName}
                       </div>
 
                       {/* Beachfront Tag (if applicable) */}
                       {property.beachfront === "Yes" && (
-                        <div className="absolute bottom-3 right-3 bg-[#0171d0] text-white text-xs px-3 py-1 rounded-md">
+                        <div className="absolute bottom-3 right-3 bg-[#0171d0] text-white text-xs px-3 py-1 rounded-md uppercase">
                           Beachfront
                         </div>
                       )}
