@@ -1,8 +1,7 @@
-// components/RecentPropertiesSlider.tsx
 import React, { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Heart, BedDouble, Bath, Ruler } from "lucide-react";
 
 interface Property {
   id: string;
@@ -11,6 +10,13 @@ interface Property {
   location: string;
   image: string;
   tag?: string;
+  propertyType?: { typeName: string };
+  beachfront?: string;
+  rooms?: number;
+  bathrooms?: number;
+  area_total?: number;
+  category?: string;
+  slug?: { current: string };
   link: string;
 }
 
@@ -40,36 +46,29 @@ const RecentPropertiesSlider: React.FC<RecentPropertiesSliderProps> = ({ title, 
           <p className="text-xl font-semibold text-gray-800">{title}</p>
           <p className="opacity-60">Discover our latest properties</p>
         </div>
-        
 
         <div className="flex items-center gap-3">
-            <button
-                onClick={() => scroll("right")}
-                className="p-2 border border-gray-300 rounded-md hover:bg-gray-100"
+          {seeAllLink && (
+            <Link
+              href={seeAllLink}
+              className="text-sm text-primary underline hover:text-primary/80"
             >
-                {seeAllLink && (
-            <Link href={seeAllLink} className="text-sm text-primary hover:underline">
-                See All
+              See All
             </Link>
-            )}
-            </button>
-            
+          )}
           <button
             onClick={() => scroll("left")}
             className="p-2 border border-gray-300 rounded-md hover:bg-gray-100"
-            aria-label="Scroll Left"
           >
             <ChevronLeft size={20} />
           </button>
           <button
             onClick={() => scroll("right")}
             className="p-2 border border-gray-300 rounded-md hover:bg-gray-100"
-            aria-label="Scroll Right"
           >
             <ChevronRight size={20} />
           </button>
         </div>
-        
       </div>
 
       <div
@@ -78,29 +77,66 @@ const RecentPropertiesSlider: React.FC<RecentPropertiesSliderProps> = ({ title, 
       >
         {properties.map((property) => (
           <Link
-                key={property.id}
-                href={property.link}
-                className="flex-shrink-0 min-w-[32%] md:min-w-[30%] lg:min-w-[28%] max-w-[300px] bg-white border border-gray-200 rounded-lg shadow-md snap-start hover:shadow-lg transition-shadow duration-300"
-                >
-            
-                <div className="relative h-48 w-full rounded-t-lg overflow-hidden">
-                <Image
-                    src={property.image}
-                    alt={property.title}
-                    fill
-                    className="object-cover"
-                />
+            key={property.id}
+            href={property.link}
+            className="flex-shrink-0 min-w-[75%] sm:min-w-[60%] md:min-w-[45%] lg:min-w-[30%] max-w-sm bg-white rounded-lg shadow-lg overflow-hidden transition hover:shadow-xl duration-300 snap-start"
+          >
+            <div className="relative">
+              <Image
+                src={property.image}
+                alt={property.title}
+                className="object-cover w-full h-[250px]"
+                width={390}
+                height={290}
+              />
+              <button className="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md hover:scale-110 transition">
+                <Heart className="h-5 w-5 text-gray-600" />
+              </button>
+              {property.propertyType?.typeName && (
+                <div className="absolute bottom-3 left-3 bg-[#008975] text-white text-xs px-3 py-1 rounded-md uppercase font-extrabold">
+                  {property.propertyType.typeName}
                 </div>
-                <div className="p-4">
-                {property.tag && (
-                    <div className="inline-block text-xs text-white bg-primary px-2 py-1 rounded mb-2">
-                    {property.tag}
+              )}
+              {property.beachfront === "Yes" && (
+                <div className="absolute bottom-3 right-3 bg-[#0171d0] text-white text-xs px-3 py-1 rounded-md uppercase font-extrabold">
+                  Beachfront
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-col justify-between h-full p-4 space-y-2">
+              <div>
+                <h2 className="text-lg font-bold text-gray-900 line-clamp-2 leading-snug">{property.title}</h2>
+                <p className="text-sm text-gray-600 line-clamp-1 min-h-[1.25rem]">
+                  {property.location}, Nicaragua
+                </p>
+              </div>
+              <div className="mt-auto">
+                <p className="text-lg font-bold text-[#008975]">
+                  ${property.price.toLocaleString()} / {property.category === "month" ? "month" : "day"}
+                </p>
+                <div className="flex flex-wrap items-center text-sm text-gray-700 mt-2 gap-x-4 gap-y-2 border-t border-gray-200 pt-4">
+                  {property.rooms && (
+                    <div className="flex items-center gap-1">
+                      <BedDouble className="h-4 w-4" />
+                      <span>{property.rooms} beds</span>
                     </div>
-                )}
-                <h3 className="text-md font-bold text-gray-900 truncate mb-1">{property.title}</h3>
-                <p className="text-sm text-green-700 font-semibold mb-1">${property.price.toLocaleString()}</p>
-                <p className="text-sm text-gray-500">{property.location}</p>
+                  )}
+                  {property.bathrooms && (
+                    <div className="flex items-center gap-1">
+                      <Bath className="h-4 w-4" />
+                      <span>{property.bathrooms} baths</span>
+                    </div>
+                  )}
+                  {property.area_total && (
+                    <div className="flex items-center gap-1">
+                      <Ruler className="h-4 w-4" />
+                      <span>{property.area_total} sqft</span>
+                    </div>
+                  )}
                 </div>
+              </div>
+            </div>
           </Link>
         ))}
       </div>
