@@ -303,10 +303,9 @@ const rentals = ({ rentals, features, types, locations }) => {
           {rentalsList.length > 0 ? (
             rentalsList.map((property) => (
               <Link href={`/rental/${property.slug.current}`}>
-                <div
-                  className="max-w-sm rounded overflow-hidden shadow-md mx-auto h-full flex flex-col"
+                <div className="bg-white rounded-lg shadow-lg overflow-hidden transition hover:shadow-xl duration-300 h-full flex flex-col justify-between"
                   key={property._id}
-                >
+                  >
                   <Image
                     src={`${urlFor(
                       property.mainImage
