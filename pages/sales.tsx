@@ -296,7 +296,7 @@ function sales({ propertiesList, types, locations }) {
           {properties.length > 0 ? (
             properties.map((property) => (
               <div
-                className="relative max-w-sm rounded overflow-hidden shadow-md mx-auto h-full flex flex-col"
+                className="bg-white rounded-lg shadow-lg overflow-hidden transition hover:shadow-xl duration-300 h-full flex flex-col justify-between"
                 key={property._id}
               >
                   <Link key={property._id} href={`/property/${property.slug.current}`} className="block">

@@ -5,12 +5,14 @@ import { ChevronLeft, ChevronRight, Heart, BedDouble, Bath, Ruler } from "lucide
 import React, { useEffect, useRef, useState, useId } from "react";
 import { FiChevronDown, FiSearch } from "react-icons/fi";
 import Head from "next/head";
+import urlFor from "../lib/urlFor";
 
-import { getProperties } from "../lib/api";
+
 import { useRouter } from "next/router";
 
 import { client } from "../lib/sanity.client";
 import { GetStaticProps } from "next";
+
 
 interface Property {
     id: string;
@@ -33,6 +35,17 @@ interface RecentPropertiesSliderProps {
   properties: Property[];
   seeAllLink?: string;
 }
+
+export async function getProperties() {
+    const query = `*[_type == "properties"] | order(_createdAt desc){
+      ...,
+      location->,
+      propertyType->
+    }`
+    const response = await client.fetch(query);
+    return response;
+  }
+  
 
 const RecentPropertiesSlider: React.FC<RecentPropertiesSliderProps> = ({ title, properties, seeAllLink }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -90,12 +103,13 @@ const RecentPropertiesSlider: React.FC<RecentPropertiesSliderProps> = ({ title, 
           >
             <div className="relative">
                 <Image
-                    src={property.image}
+                    src={`${urlFor(property.mainImage).url()}?w=390&h=290&fit=crop&crop=center`}
                     alt={property.title}
                     className="object-cover w-full h-[250px]"
                     width={390}
                     height={290}
                 />
+
 
               <button className="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md hover:scale-110 transition">
                 <Heart className="h-5 w-5 text-gray-600" />
