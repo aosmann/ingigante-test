@@ -10,6 +10,7 @@ import { client, client_with_token } from "../../lib/sanity.client";
 import Map from "../../components/Map";
 import ImageCarousel from "../../components/ImageCarousel";
 import RichTextComponent from "../../components/RichTextComponent";
+import { Car, Bath, BedDouble, Ruler } from "lucide-react";
 
 export const getServerSideProps = async (pageContext) => {
   const pageSlug = pageContext.query.slug;
@@ -64,9 +65,7 @@ const RentalDetails = ({ rentals, allImages }: any) => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Property Details */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            
-
+          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">        
             <div>
               <h2 className="text-3xl font-bold text-gray-900 mb-2">{rentals.title}</h2>
               <p className="text-xl text-primary font-semibold">${rentals.price} / {rentals.category}</p>
@@ -79,12 +78,31 @@ const RentalDetails = ({ rentals, allImages }: any) => {
                 )}
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-6 text-gray-700">
-                {rentals.rooms && <div>{rentals.rooms} rooms</div>}
-                {rentals.bathrooms && <div>{rentals.bathrooms} bathrooms</div>}
-                {rentals.area_usable && <div>{rentals.area_usable} m² usable</div>}
-                {rentals.area_total && <div>{rentals.area_total} m² total</div>}
-                {rentals.parking === "Yes" && <div>Parking available</div>}
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-6 text-gray-700 py-6 border-y border-gray-200 text-sm">
+                {rentals.rooms && (
+                  <div className="flex items-center gap-2">
+                    <BedDouble className="h-5 w-5" />
+                    <span>{rentals.rooms} Rooms</span>
+                  </div>
+                )}
+                {rentals.bathrooms && (
+                  <div className="flex items-center gap-2">
+                    <Bath className="h-5 w-5" />
+                    <span>{rentals.bathrooms} Bathrooms</span>
+                  </div>
+                )}
+                {rentals.area_total && (
+                  <div className="flex items-center gap-2">
+                    <Ruler className="h-5 w-5" />
+                    <span>{rentals.area_total} m² total</span>
+                  </div>
+                )}
+                {rentals.parking === "Yes" && (
+                  <div className="flex items-center gap-2">
+                    <Car className="h-5 w-5" />
+                    <span>Parking</span>
+                  </div>
+                )}
               </div>
 
               <div className="mt-6">
