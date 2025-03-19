@@ -37,6 +37,17 @@ const RecentPropertiesSlider: React.FC<RecentPropertiesSliderProps> = ({ title, 
     <section className="w-full py-10">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
+          
+          <h2 className="text-xl font-semibold text-gray-800 ml-4">{title}</h2>
+        </div>
+        
+
+        <div className="flex items-center gap-3">
+            {seeAllLink && (
+            <Link href={seeAllLink} className="text-sm text-primary hover:underline">
+                See All
+            </Link>
+            )}
           <button
             onClick={() => scroll("left")}
             className="p-2 border border-gray-300 rounded-md hover:bg-gray-100"
@@ -51,13 +62,8 @@ const RecentPropertiesSlider: React.FC<RecentPropertiesSliderProps> = ({ title, 
           >
             <ChevronRight size={20} />
           </button>
-          <h2 className="text-xl font-semibold text-gray-800 ml-4">{title}</h2>
         </div>
-        {seeAllLink && (
-          <Link href={seeAllLink} className="text-sm text-primary hover:underline">
-            See All
-          </Link>
-        )}
+        
       </div>
 
       <div
