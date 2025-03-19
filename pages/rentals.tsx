@@ -348,7 +348,7 @@ const rentals = ({ rentals, features, types, locations }) => {
                       </p>
 
                       {/* Features */}
-                      <div className="flex flex-wrap items-center text-sm text-gray-700 mt-2 gap-x-4 gap-y-2">
+                      <div className="flex flex-wrap items-center text-sm text-gray-700 mt-2 gap-x-4 gap-y-2 border-t border-gray-200 pt-4">
                         {property.rooms && (
                           <div className="flex items-center gap-1">
                             <BedDouble className="h-4 w-4" />
