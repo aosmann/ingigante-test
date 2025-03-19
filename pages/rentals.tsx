@@ -8,6 +8,7 @@ import Image from "next/image";
 import Select from "react-select";
 import { getPropertiesRent } from "../lib/api";
 import { useRouter } from "next/router";
+import { BedDouble, Bath, Ruler, Heart } from "lucide-react";
 
 export const getStaticProps = async () => {
   const rentals =
@@ -306,44 +307,76 @@ const rentals = ({ rentals, features, types, locations }) => {
                 <div className="bg-white rounded-lg shadow-lg overflow-hidden transition hover:shadow-xl duration-300 h-full flex flex-col justify-between"
                   key={property._id}
                   >
-                  <Image
-                    src={`${urlFor(
-                      property.mainImage
-                    ).url()}?w=390&h=290&fit=crop&crop=center`}
-                    alt="card"
-                    className="object-cover lg:object-center"
-                    width={390}
-                    height={290}
-                    priority
-                  />
+
+                    <div className="relative">
+                      <Image
+                        src={`${urlFor(
+                          property.mainImage
+                        ).url()}?w=390&h=290&fit=crop&crop=center`}
+                        alt="card"
+                        className="object-cover lg:object-center"
+                        width={390}
+                        height={290}
+                        priority
+                      />
+
+                      {/* Favorite Button */}
+                      <button className="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md hover:scale-110 transition">
+                        <Heart className="h-5 w-5 text-gray-600" />
+                      </button>
+
+                      {/* Property Type Badge */}
+                      <div className="absolute bottom-3 left-3 bg-[#008975] text-white text-xs px-3 py-1 rounded-md">
+                        {property.propertyType.typeName}
+                      </div>
+
+                      {/* Beachfront Tag (if applicable) */}
+                      {property.beachfront === "Yes" && (
+                        <div className="absolute bottom-3 right-3 bg-[#0171d0] text-white text-xs px-3 py-1 rounded-md">
+                          Beachfront
+                        </div>
+                      )}
+                    </div>
                   
                   <div className="px-6 py-4">
                     <h1 className="font-bold text-[20px]">{property.title}</h1>
                   </div>            
 
-                  {/* Flash Text (On demand) */}
-                  {property.flash_text && (
-                    <div className="flex items-center px-6">
-                      <p className="rounded px-2 font-normal bg-[#ffebeb] text-[#ff0000] w-fit">
-                        {property.flash_text}
-                      </p>
-                    </div>
-                  )}
-                  
-                  <div className="px-6 py-4 text-[17px] mt-auto">
-                    <p className="text-secondary">
-                      {"$"}{property.price} {"/"}
-                      {property.category === "month" ? "month" : "day"}
-                    </p>
+                  {/* Content Section */}
+                    <div className="flex flex-col justify-between h-full p-4 space-y-2">
+                      {/* Title */}
+                      <h2 className="text-lg font-bold text-gray-900 line-clamp-2 leading-snug min-h-[3rem]">{property.title}</h2>
 
-                    <p>
-                      {property.propertyType.typeName} {" in "}{" "}
-                      {property.location.locationName}
-                      {", Nicaragua"}
-                    </p>
-                    
-                    
-                  </div>
+                      {/* Location */}
+                      <p className="text-sm text-gray-600 line-clamp-1 min-h-[1.25rem]">{property.location.locationName}, Nicaragua</p>
+
+                      {/* Price */}
+                      <p className="text-lg font-bold text-[#008975]">
+                        ${property.price.toLocaleString()} / {property.category === "month" ? "month" : "day"}
+                      </p>
+
+                      {/* Features */}
+                      <div className="flex flex-wrap items-center text-sm text-gray-700 mt-2 gap-x-4 gap-y-2">
+                        {property.rooms && (
+                          <div className="flex items-center gap-1">
+                            <BedDouble className="h-4 w-4" />
+                            <span>{property.rooms} beds</span>
+                          </div>
+                        )}
+                        {property.bathrooms && (
+                          <div className="flex items-center gap-1">
+                            <Bath className="h-4 w-4" />
+                            <span>{property.bathrooms} baths</span>
+                          </div>
+                        )}
+                        {property.area_total && (
+                          <div className="flex items-center gap-1">
+                            <Ruler className="h-4 w-4" />
+                            <span>{property.area_total} sqft</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                 </div>
               </Link>
             ))
