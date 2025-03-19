@@ -1,209 +1,178 @@
+// ✅ Enhanced ImageCarousel: Grid View + Overlay + Image Viewer Modal + Keyboard Navigation + Mobile Friendly + Overlay Click Close
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { AiFillLeftCircle, AiFillRightCircle } from "react-icons/ai";
 import urlFor from "../lib/urlFor";
+import { AiFillLeftCircle, AiFillRightCircle } from "react-icons/ai";
 
 interface ImageCarouselProps {
   images: any[];
 }
 
 const ImageCarousel = ({ images }: ImageCarouselProps) => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [slideDirection, setSlideDirection] = useState("");
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const openViewer = (index: number) => {
+    setCurrentIndex(index);
+    setIsViewerOpen(true);
+  };
+
+  const closeViewer = () => setIsViewerOpen(false);
 
   const nextImage = () => {
-    setSlideDirection("slide-left");
-    setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
 
-  const previousImage = () => {
-    setSlideDirection("slide-right");
-    setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
-  };
-
-  const handleThumbnailClick = (index: number) => {
-    setSlideDirection(index > currentImageIndex ? "slide-left" : "slide-right");
-    setCurrentImageIndex(index);
-  };
-
-  const toggleFullscreen = () => {
-    setIsFullscreen(!isFullscreen);
+  const prevImage = () => {
+    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setSlideDirection("");
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [currentImageIndex]);
-
-  useEffect(() => {
-    const handleKeydown = (e: KeyboardEvent) => {
-      if (!isFullscreen) return;
-
-      if (e.key === "Escape") {
-        setIsFullscreen(false);
-      } else if (e.key === "ArrowRight") {
-        nextImage();
-      } else if (e.key === "ArrowLeft") {
-        previousImage();
-      }
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isViewerOpen) return;
+      if (e.key === "Escape") closeViewer();
+      else if (e.key === "ArrowRight") nextImage();
+      else if (e.key === "ArrowLeft") prevImage();
     };
-
-    window.addEventListener("keydown", handleKeydown);
-    return () => window.removeEventListener("keydown", handleKeydown);
-  }, [isFullscreen]);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isViewerOpen]);
 
   useEffect(() => {
-    if (isFullscreen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
+    document.body.style.overflow = isViewerOpen ? "hidden" : "unset";
     return () => {
       document.body.style.overflow = "unset";
     };
-  }, [isFullscreen]);
+  }, [isViewerOpen]);
 
   return (
-    <div className="slider-wrapper w-full">
-      <div className="relative overflow-hidden rounded-lg">
+    <div className="grid grid-cols-4 grid-rows-2 gap-4 max-sm:grid-cols-2 max-sm:grid-rows-auto">
+      {/* Large Primary Image */}
+      {images[0] && (
         <div
-          className="relative w-full cursor-pointer"
-          style={{ paddingBottom: "66.67%" }}
-          onClick={toggleFullscreen}
+          className="col-span-2 row-span-2 max-sm:col-span-2 max-sm:row-span-1 relative w-full h-96 sm:h-full rounded-lg overflow-hidden cursor-pointer"
+          onClick={() => openViewer(0)}
         >
           <Image
-            src={urlFor(images[currentImageIndex].asset).url()}
-            alt=""
+            src={urlFor(images[0].asset).url()}
+            alt="Main Image"
             fill
-            className={`object-cover transition-transform duration-500 ${slideDirection}`}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
-            priority
+            className="object-cover"
           />
         </div>
+      )}
 
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            previousImage();
-          }}
-          className="absolute left-4 top-1/2 -translate-y-1/2 p-2 text-white hover:scale-110 transition-transform duration-200 bg-black/30 rounded-full"
+      {/* Thumbnails in specific grid positions */}
+      {images[1] && (
+        <div
+          className="col-start-3 row-start-1 max-sm:col-span-1 relative h-44 w-full rounded-lg overflow-hidden cursor-pointer"
+          onClick={() => openViewer(1)}
         >
-          <AiFillLeftCircle size={34} />
-        </button>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            nextImage();
-          }}
-          className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-white hover:scale-110 transition-transform duration-200 bg-black/30 rounded-full"
+          <Image
+            src={urlFor(images[1].asset).url()}
+            alt="Image 2"
+            fill
+            className="object-cover"
+          />
+        </div>
+      )}
+
+      {images[2] && (
+        <div
+          className="col-start-4 row-start-1 max-sm:col-span-1 relative h-44 w-full rounded-lg overflow-hidden cursor-pointer"
+          onClick={() => openViewer(2)}
         >
-          <AiFillRightCircle size={34} />
-        </button>
-      </div>
+          <Image
+            src={urlFor(images[2].asset).url()}
+            alt="Image 3"
+            fill
+            className="object-cover"
+          />
+        </div>
+      )}
 
-      <div className="mt-4 p-2 flex gap-2 overflow-x-auto pb-2 scrollbar-hide min-w-full lg:min-w-[50rem]">
-        {images.slice(0, 5).map((image, index) => (
-          <button
-            key={image._ref}
-            onClick={() => handleThumbnailClick(index)}
-            className={`relative w-20 md:w-24 flex-shrink-0 overflow-hidden rounded-md transition-all duration-200 hover:scale-105 ${
-              currentImageIndex === index
-                ? "ring-2 ring-offset-2 ring-blue-500 scale-105"
-                : "hover:ring-1 hover:ring-blue-300"
-            }`}
-            style={{ aspectRatio: "3/2" }}
-          >
-            <Image
-              src={urlFor(image.asset).url()}
-              alt=""
-              fill
-              className="object-cover"
-              sizes="96px"
-              loading="lazy"
-            />
-            {index === 4 && images.length > 5 && !isFullscreen && (
-              <div className="absolute inset-0 bg-black bg-opacity-50 text-white text-sm flex items-center justify-center font-semibold">
-                +{images.length - 5} more
-              </div>
-            )}
-          </button>
-        ))}
-      </div>
+      {images[3] && (
+        <div
+          className="col-start-3 row-start-2 max-sm:col-span-1 relative h-44 w-full rounded-lg overflow-hidden cursor-pointer"
+          onClick={() => openViewer(3)}
+        >
+          <Image
+            src={urlFor(images[3].asset).url()}
+            alt="Image 4"
+            fill
+            className="object-cover"
+          />
+        </div>
+      )}
 
-
-      {isFullscreen && (
-        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
-          <button
-            onClick={toggleFullscreen}
-            className="absolute top-4 right-4 text-white z-50 hover:opacity-75 transition-opacity"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+      {images[4] && (
+        <div
+          className="col-start-4 row-start-2 max-sm:col-span-1 relative h-44 w-full rounded-lg overflow-hidden cursor-pointer"
+          onClick={() => openViewer(4)}
+        >
+          <Image
+            src={urlFor(images[4].asset).url()}
+            alt="Image 5"
+            fill
+            className="object-cover"
+          />
+          {images.length > 5 && (
+            <div
+              className="absolute inset-0 bg-black bg-opacity-60 text-white flex items-center justify-center text-lg font-semibold"
+              onClick={() => openViewer(4)}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+              +{images.length - 5} more
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Fullscreen Image Viewer Modal */}
+      {isViewerOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center px-2"
+          onClick={closeViewer}
+        >
+          <div className="absolute inset-0" onClick={closeViewer}></div>
+
+          <button
+            className="absolute top-4 right-4 text-white text-2xl z-50"
+            onClick={closeViewer}
+          >
+            &times;
           </button>
 
           <button
-            onClick={previousImage}
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-white z-50 hover:scale-110 transition-transform"
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-3xl z-50"
+            onClick={(e) => {
+              e.stopPropagation();
+              prevImage();
+            }}
           >
             <AiFillLeftCircle size={40} />
           </button>
 
+          <div
+            className="relative w-full max-w-5xl h-[80vh] z-50"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Image
+              src={urlFor(images[currentIndex].asset).url()}
+              alt={`Image ${currentIndex + 1}`}
+              fill
+              className="object-contain"
+            />
+          </div>
+
           <button
-            onClick={nextImage}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-white z-50 hover:scale-110 transition-transform"
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-3xl z-50"
+            onClick={(e) => {
+              e.stopPropagation();
+              nextImage();
+            }}
           >
             <AiFillRightCircle size={40} />
           </button>
-
-          <div className="relative w-full h-full flex items-center justify-center p-4">
-            <div className="relative w-full h-full">
-              <Image
-                src={urlFor(images[currentImageIndex].asset).url()}
-                alt=""
-                fill
-                className={`object-contain transition-transform duration-500 ${slideDirection}`}
-              />
-            </div>
-          </div>
-
-          <div className="absolute bottom-4 left-0 right-0">
-            <div className="flex justify-center gap-2 px-4 overflow-x-auto pb-2">
-              {images.map((image, index) => (
-                <button
-                  key={image._ref}
-                  onClick={() => handleThumbnailClick(index)}
-                  className={`relative h-16 w-24 flex-shrink-0 overflow-hidden rounded-md transform transition-all duration-200 hover:scale-105 ${
-                    currentImageIndex === index
-                      ? "ring-2 ring-offset-2 ring-blue-500 scale-105"
-                      : "hover:ring-1 hover:ring-blue-300"
-                  }`}
-                >
-                  <Image
-                    src={urlFor(image.asset).url()}
-                    alt=""
-                    fill
-                    className="object-cover"
-                  />
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
       )}
     </div>
