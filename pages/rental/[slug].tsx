@@ -12,6 +12,8 @@ import ImageCarousel from "../../components/ImageCarousel";
 import RichTextComponent from "../../components/RichTextComponent";
 import { Car, Bath, BedDouble, Ruler } from "lucide-react";
 import RecentPropertiesSlider from "../../components/RecentPropertiesSlider";
+import { getRecentPropertiesSale } from "../../lib/getPropertiesSale";
+
 
 export const getServerSideProps = async (pageContext) => {
   const pageSlug = pageContext.query.slug;
