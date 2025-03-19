@@ -38,16 +38,23 @@ const RecentPropertiesSlider: React.FC<RecentPropertiesSliderProps> = ({ title, 
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           
-          <h2 className="text-xl font-semibold text-gray-800 ml-4">{title}</h2>
+          <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
+          <p className="opacity-60">Discover our latest properties</p>
         </div>
         
 
         <div className="flex items-center gap-3">
-            {seeAllLink && (
+            <button
+                onClick={() => scroll("right")}
+                className="p-2 border border-gray-300 rounded-md hover:bg-gray-100"
+            >
+                {seeAllLink && (
             <Link href={seeAllLink} className="text-sm text-primary hover:underline">
                 See All
             </Link>
             )}
+            </button>
+            
           <button
             onClick={() => scroll("left")}
             className="p-2 border border-gray-300 rounded-md hover:bg-gray-100"
