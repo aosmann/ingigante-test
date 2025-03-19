@@ -2,7 +2,7 @@
 import { client } from "./sanity.client";
 
 export const getRecentPropertiesSale = async (limit = 5) => {
-  const query = `*[_type == "propertiesSale"] | order(_createdAt desc)[0...$limit] {
+  const query = `*[_type == "properties"] | order(_createdAt desc)[0...$limit] {
     _id,
     title,
     price,
