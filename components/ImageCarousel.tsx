@@ -136,7 +136,7 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
           <div className="absolute inset-0" onClick={closeViewer}></div>
 
           <button
-            className="absolute top-4 right-4 text-white text-2xl z-50"
+            className="absolute top-4 right-4 text-white text-5xl z-50 p-4"
             onClick={closeViewer}
           >
             &times;
@@ -153,7 +153,7 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
           </button>
 
           <div
-            className="relative w-full max-w-5xl h-[80vh] z-50"
+            className="relative w-full max-w-5xl h-[80vh] z-40"
             onClick={(e) => e.stopPropagation()}
           >
             <Image
