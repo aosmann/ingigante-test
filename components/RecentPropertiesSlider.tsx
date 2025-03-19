@@ -15,7 +15,7 @@ import { GetStaticProps } from "next";
 
 
 interface Property {
-    id: string;
+    _id: string;
     title: string;
     sellPrice: number;
     location: { locationName: string };
@@ -26,8 +26,8 @@ interface Property {
     bathrooms?: number;
     area_total?: number;
     slug?: { current: string };
-    link: string;
   }
+  
   
 
 interface RecentPropertiesSliderProps {
@@ -37,15 +37,15 @@ interface RecentPropertiesSliderProps {
 }
 
 export async function getProperties() {
-    const query = `*[_type == "properties"] | order(_createdAt desc){
-      ...,
-      location->,
-      propertyType->
-    }`
-    const response = await client.fetch(query);
-    return response;
-  }
-  
+  const query = `*[_type == "properties"] | order(_createdAt desc){
+    ...,
+    location->,
+    propertyType->
+  }`
+  const response = await client.fetch(query);
+  return response;
+}
+
 
 const RecentPropertiesSlider: React.FC<RecentPropertiesSliderProps> = ({ title, properties, seeAllLink }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -97,8 +97,8 @@ const RecentPropertiesSlider: React.FC<RecentPropertiesSliderProps> = ({ title, 
       >
         {properties.map((property) => (
           <Link
-            key={property.id}
-            href={property.link}
+            key={property._id}
+            href={`/property/${property.slug?.current}`}
             className="flex-shrink-0 min-w-[75%] sm:min-w-[60%] md:min-w-[45%] lg:min-w-[30%] max-w-sm bg-white rounded-lg shadow-lg overflow-hidden transition duration-300 snap-start"
           >
             <div className="relative">
