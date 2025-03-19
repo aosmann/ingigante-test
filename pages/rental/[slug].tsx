@@ -11,17 +11,30 @@ import Map from "../../components/Map";
 import ImageCarousel from "../../components/ImageCarousel";
 import RichTextComponent from "../../components/RichTextComponent";
 import { Car, Bath, BedDouble, Ruler } from "lucide-react";
+import RecentPropertiesSlider from "@/components/RecentPropertiesSlider";
 
 export const getServerSideProps = async (pageContext) => {
   const pageSlug = pageContext.query.slug;
+
   const query = `*[ _type == "propertiesRent" && slug.current == $pageSlug][0]{ _id, ..., location->, propertyType-> }`;
   const rentals = await client.fetch(query, { pageSlug });
-  let allImages = rentals.images.concat(rentals.mainImage);
+
+  let allImages = rentals?.images?.concat(rentals?.mainImage) || [];
+
+  const recentProperties = await getRecentPropertiesSale(5); // 👈 new line
+
   if (!rentals) return { props: null, notFound: true };
-  return { props: { rentals, allImages } };
+
+  return {
+    props: {
+      rentals,
+      allImages,
+      recentProperties, // 👈 pass as prop
+    },
+  };
 };
 
-const RentalDetails = ({ rentals, allImages }: any) => {
+const RentalDetails = ({ rentals, allImages, recentProperties }: any) => {
   const formRef = useRef();
   const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '', phone: '', message: '' });
 
@@ -142,6 +155,12 @@ const RentalDetails = ({ rentals, allImages }: any) => {
           </div>
         </div>
       </div>
+      <RecentPropertiesSlider
+        title="Recently Added Properties for Sale"
+        properties={recentProperties}
+        seeAllLink="/properties"
+      />
+
     </div>
   );
 };
