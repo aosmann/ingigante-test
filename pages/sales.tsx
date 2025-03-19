@@ -107,15 +107,24 @@ function sales({ propertiesList, types, locations }) {
         location,
       });
 
-      // Sort data by `updatedAt` or `createdAt` in descending order
-    const sortedData = data.sort((a, b) => {
-      const dateA = new Date(a._updatedAt || a._createdAt);
-      const dateB = new Date(b._updatedAt || b._createdAt);
-      return dateB - dateA; // Descending order
-    });
-      
-      setProperties(data);
+      let sortedData = data;
+  
+      if (sortByPrice === "price") {
+        sortedData = data.sort((a, b) => a.price - b.price);
+      } else if (sortByPrice === "price-desc") {
+        sortedData = data.sort((a, b) => b.price - a.price);
+      } else {
+        // Default sort by date
+        sortedData = data.sort((a, b) => {
+          const dateA = new Date(a._updatedAt || a._createdAt);
+          const dateB = new Date(b._updatedAt || b._createdAt);
+          return dateB - dateA;
+        });
+      }
+  
+      setProperties(sortedData);
     }
+
     fetchProperties();
   }, [
     category,
