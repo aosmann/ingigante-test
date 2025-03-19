@@ -1,22 +1,44 @@
 import React, { useEffect, useRef, useState, useId } from "react";
 import Image from "next/image";
-import { Heart, BedDouble, Bath, Ruler } from "lucide-react";
+import { FiChevronDown, FiSearch } from "react-icons/fi";
 import urlFor from "../lib/urlFor";
 import Link from "next/link";
 import Head from "next/head";
+
+import { getProperties } from "../lib/api";
+import { useRouter } from "next/router";
+
+import Select from "react-select";
 import { client } from "../lib/sanity.client";
 import { GetStaticProps } from "next";
 
 export const getStaticProps: GetStaticProps = async () => {
-  const propertiesList = await client.fetch(`*[_type == "properties" && _id in path("drafts.**") == false]{
+  const propertiesList =
+    await client.fetch(`*[_type == "properties" && _id in path("drafts.**") == false]{
     ...,
     propertyType->,
     location->
   }`);
 
+  const types =
+    await client.fetch(`*[_type == "propertyType" && _id in path("drafts.**") == false]{
+    ...,
+  }`);
+
+  const locations =
+    await client.fetch(`*[_type == "locations" && _id in path("drafts.**") == false]{
+    ...,
+  }`);
+
+  console.log(propertiesList);
+
   return {
-    props: { propertiesList },
-    revalidate: 10, 
+    props: {
+      propertiesList,
+      types,
+      locations,
+    },
+    revalidate: 10,
   };
 };
 
