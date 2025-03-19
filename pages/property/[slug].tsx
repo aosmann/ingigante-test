@@ -1,50 +1,74 @@
 // @ts-ignore
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { MdOutlineArrowBack } from "react-icons/md";
 import Link from "next/link";
+
 import { client, client_with_token } from "../../lib/sanity.client";
 import RichTextComponent from "../../components/RichTextComponent";
 import { PortableText } from "@portabletext/react";
 import Head from "next/head";
+
 import urlFor from "../../lib/urlFor";
+
+import { useState, useRef } from "react";
+
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+
 import toast, { Toaster } from "react-hot-toast";
+
 import Map from "../../components/Map";
 import { GetServerSideProps } from "next";
+
 import { AiFillLeftCircle, AiFillRightCircle } from "react-icons/ai";
 import ImageCarousel from "../../components/ImageCarousel";
 
 function PropertyDetails({ property, images }: any) {
-  const formRef = useRef<HTMLFormElement>(null);
+  const formRef = useRef();
 
-  const submitContact = async (e: React.FormEvent<HTMLFormElement>) => {
+  const submitContact = async (e) => {
     e.preventDefault();
-    const form = e.currentTarget;
-
     const newContact = {
       _type: "contactForm",
-      firstName: (form.elements.namedItem("firstName") as HTMLInputElement)?.value,
-      lastName: (form.elements.namedItem("lastName") as HTMLInputElement)?.value,
-      email: (form.elements.namedItem("email") as HTMLInputElement)?.value,
-      phone: (form.elements.namedItem("phone") as HTMLInputElement)?.value,
-      message: (form.elements.namedItem("comment") as HTMLTextAreaElement)?.value,
+      firstName: e.target[0].value,
+      lastName: e.target[1].value,
+      email: e.target[3].value,
+      phone: e.target[2].value,
+      message: e.target[4].value,
       property: {
         _type: "reference",
         _ref: property._id,
       },
     };
 
-    try {
-      await client_with_token.create(newContact);
-      toast.success("Thank you for your message. We will get back shortly!", { duration: 3000 });
-      formRef.current?.reset();
-    } catch (error) {
-      console.error("Contact form submission error:", error);
-      toast.error("Something went wrong! Please try again");
-    }
+    client_with_token
+      .create(newContact)
+      .then((result) => {
+        toast.success("Thank you for your message. We will get back shortly!", {
+          duration: 3000,
+        });
+        formRef.current.reset();
+      })
+      .catch((error) => {
+        toast.error("Something went wrong! Please try again");
+      });
+
+    // const res = await sendContactForm({
+    //   firstName: e.target[0].value,
+    //   lastName: e.target[1].value,
+    //   email: e.target[2].value,
+    //   phone: e.target[3].value,
+    //   comment: e.target[4].value,
+    // });
+    // if (res == 0) {
+    //   toast.success("Thank you for your message. We will get back shortly!", {
+    //     duration: 3000,
+    //   });
+    //   formRef.current.reset();
+    // } else {
+    //   toast.error("Something went wrong! Please try again", { duration: 3000 });
+    // }
   };
-  
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [slideDirection, setSlideDirection] = useState("");
@@ -309,17 +333,16 @@ function PropertyDetails({ property, images }: any) {
                   components={RichTextComponent}
                 />
 
-                  {property.vrview ? (
-                    <iframe
-                      height="400px"
-                      width="100%"
-                      allowFullScreen
-                      src={property.vrview}
-                    ></iframe>
-                  ) : (
-                    ""
-                  )}
-
+                {property.vrview ? (
+                  <iframe
+                    height="400px"
+                    width="100%"
+                    allowFullScreen="true"
+                    src={property.vrview}
+                  ></iframe>
+                ) : (
+                  ""
+                )}
 
                 <Link href={"/contact"} className="underline block sm:hidden">
                   Contact Us {">"}
@@ -619,7 +642,7 @@ function PropertyDetails({ property, images }: any) {
           {/* Fullscreen thumbnails */}
           <div className="absolute bottom-4 left-0 right-0">
             <div className="flex justify-center gap-2 px-4 overflow-x-auto pb-2">
-            {images.map((image: any, index: number) => (
+              {images.map((image, index) => (
                 <button
                   key={image._ref}
                   onClick={() => handleThumbnailClick(index)}

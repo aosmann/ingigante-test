@@ -1,144 +1,451 @@
-// ✅ FULL RentalDetails Page Redesign With Performance Optimization
 import { PortableText } from "@portabletext/react";
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { MdOutlineArrowBack } from "react-icons/md";
-import { Car, Bath, BedDouble, Ruler } from "lucide-react";
-import dynamic from "next/dynamic";
-import { client, client_with_token } from "../../lib/sanity.client";
+
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import RichTextComponent from "../../components/RichTextComponent";
-import { GetServerSidePropsContext } from "next";
+import { client, client_with_token } from "../../lib/sanity.client";
+import Map from "../../components/Map";
 
-const Map = dynamic(() => import("../../components/Map"), { ssr: false });
-const ImageCarousel = dynamic(() => import("../../components/ImageCarousel"), { ssr: false, loading: () => <p>Loading images...</p> });
+import ImageCarousel from "../../components/ImageCarousel";
 
-export const getServerSideProps = async (pageContext: GetServerSidePropsContext) => {
+export const getServerSideProps = async (pageContext) => {
   const pageSlug = pageContext.query.slug;
-  const query = `*[ _type == "propertiesRent" && slug.current == $pageSlug][0]{ _id, ..., location->, propertyType-> }`;
+
+  const query = `*[ _type == "propertiesRent" && slug.current == $pageSlug][0]{
+    _id,
+      ...,
+      location->,
+      propertyType->
+    }`;
+
   const rentals = await client.fetch(query, { pageSlug });
-  const allImages = rentals?.images?.concat(rentals.mainImage) || [];
-  if (!rentals) return { props: null, notFound: true };
-  return { props: { rentals, allImages } };
+
+  let allImages = rentals.images.concat(rentals.mainImage);
+
+  if (!rentals) {
+    return {
+      props: null,
+      notFound: true,
+    };
+  } else {
+    return {
+      props: {
+        rentals,
+        allImages,
+      },
+    };
+  }
 };
 
-const RentalDetails = ({ rentals, allImages }: any) => {
-  const formRef = useRef<HTMLFormElement>(null);
-  const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '', phone: '', message: '' });
+const RentalDetails = ({ rentals, imagaes }: any) => {
+  const formRef = useRef();
 
   const submitContact = async (e: any) => {
     e.preventDefault();
     const newContact = {
       _type: "contactForm",
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-      phone: formData.phone,
-      message: formData.message,
-      property: { _type: "reference", _ref: rentals._id },
+      firstName: e.target[0].value,
+      lastName: e.target[1].value,
+      email: e.target[3].value,
+      phone: e.target[2].value,
+      message: e.target[4].value,
+      property: {
+        _type: "reference",
+        _ref: rentals._id,
+      },
     };
-    client_with_token.create(newContact)
-      .then(() => {
-        toast.success("Thank you for your message. We will get back shortly!");
-        formRef.current?.reset();
-        setFormData({ firstName: '', lastName: '', email: '', phone: '', message: '' });
+    client_with_token
+      .create(newContact)
+      .then((result) => {
+        toast.success("Thank you for your message. We will get back shortly!", {
+          duration: 3000,
+        });
+        formRef.current.reset();
       })
-      .catch(() => toast.error("Something went wrong. Please try again."));
+      .catch((error) => {
+        toast.error("Something went wrong! Please try again");
+      });
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    
+    <div className="min-h-screen mt-10">
       <Head>
-        <title>{rentals.propertyType.typeName} for Rent in {rentals.location.locationName}, Nicaragua</title>
-        {allImages[0] && <link rel="preload" as="image" href={`${allImages[0].asset?.url || allImages[0].url}?w=1000&quality=70`} />}
+        <title>
+          {rentals.propertyType.typeName} {" for Rent in "}{" "}
+          {rentals.location.locationName}
+          {", Nicaragua"}
+        </title>
+
+        {/* Google Tag Manager */}
+          <script async src="https://www.googletagmanager.com/gtag/js?id=AW-11184375903"></script>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'AW-11184375903');
+              `,
+            }}
+          />
+        
       </Head>
 
-      <div className="space-y-4 mb-6">
-        <Link href="/rentals" className="flex items-center text-gray-600 hover:text-primary">
-          <MdOutlineArrowBack className="mr-2" /> Back
-        </Link>
-        <h1 className="text-2xl text-gray-600">{rentals.propertyType.typeName} for Rent in {rentals.location.locationName}</h1>
-      </div>
-
-      <div className="space-y-4 mb-6">
-        <ImageCarousel  images={allImages.map((img: { asset?: { url?: string }; url?: string }) => ({ ...img, url: `${img.asset?.url || img.url}?w=1000&quality=70`, }))} />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Property Details */}
-        <div className="lg:col-span-2">
-          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">{rentals.title}</h2>
-            <p className="text-xl text-primary font-semibold">${rentals.price} / {rentals.category}</p>
-            <p className="text-gray-600">{rentals.location.locationName}</p>
-
-            <div className="mt-4 flex flex-wrap gap-2">
-              <span className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm font-medium">{rentals.propertyType.typeName}</span>
-              {rentals.beachfront === "Yes" && (
-                <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">Beachfront</span>
-              )}
+      <div className="space-y-10 flex flex-col px-4 justify-center items-center bg-gray-50">
+        <div className="flex flex-col items-top justify-center xl:flex-row xl:space-x-4 max-w-[1200px]">
+          <div className="w-full lg:w-[800px]">
+            <div className="space-y-4">
+              <Link href={"/rentals"} className="flex items-center text-[#484848] w-fit pl-[0.4rem] pr-[1rem] rounded">
+                <MdOutlineArrowBack size={20} />
+                <p className="text-lg ml-[0.1rem]">Back</p>
+              </Link>
+              <h1 className="text-[25px] leading-none sm:text-[35px] md:text-[35px] lg:text-[35px] text-normal mb-6 pb-6 text-normal">
+                {rentals.propertyType.typeName} {" for Rent in "}{" "}
+                {rentals.location.locationName}
+                {", Nicaragua"}
+              </h1>
             </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-6 text-gray-700 py-6 border-y border-gray-200 text-sm">
-              {rentals.rooms && (
-                <div className="flex items-center gap-2">
-                  <BedDouble className="h-5 w-5" />
-                  <span>{rentals.rooms} Rooms</span>
-                </div>
-              )}
-              {rentals.bathrooms && (
-                <div className="flex items-center gap-2">
-                  <Bath className="h-5 w-5" />
-                  <span>{rentals.bathrooms} Bathrooms</span>
-                </div>
-              )}
-              {rentals.area_total && (
-                <div className="flex items-center gap-2">
-                  <Ruler className="h-5 w-5" />
-                  <span>{rentals.area_total} m² total</span>
-                </div>
-              )}
-              {rentals.parking === "Yes" && (
-                <div className="flex items-center gap-2">
-                  <Car className="h-5 w-5" />
-                  <span>Parking</span>
-                </div>
-              )}
-            </div>
-
-            <div className="mt-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">Description</h2>
-              <div className="text-gray-700 text-sm leading-relaxed">
-                <PortableText value={rentals.overview} components={RichTextComponent} />
+            
+            {/* Slider */}
+            <ImageCarousel images={rentals.images} />
+            
+            {/* Price */} {/* Details */}
+            <div className="text-left pt-4">
+            
+              {/* Flash Text (On demand) */}
+              <div className="flex items-center space-x-4">
+                <p className="font-normal bg-[#ffebeb] text-[#ff0000] w-fit rounded px-2">
+                  {rentals.flash_text}
+                </p>
+                
+                {rentals.price_old && rentals.price && (
+                  <p className="flex text-white bg-red-500 font-light rounded px-2">
+                    {Math.round(((rentals.price_old - rentals.price) / rentals.price_old) * 100)}% discount
+                  </p>
+                )}
               </div>
-              {rentals.vrview && (
-                <div className="mt-4">
-                  <iframe width="100%" height="400" src={rentals.vrview} allowFullScreen></iframe>
-                </div>
-              )}
-            </div>
+            
+              <div className="flex items-end space-x-4 pt-3">
+                <h2 className="text-4xl font-normal">
+                  {"$"}
+                  {rentals.price}
+                  {"/"}
+                  {rentals.category === "month" ? "month" : "day"}
+                </h2>
 
-            <div className="mt-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">Map</h2>
+                {rentals.price_old && rentals.price && (
+                  <h2 className="text-2xl font-thin line-through opacity-60">
+                      {"$"}
+                      {rentals.price_old}
+                      {"/"}
+                      {rentals.category === "month" ? "month" : "day"}
+                    </h2>
+                )}
+
+              </div>
+
+            {/* Title */}
+              <div className="flex items-center text-xl font-normal text-gray-700 pt-3">
+                <p>
+                  {rentals.title}, {rentals.location.locationName}
+                  {", Nicaragua"}
+                </p>
+              </div>
+
+            {/* Mini details */}
+              <div className="flex items-center text-gray-500 font-normal">
+                {[
+                  rentals.rooms && `${rentals.rooms} rooms`,
+                  rentals.bathrooms && `${rentals.bathrooms} bathrooms`,
+                  rentals.area_usable && `${rentals.area_usable} m²`,
+                ]
+                  .filter(Boolean) // Remove falsy values (null, undefined, 0, "")
+                  .join(", ")}
+              </div>
+            </div>
+            <div className="space-y-4 pt-6 pr-[1rem]">
+              <p className="text-xl font-bold border-b pb-2 text-gray-700">
+                Details
+              </p>
+              <div className="space-y-2">
+                {rentals.location?.locationName && (
+                  <div className="flex justify-between border-b py-2">
+                    <p className="font-medium text-gray-700">City:</p>
+                    <p className="text-gray-500">
+                      {rentals.location.locationName}
+                    </p>
+                  </div>
+                )}
+
+                {rentals.propertyType?.typeName && (
+                  <div className="flex justify-between border-b py-2">
+                    <p className="font-medium text-gray-700">Type:</p>
+                    <p className="text-gray-500">
+                      {rentals.propertyType.typeName}
+                    </p>
+                  </div>
+                )}
+
+                {rentals.beachfront === "Yes" && (
+                  <div className="flex justify-between border-b py-2">
+                    <p className="font-medium text-gray-700">Beachfront:</p>
+                    <p className="text-gray-500">Yes</p>
+                  </div>
+                )}
+
+                {rentals.lotSize && (
+                  <div className="flex justify-between border-b py-2">
+                    <p className="font-medium text-gray-700">Land Area:</p>
+                    <p className="text-gray-500">{`${rentals.lotSize.toLocaleString()} m²`}</p>
+                  </div>
+                )}
+
+                {rentals.area_total && (
+                  <div className="flex justify-between border-b py-2">
+                    <p className="font-medium text-gray-700">Property Area:</p>
+                    <p className="text-gray-500">
+                      {`${rentals.area_total.toLocaleString()} m²`}
+                    </p>
+                  </div>
+                )}
+
+                {rentals.rooms && (
+                  <div className="flex justify-between border-b py-2">
+                    <p className="font-medium text-gray-700">Rooms:</p>
+                    <p className="text-gray-500">{rentals.rooms}</p>
+                  </div>
+                )}
+
+                {rentals.bathrooms && (
+                  <div className="flex justify-between border-b py-2">
+                    <p className="font-medium text-gray-700">Bathrooms:</p>
+                    <p className="text-gray-500">{rentals.bathrooms}</p>
+                  </div>
+                )}
+
+                {rentals.parking === "Yes" && (
+                  <div className="flex justify-between border-b py-2">
+                    <p className="font-medium text-gray-700">Parking:</p>
+                    <p className="text-gray-500">Yes</p>
+                  </div>
+                )}
+
+                {rentals.propertyId && (
+                  <div className="flex justify-between border-b py-2">
+                    <p className="font-medium text-gray-700">ID:</p>
+                    <p className="text-gray-500">{rentals.propertyId}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="space-y-4 pt-10 pb-4">
+              <p className="text-xl font-bold border-b pb-2 text-gray-700">
+                Description
+              </p>
+              <div className="space-y-2 text-gray-700">
+                <PortableText
+                  value={rentals.overview}
+                  components={RichTextComponent}
+                />
+
+                {rentals.vrview ? (
+                  <iframe
+                    height="400px"
+                    width="100%"
+                    allowFullScreen="true"
+                    src={rentals.vrview}
+                  ></iframe>
+                ) : (
+                  ""
+                )}
+
+                <Link href={"/contact"} className="underline block sm:hidden">
+                  Contact Us {">"}
+                </Link>
+              </div>
+            </div>
+            {/* Mapbox */}
+            <div className="flex justify-center py-4">
+              {/* <Image src={map} alt='map' /> */}
               <Map location={rentals.maplocation} />
             </div>
           </div>
-        </div>
 
-        {/* Contact Form Sidebar */}
-        <div className="lg:col-span-1">
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Interested in this property?</h2>
-            <form onSubmit={submitContact} ref={formRef} className="space-y-4">
-              <input type="text" required name="firstName" placeholder="First Name" value={formData.firstName} onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary" />
-              <input type="text" required name="lastName" placeholder="Last Name" value={formData.lastName} onChange={(e) => setFormData({ ...formData, lastName: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary" />
-              <input type="email" required name="email" placeholder="Email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary" />
-              <input type="tel" name="phone" placeholder="Phone" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary" />
-              <textarea rows={4} required name="message" placeholder="Message" value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary"></textarea>
-              <button type="submit" className="w-full py-3 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary/90">Contact Agent</button>
+          <div className="mt-6 lg:mt-[6.4rem] space-y-6 w-full mb-20">
+
+            {/*CONTACT FORM*/}
+          <div className="bg-white rounded-lg shadow-sm p-6 text-gray-800 space-y-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Contact Us</h2>
+            <Toaster />
+            <form
+              className="space-y-4"
+              id="property"
+              ref={formRef}
+              onSubmit={submitContact}
+            >
+              <div>
+                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                <input
+                  type="text"
+                  name="firstName"
+                  id="firstName"
+                  placeholder="First Name"
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+                />
+              </div>
+              <div>
+                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                <input
+                  type="text"
+                  name="lastName"
+                  id="lastName"
+                  placeholder="Last Name"
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+                />
+              </div>
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  id="phone"
+                  placeholder="+1(500) 000 000"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+                />
+              </div>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  placeholder="your@company.com"
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+                />
+              </div>
+              <div>
+                <label htmlFor="comment" className="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                <textarea
+                  id="comment"
+                  name="comment"
+                  rows={5}
+                  placeholder="Leave us a message..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+                  required
+                ></textarea>
+              </div>
+          
+              <button
+                type="submit"
+                className="w-full py-3 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary/90 transition duration-300"
+              >
+                Send Message
+              </button>
             </form>
+          </div>
+
+            
+            
+
+          <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
+            <Link
+              href="https://ingigante.com/rental/hotel-ingigante-rent"
+              target="_blank"
+              >
+              {/* Image Section */}
+              <div className="h-40 relative">
+                <Image
+                  src="/assets/images/hotel-cover.webp"
+                  alt="Hotel Ingigante"
+                  className="h-full w-full object-cover"
+                  layout="fill" // Automatically fits container dimensions
+                  objectFit="cover"
+                />
+              </div>
+        
+              {/* Content Section */}
+              <div className="p-4">
+                <div className="bg-[#ffebeb] text-[#ff0000] w-fit rounded px-2">Promoted</div>
+                <h3 className="text-lg font-bold text-gray-800 pt-2">Hotel Ingigante</h3>
+                 <div className="flex items-center text-gray-500 font-normal mb-4">14 rooms, 14 bathrooms, 1,867.72 m²</div>
+        
+                {/* Buttons */}
+                <div className="flex gap-2">
+                  {/* Button to Check Hotel */}
+                  <a
+                    href="https://ingigante.com/rental/hotel-ingigante-rent"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 text-center border border-[#236253] text-green-800 py-2 rounded-md text-sm hover:bg-[#d4e8e3]"
+                  >
+                    Check hotel
+                  </a>
+        
+                  {/* Button to Book Now */}
+                  <a
+                    href="https://us2.cloudbeds.com/reservation/MBptIV"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 text-center bg-[#236253] text-white py-2 rounded-md text-sm hover:bg-[#134a3d]"
+                  >
+                    Book now
+                  </a>
+                </div>
+              </div>
+              </Link>
+            </div>
+
+
+            {/*Promoted box 2*/}
+              <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
+                <Link
+              href="https://ingigante.com/property/surf-ranch-popoyo-home"
+              target="_blank"
+              >
+                  
+                {/* Image Section */}
+                <div className="h-40 relative">
+                  <Image
+                    src="/assets/images/promoted-2.webp"
+                    alt="Surf Ranch Popoyo Home"
+                    className="h-full w-full object-cover"
+                    layout="fill" // Automatically fits container dimensions
+                    objectFit="cover"
+                  />
+                </div>
+          
+                {/* Content Section */}
+                <div className="p-4">
+                  <div className="bg-[#ffebeb] text-[#ff0000] w-fit rounded px-2">Hot SALE</div>
+                  <h3 className="text-lg font-bold text-gray-800 pt-2">Surf Ranch Popoyo Home</h3>
+                   <div className="flex items-center text-gray-500 font-normal mb-4">5 rooms, 4 bathrooms, 275 m²</div>
+          
+                  {/* Buttons */}
+                  <div className="flex gap-2">
+                    {/* Button to Check Hotel */}
+                    <a
+                      href="https://ingigante.com/property/surf-ranch-popoyo-home"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 text-center bg-[#236253] text-white py-2 rounded-md text-sm hover:bg-[#134a3d]"
+                    >
+                      Buy Home
+                    </a>
+                  </div>
+                </div>
+                </Link>
+              </div>
+            
+            
           </div>
         </div>
       </div>

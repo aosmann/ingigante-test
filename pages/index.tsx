@@ -50,14 +50,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
   };
 };
 
-interface HomeProps {
-  properties: any[]; // you can replace `any` with your actual data type if you have one
-  ourteam: any[];
-  references: any[];
-  faq: any[];
-  propertyType: any[];
-  locations: any[];
-}
 function Home({
   properties,
   ourteam,
@@ -65,7 +57,7 @@ function Home({
   faq,
   propertyType,
   locations,
-}: HomeProps) {
+}) {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center overflow-x-hidden	">
       <Head>
@@ -116,6 +108,29 @@ function Home({
         <Faq faqs={faq} />
         <Reference references={references} />
       </main>
+
+      {/*
+      <main className="relative flex w-full flex-1 flex-col">
+        <div className="relative z-50">
+          <Hero propertyType={propertyType} locations={locations} />
+        </div>
+        <div className="relative z-10">
+          <Offers properties={properties} />
+        </div>
+        <div className="relative z-10">
+          <About />
+        </div>
+        <div className="relative z-10">
+          <OurTeam teamMembers={ourteam} />
+        </div>
+        <div className="relative z-10">
+          <Faq faqs={faq} />
+        </div>
+        <div className="relative z-10">
+          <Reference references={references} />
+        </div>
+      </main>
+*/}
     </div>
   );
 }

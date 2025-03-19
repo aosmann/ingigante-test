@@ -1,23 +1,19 @@
 import { useState } from "react";
 import { FiSearch } from "react-icons/fi";
 
-interface SearchBarProps {
-  onSearch: (query: string) => void;
-}
-
-export default function SearchBar({ onSearch }: SearchBarProps) {
+export default function SearchBar({ onSearch }) {
   const [query, setQuery] = useState("");
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     onSearch(query);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-2">
+    <form onSubmit={handleSubmit}>
       <input
         type="text"
-        className="bg-white border border-gray-300 text-gray-900 text-sm rounded-md block w-full p-2.5"
+        className="bg-white border border-gray-300 text-gray-900 text-sm rounded-md  block w-full p-2.5"
         placeholder="Enter a keyword"
         value={query}
         onChange={(event) => setQuery(event.target.value)}

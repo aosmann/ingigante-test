@@ -1,14 +1,9 @@
-import urlFor from '../lib/urlFor';
+import { urlFor } from '../lib/urlFor';
 
-interface ImagesProps {
-  identifier: string;
-  image: any; // or type this better if you know it's SanityImageAsset
-}
-
-const Images = ({ identifier, image }: ImagesProps) => {
+const Images = ({ identifier, image }) => {
   return (
     <div className={identifier === 'main-image' ? 'main-image' : 'image'}>
-      <img src={urlFor(image).auto('format').url()} alt="property image" />
+      <img src={urlFor(image).auto('format')} />
     </div>
   );
 };

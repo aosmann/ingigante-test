@@ -11,11 +11,6 @@ import { useRouter } from "next/router";
 import Select from "react-select";
 import { client } from "../lib/sanity.client";
 import { GetStaticProps } from "next";
-import type { Property } from "../lib/api";
-import { ChangeEvent } from "react";
-import { SingleValue } from "react-select";
-type SelectOption = { value: string; label: string };
-
 
 export const getStaticProps: GetStaticProps = async () => {
   const propertiesList =
@@ -47,15 +42,8 @@ export const getStaticProps: GetStaticProps = async () => {
   };
 };
 
-
-interface SalesPageProps {
-  propertiesList: Property[];
-  types: any[];
-  locations: any[];
-}
-
-function sales({ propertiesList, types, locations }: SalesPageProps) {
-  const inputRef = useRef<HTMLInputElement | null>(null);
+function sales({ propertiesList, types, locations }) {
+  const inputRef = useRef(null);
 
   const locationOptions = locations.map((item) => ({
     value: item.locationName,
@@ -69,35 +57,43 @@ function sales({ propertiesList, types, locations }: SalesPageProps) {
     instanceId: useId(),
   }));
 
-  const sortOptions: SelectOption[] = [
-    { value: "sort", label: "Sort" },
-    { value: "sellPrice", label: "Price (low to high)" },
-    { value: "sellPrice-desc", label: "Price (high to low)" },
+  const sortOptions = [
+    { value: "sort", label: "Sort", instanceId: useId() },
+    {
+      value: "sellPrice",
+      label: "Price (low to high)",
+      instanceId: useId(),
+    },
+    {
+      value: "sellPrice-desc",
+      label: "Price (high to low)",
+      instanceId: useId(),
+    },
   ];
 
   const router = useRouter();
 
   const [properties, setProperties] = useState(propertiesList);
   const [searchQuery, setSearchQuery] = useState("");
+  const [category, setCategory] = useState(
+    router.query ? router.query.cat : null
+  );
   const [minBedrooms, setMinBedrooms] = useState(null);
   const [minBathrooms, setMinBathrooms] = useState(null);
-  const [sortByPrice, setSortByPrice] = useState<boolean | null>(null);
-  const [sortDescending, setSortDescending] = useState<boolean | null>(null);
-  const [priceMin, setPriceMin] = useState<number | null>(null);
-  const [priceMax, setPriceMax] = useState<number | null>(null);
-  const [category, setCategory] = useState<string | null>(
-    typeof router.query.cat === "string" ? router.query.cat : null
+
+  const [sortByPrice, setSortByPrice] = useState(null);
+  const [sortDescending, setSortDescending] = useState(null);
+  // const [price, setPrice] = useState(null);
+
+  const [priceMin, setPriceMin] = useState(null);
+  const [priceMax, setPriceMax] = useState(null);
+  const [location, setLocation] = useState(
+    router.query ? router.query.loc : null
   );
-  const [location, setLocation] = useState<string | null>(
-    typeof router.query.loc === "string" ? router.query.loc : null
-  );
-  
-  
-  
 
   useEffect(() => {
     async function fetchProperties() {
-      const data: Property[] = await getProperties({
+      const data = await getProperties({
         category,
         minBedrooms,
         minBathrooms,
@@ -110,11 +106,11 @@ function sales({ propertiesList, types, locations }: SalesPageProps) {
       });
 
       // Sort data by `updatedAt` or `createdAt` in descending order
-      const sortedData = data.sort((a, b) => {
-        const dateA = new Date(a._updatedAt ?? a._createdAt ?? "").getTime();
-        const dateB = new Date(b._updatedAt ?? b._createdAt ?? "").getTime();
-        return dateB - dateA; // Descending order
-      });
+    const sortedData = data.sort((a, b) => {
+      const dateA = new Date(a._updatedAt || a._createdAt);
+      const dateB = new Date(b._updatedAt || b._createdAt);
+      return dateB - dateA; // Descending order
+    });
       
       setProperties(data);
     }
@@ -131,46 +127,40 @@ function sales({ propertiesList, types, locations }: SalesPageProps) {
     location,
   ]);
 
-  
+  function handleCategoryChange(event) {
+    setCategory(event.value);
+  }
 
-  function handleCategoryChange(event: SingleValue<SelectOption>) {
-    setCategory(event?.value ?? null);
+  function handleLocationChange(event) {
+    setLocation(event.value);
   }
-  
-  function handleLocationChange(event: SingleValue<SelectOption>) {
-    setLocation(event?.value ?? null);
+
+  function handleSearchQuery(event) {
+    setSearchQuery(inputRef.current.value);
+    // setSearchQuery(event.target.value);
   }
-  
-  function handleSearchQuery() {
-    if (inputRef.current) {
-      setSearchQuery(inputRef.current.value);
-    }
-  }
-  
-  function handlePriceMinChange(event: ChangeEvent<HTMLInputElement>) {
+
+  // function handleBedroomsChange(event) {
+  //   setMinBedrooms(parseInt(event.target.value) || null);
+  // }
+
+  // function handleBathroomsChange(event) {
+  //   setMinBathrooms(parseInt(event.target.value) || null);
+  // }
+
+  function handlePriceMinChange(event) {
     setPriceMin(parseInt(event.target.value) || null);
   }
-  
-  function handlePriceMaxChange(event: ChangeEvent<HTMLInputElement>) {
+
+  function handlePriceMaxChange(event) {
     setPriceMax(parseInt(event.target.value) || null);
   }
-  
-  function handleSortChange(event: SingleValue<SelectOption>) {
-    const value = event?.value ?? null;
-  
-    if (value === "sellPrice") {
-      setSortByPrice(true); // ✅ boolean
-      setSortDescending(false);
-    } else if (value === "sellPrice-desc") {
-      setSortByPrice(true); // ✅ boolean again
-      setSortDescending(true);
-    } else {
-      setSortByPrice(null);
-      setSortDescending(null);
-    }
+
+  function handleSortChange(event) {
+    const value = event.value;
+    setSortByPrice(value);
+    setSortDescending(value);
   }
-  
-  
 
   return (
     <div className="min-h-screen flex flex-col items-center">
@@ -238,28 +228,90 @@ function sales({ propertiesList, types, locations }: SalesPageProps) {
           <p className="text-center mt-4 mb-4 opacity-50">Filter Settings</p>
           <div className="md:flex md:flex-row md:space-x-4">
             <div className="relative mb-6 md:mb-0 md:w-1/4">
-            <Select
-              value={typeOptions.find(opt => opt.value === category)}
-              onChange={handleCategoryChange}
-              options={typeOptions}
-              placeholder="Type"
-              isSearchable={false}
-            />
-              
+              <Select
+                defaultValue={category}
+                onChange={handleCategoryChange}
+                options={typeOptions}
+                placeholder="Type"
+                isSearchable={false}
+                // value={category}
+              />
+              {/* <select
+                className="w-full block bg-white border border-btn p-2.5 rounded-md text-sm appearance-none md:pr-20"
+                //   value={category || ''}
+                onChange={handleCategoryChange}
+              >
+                <option value={""}>Type</option>
+                <option value={"House"}>House</option>
+                <option value={"Condo"}>Condo</option>
+                <option value={"Hotel"}>Hotel</option>
+                <option value={"Residential"}>Residential</option>
+                <option value={"Land"}>Land</option>
+                <option value={"Commercial"}>Commercial</option>
+              </select> */}
+              {/* <div className='absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none'>
+                <FiChevronDown color='primary' className='opacity-30' />
+              </div> */}
             </div>
             <div className="relative mb-6 md:mb-0 md:w-1/4">
-            <Select
-              value={locationOptions.find(opt => opt.value === location)}
-              onChange={handleLocationChange}
-              options={locationOptions}
-              placeholder="Location"
-              isSearchable={false}
-            />
-
-              
+              <Select
+                defaultValue={location}
+                onChange={handleLocationChange}
+                options={locationOptions}
+                placeholder="Location"
+                isSearchable={false}
+                // value={loc}
+              />
+              {/* <select
+                className="w-full block bg-white border border-btn p-2.5 rounded-md text-sm appearance-none md:pr-20"
+                //   value={category || ''}
+                onChange={handleLocationChange}
+              >
+                <option value={""}>Location</option>
+                <option value={"Playa Gigante"}>Playa Gigante</option>
+                <option value={"Guasacate"}>Guasacate</option>
+                <option value={"Jiquelite"}>Jiquelite</option>
+                <option value={"Popoyo"}>Popoyo</option>
+              </select> */}
+              {/* <div className='absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none'>
+                <FiChevronDown color='primary' className='opacity-30' />
+              </div> */}
             </div>
 
-            
+            {/* <div className='relative mb-6 md:mb-0 md:w-1/4'>
+              <select
+                value={minBedrooms || 'Bedrooms'}
+                onChange={handleBedroomsChange}
+                className='w-full block bg-white border border-btn p-2.5 rounded-md text-sm appearance-none md:pr-20'
+              >
+                <option value={'Bedrooms'}>Bedrooms</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+              <div className='absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none'>
+                <FiChevronDown color='primary' className='opacity-30' />
+              </div>
+            </div>
+            <div className='relative mb-6 md:mb-0 md:w-1/4'>
+              <select
+                value={minBathrooms || 'Bathrooms'}
+                onChange={handleBathroomsChange}
+                className='w-full block bg-white border border-btn p-2.5 rounded-md text-sm appearance-none md:pr-20'
+              >
+                <option>Bathrooms</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+              <div className='absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none'>
+                <FiChevronDown color='primary' className='opacity-30' />
+              </div>
+            </div> */}
             <div className="relative mb-6 md:mb-0 md:w-1/4">
               <p className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none opacity-40">
                 $
@@ -291,10 +343,44 @@ function sales({ propertiesList, types, locations }: SalesPageProps) {
                 placeholder="Sort"
                 isSearchable={false}
               />
-              
+              {/* <select
+                value={
+                  sortByPrice
+                    ? sortDescending
+                      ? "sellPrice-desc"
+                      : "sellPrice"
+                    : "sort"
+                }
+                onChange={handleSortChange}
+                className="w-full block bg-white border border-btn p-2.5 rounded-md text-sm appearance-none md:pr-20"
+              >
+                <option value="sort">Sort By</option>
+                <option value="sellPrice">Price (low to high)</option>
+                <option value="sellPrice-desc">Price (high to low)</option>
+              </select>
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <FiChevronDown color="primary" className="opacity-30" />
+              </div> */}
             </div>
           </div>
-          
+          {/* <div className='md:mt-12 mb-6'>
+            <div className=''>
+              <input
+                type='range'
+                name='price'
+                min={0}
+                max={1000000}
+                step={50000}
+                className='w-full'
+                onMouseUp={handlePriceChange}
+                onTouchEnd={handlePriceChange}
+              />
+            </div>
+            <div className='flex flex-row justify-between'>
+              <p>0 {'$'}</p>
+              <p>1 000 000 {'$'}</p>
+            </div>
+          </div> */}
         </div>
       </div>
       <div className="max-w-7xl w-full mt-14">

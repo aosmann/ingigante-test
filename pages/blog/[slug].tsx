@@ -7,9 +7,8 @@ import Image from "next/image";
 import urlFor from "../../lib/urlFor";
 import RichTextComponent from "../../components/RichTextComponent";
 import { BsArrowLeftShort } from "react-icons/bs";
-import { GetServerSideProps, GetServerSidePropsContext } from "next";
 
-const BlogDetails = ({ blog }: { blog: any }) => {
+const BlogDetails = ({ blog }) => {
   return (
     <div className="min-h-screen">
       <Head>
@@ -17,14 +16,14 @@ const BlogDetails = ({ blog }: { blog: any }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="flex flex-col relative w-screen h-[260px]">
-        <Image
-          src={urlFor(blog.mainImage).url()}
-          alt={blog.slug.current}
-          fill
-          className="object-cover object-center"
-        />
-      </div>
-
+            <Image
+              src={urlFor(blog.mainImage).url()}
+              alt={blog.slug.current}
+              fill
+              className="object-cover object-center"
+            />
+          </div>
+      {/*<div className='bg-[url("/assets/images/blogbg.png")] bg-no-repeat bg-cover py-52 text-secondary top-0'></div> */}
       <section className="text-primary flex flex-col px-4 items-center">
         <div className="flex flex-col mt-12 mb-12 max-w-3xl ">
           <Link href={"/blog"} className="flex items-center font-bold">
@@ -32,7 +31,7 @@ const BlogDetails = ({ blog }: { blog: any }) => {
             Back
           </Link>
           <h1 className="text-[50px] py-4">{blog.title}</h1>
-
+          
           <div className="pb-12 text-justify">
             <PortableText value={blog.body} components={RichTextComponent} />
             <Link href={"/blog"} className="flex items-center font-bold py-6">
@@ -46,25 +45,25 @@ const BlogDetails = ({ blog }: { blog: any }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const pageSlug = context.query.slug;
+export const getServerSideProps = async (pageContext) => {
+  const pageSlug = pageContext.query.slug;
 
-  const query = `*[_type == "blog" && slug.current == $pageSlug][0]`;
+  const query = `*[ _type == "blog" && slug.current == $pageSlug][0]`;
+
   const blog = await client.fetch(query, { pageSlug });
 
   if (!blog) {
     return {
+      props: null,
       notFound: true,
     };
+  } else {
+    return {
+      props: {
+        blog,
+      },
+    };
   }
-
-  return {
-    props: {
-      blog,
-    },
-  };
 };
 
 export default BlogDetails;

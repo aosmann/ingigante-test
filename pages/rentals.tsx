@@ -1,6 +1,5 @@
 import Head from "next/head";
 import Link from "next/link";
-import { BedDouble, Bath, Ruler, Heart } from "lucide-react";
 import React, { useEffect, useId, useRef, useState } from "react";
 import { FiChevronDown, FiSearch } from "react-icons/fi";
 import { client } from "../lib/sanity.client";
@@ -9,10 +8,6 @@ import Image from "next/image";
 import Select from "react-select";
 import { getPropertiesRent } from "../lib/api";
 import { useRouter } from "next/router";
-type SelectOption = { value: string; label: string };
-import type { Property } from "../lib/api";
-
-
 
 export const getStaticProps = async () => {
   const rentals =
@@ -47,52 +42,29 @@ export const getStaticProps = async () => {
   };
 };
 
-interface PropertyType {
-  _id: string;
-  title: string;
-  slug: { current: string };
-  price: number;
-  category: string;
-  location: { locationName: string };
-  propertyType: { typeName: string };
-  rooms?: number;
-  bathrooms?: number;
-  area_total?: number;
-  beachfront?: string;
-  mainImage: any;
-  _createdAt?: string;
-  _updatedAt?: string;
-}
-
-interface RentalsPageProps {
-  rentals: PropertyType[];
-  features: any[];
-  types: any[];
-  locations: any[];
-}
-
-
-const Rentals = ({ rentals, features, types, locations }: RentalsPageProps) => {
-  const inputRef = useRef<HTMLInputElement | null>(null);
+const rentals = ({ rentals, features, types, locations }) => {
+  const inputRef = useRef(null);
   const router = useRouter();
 
-  const [category, setCategory] = useState<string | null>(null);
-  const [location, setLocation] = useState<string | null>(null);
-  const [priceCategory, setPriceCategory] = useState<string | null>(null);
-  const [feature, setFeature] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [priceMin, setPriceMin] = useState<number | null>(null);
-  const [priceMax, setPriceMax] = useState<number | null>(null);
-  const [sortByPrice, setSortByPrice] = useState<string | null>(null);
-  const [sortDescending, setSortDescending] = useState<boolean | null>(null);
+  const [priceMin, setPriceMin] = useState(null);
+  const [priceMax, setPriceMax] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [feature, setFeature] = useState(null);
+  const [sortByPrice, setSortByPrice] = useState(null);
+  const [sortDescending, setSortDescending] = useState(null);
+  const [rentalsList, setRentalsList] = useState(rentals);
+  const [category, setCategory] = useState(null);
+  const [location, setLocation] = useState(
+    router.query ? router.query.loc : null
+  );
+
+  const [priceCategory, setPriceCategory] = useState(null);
 
   const [featuresList, setFeaturesList] = useState(features);
-  const [rentalsList, setRentalsList] = useState<any[]>(rentals);
-
 
   useEffect(() => {
     async function fetchProperties() {
-      const data = (await getPropertiesRent({
+      const data = await getPropertiesRent({
         category,
         sortByPrice,
         sortDescending,
@@ -102,28 +74,18 @@ const Rentals = ({ rentals, features, types, locations }: RentalsPageProps) => {
         location,
         feature,
         priceCategory,
-      })) as Property[];
-  
-      let sortedData: Property[] = data;
-  
-      if (sortByPrice === "price") {
-        sortedData = data.sort((a, b) => {
-          const priceA = a.sellPrice || 0;
-          const priceB = b.sellPrice || 0;
-          return sortDescending ? priceB - priceA : priceA - priceB;
-        });
-      } else {
-        sortedData = data.sort((a, b) => {
-          const dateA = new Date(a._updatedAt ?? a._createdAt ?? "").getTime();
-          const dateB = new Date(b._updatedAt ?? b._createdAt ?? "").getTime();
-          return dateB - dateA;
-        });
-      }
-  
-      // ✅ Set rentalsList here
-      setRentalsList(sortedData);
+      });
+
+      // Sort data by `updatedAt` or `createdAt` in descending order
+    const sortedData = data.sort((a, b) => {
+      const dateA = new Date(a._updatedAt || a._createdAt);
+      const dateB = new Date(b._updatedAt || b._createdAt);
+      return dateB - dateA; // Descending order
+    });
+
+      
+      setRentalsList(data);
     }
-  
     fetchProperties();
   }, [
     category,
@@ -136,47 +98,40 @@ const Rentals = ({ rentals, features, types, locations }: RentalsPageProps) => {
     feature,
     priceCategory,
   ]);
-  
 
-  function handlePriceCategoryChange(option: SelectOption | null) {
-    setPriceCategory(option?.value ?? null);
+  function handlePriceCategoryCahnge(event) {
+    setPriceCategory(event.value);
   }
-  
-  function handleCategoryChange(option: SelectOption | null) {
-    setCategory(option?.value || null);
+
+  function handleCategoryChange(event) {
+    setCategory(event.value);
   }
-  
-  function handleLocationChange(option: SelectOption | null) {
-    setLocation(option?.value || null);
+
+  function handleLocationChange(event) {
+    setLocation(event.value);
   }
-  
-  function handleSearchQuery() {
-    if (inputRef.current) {
-      setSearchQuery((inputRef.current as HTMLInputElement).value);
-    }
+
+  function handleSearchQuery(event) {
+    setSearchQuery(inputRef.current.value);
+    // setSearchQuery(event.target.value);
   }
-  
-  function handlePriceMinChange(event: React.ChangeEvent<HTMLInputElement>) {
+
+  function handlePriceMinChange(event) {
     setPriceMin(parseInt(event.target.value) || null);
   }
-  
-  function handlePriceMaxChange(event: React.ChangeEvent<HTMLInputElement>) {
+
+  function handlePriceMaxChange(event) {
     setPriceMax(parseInt(event.target.value) || null);
   }
-  
-  function handleFeature(option: SelectOption | null) {
-    setFeature(option?.value || null);
+
+  function handleFeature(event) {
+    setFeature(event.value);
   }
-  
-  function handleSortChange(option: SelectOption | null) {
-    const value = option?.value;
-    if (value === "price") {
-      setSortByPrice("price");
-      setSortDescending(false);
-    } else if (value === "price-desc") {
-      setSortByPrice("price");
-      setSortDescending(true);
-    }
+
+  function handleSortChange(event) {
+    const value = event.value;
+    setSortByPrice(value);
+    setSortDescending(value);
   }
 
   const featureOptions = featuresList.map((item) => ({
@@ -195,7 +150,8 @@ const Rentals = ({ rentals, features, types, locations }: RentalsPageProps) => {
     instanceId: useId(),
   }));
 
-  const sortOptions: SelectOption[] = [
+  const sortOptions = [
+    // { value: "sort", label: "Sort" },
     { value: "price", label: "Price (low to high)" },
     { value: "price-desc", label: "Price (high to low)" },
   ];
@@ -205,7 +161,6 @@ const Rentals = ({ rentals, features, types, locations }: RentalsPageProps) => {
     { value: "month", label: "Price / month" },
     { value: "day", label: "Price / day" },
   ];
-
 
   return (
     <div className="min-h-screen flex flex-col items-center">
@@ -274,7 +229,7 @@ const Rentals = ({ rentals, features, types, locations }: RentalsPageProps) => {
           <div className="md:flex md:flex-row md:space-x-4">
             <div className="relative mb-6 md:mb-0 md:w-1/4">
               <Select
-                value={typeOptions.find(opt => opt.value === category)}
+                defaultValue={category}
                 onChange={handleCategoryChange}
                 options={typeOptions}
                 placeholder="Type"
@@ -283,7 +238,7 @@ const Rentals = ({ rentals, features, types, locations }: RentalsPageProps) => {
             </div>
             <div className="relative mb-6 md:mb-0 md:w-1/4">
               <Select
-                value={featureOptions.find(opt => opt.value === feature)}
+                defaultValue={feature}
                 onChange={handleFeature}
                 options={featureOptions}
                 placeholder="Feature"
@@ -292,40 +247,47 @@ const Rentals = ({ rentals, features, types, locations }: RentalsPageProps) => {
             </div>
             <div className="relative mb-6 md:mb-0 md:w-1/4">
               <Select
-                value={locationOptions.find(opt => opt.value === location)}
+                defaultValue={location}
                 onChange={handleLocationChange}
                 options={locationOptions}
                 placeholder="Location"
                 isSearchable={false}
+                // value={loc}
               />
             </div>
             <div className="relative mb-6 md:mb-0 md:w-1/4">
               <Select
-                value={priceCategories.find(opt => opt.value === priceCategory)}
-                onChange={handlePriceCategoryChange}
+                defaultValue={priceCategory}
+                onChange={handlePriceCategoryCahnge}
                 options={priceCategories}
                 placeholder="Price Category"
                 isSearchable={false}
               />
+              {/* <p className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none opacity-40">
+                USD
+              </p>
+              <input
+                type="number"
+                placeholder="Price min."
+                className="w-full pl-12 rounded-md border border-gray-300 "
+                onChange={handlePriceMinChange}
+              /> */}
             </div>
             <div className="relative mb-6 md:mb-0 md:w-1/4">
-              <p className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none opacity-40">$</p>
+              <p className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none opacity-40">
+                $
+              </p>
               <input
                 type="number"
                 placeholder="Price max."
-                className="w-full pl-6 rounded-md border border-gray-300"
+                className="w-full pl-6 rounded-md border border-gray-300 "
                 onChange={handlePriceMaxChange}
               />
             </div>
+
             <div className="relative mb-6 md:mb-0 md:w-1/4">
               <Select
-                value={
-                  sortByPrice
-                    ? sortOptions.find(opt =>
-                        sortDescending ? opt.value === "price-desc" : opt.value === "price"
-                      ) || null
-                    : null
-                }
+                // defaultValue={feature}
                 onChange={handleSortChange}
                 options={sortOptions}
                 placeholder="Sort"
@@ -333,91 +295,66 @@ const Rentals = ({ rentals, features, types, locations }: RentalsPageProps) => {
               />
             </div>
           </div>
-
         </div>
       </div>
-
+      
       <div className="max-w-7xl w-full mt-14">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8 px-4">
-            {rentalsList.length > 0 ? (
-              rentalsList.map((property) => (
-                <Link href={`/rental/${property.slug.current}`} className="block">
-                  <div className="bg-white rounded-lg shadow-lg overflow-hidden transition hover:shadow-xl duration-300 h-full flex flex-col justify-between">
-                    {/* Image Section */}
-                    <div className="relative">
-                      <Image
-                        src={`${urlFor(property.mainImage).url()}?w=390&h=290&fit=crop&crop=center`}
-                        alt={property.title}
-                        className="object-cover w-full h-[250px]"
-                        width={390}
-                        height={290}
-                        priority
-                      />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8 px-4">
+          {rentalsList.length > 0 ? (
+            rentalsList.map((property) => (
+              <Link href={`/rental/${property.slug.current}`}>
+                <div
+                  className="max-w-sm rounded overflow-hidden shadow-md mx-auto h-full flex flex-col"
+                  key={property._id}
+                >
+                  <Image
+                    src={`${urlFor(
+                      property.mainImage
+                    ).url()}?w=390&h=290&fit=crop&crop=center`}
+                    alt="card"
+                    className="object-cover lg:object-center"
+                    width={390}
+                    height={290}
+                    priority
+                  />
+                  
+                  <div className="px-6 py-4">
+                    <h1 className="font-bold text-[20px]">{property.title}</h1>
+                  </div>            
 
-                      {/* Favorite Button */}
-                      <button className="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md hover:scale-110 transition">
-                        <Heart className="h-5 w-5 text-gray-600" />
-                      </button>
-
-                      {/* Property Type Badge */}
-                      <div className="absolute bottom-3 left-3 bg-[#008975] text-white text-xs px-3 py-1 rounded-md">
-                        {property.propertyType.typeName}
-                      </div>
-
-                      {/* Beachfront Tag (if applicable) */}
-                      {property.beachfront === "Yes" && (
-                        <div className="absolute bottom-3 right-3 bg-[#0171d0] text-white text-xs px-3 py-1 rounded-md">
-                          Beachfront
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Content Section */}
-                    <div className="flex flex-col justify-between h-full p-4 space-y-2">
-                      {/* Title */}
-                      <h2 className="text-lg font-bold text-gray-900 line-clamp-2 leading-snug min-h-[3rem]">{property.title}</h2>
-
-                      {/* Location */}
-                      <p className="text-sm text-gray-600 line-clamp-1 min-h-[1.25rem]">{property.location.locationName}, Nicaragua</p>
-
-                      {/* Price */}
-                      <p className="text-lg font-bold text-[#008975]">
-                        ${property.price.toLocaleString()} / {property.category === "month" ? "month" : "day"}
+                  {/* Flash Text (On demand) */}
+                  {property.flash_text && (
+                    <div className="flex items-center px-6">
+                      <p className="rounded px-2 font-normal bg-[#ffebeb] text-[#ff0000] w-fit">
+                        {property.flash_text}
                       </p>
-
-                      {/* Features */}
-                      <div className="flex flex-wrap items-center text-sm text-gray-700 mt-2 gap-x-4 gap-y-2">
-                        {property.rooms && (
-                          <div className="flex items-center gap-1">
-                            <BedDouble className="h-4 w-4" />
-                            <span>{property.rooms} beds</span>
-                          </div>
-                        )}
-                        {property.bathrooms && (
-                          <div className="flex items-center gap-1">
-                            <Bath className="h-4 w-4" />
-                            <span>{property.bathrooms} baths</span>
-                          </div>
-                        )}
-                        {property.area_total && (
-                          <div className="flex items-center gap-1">
-                            <Ruler className="h-4 w-4" />
-                            <span>{property.area_total} sqft</span>
-                          </div>
-                        )}
-                      </div>
                     </div>
+                  )}
+                  
+                  <div className="px-6 py-4 text-[17px] mt-auto">
+                    <p className="text-secondary">
+                      {"$"}{property.price} {"/"}
+                      {property.category === "month" ? "month" : "day"}
+                    </p>
+
+                    <p>
+                      {property.propertyType.typeName} {" in "}{" "}
+                      {property.location.locationName}
+                      {", Nicaragua"}
+                    </p>
+                    
+                    
                   </div>
-                </Link>
-              ))
-            ) : (
-              <h1>No Result!</h1>
-            )}
-          </div>
+                </div>
+              </Link>
+            ))
+          ) : (
+            <h1>No Result!</h1>
+          )}
         </div>
-        
-  </div>
+      </div>
+    </div>
   );
 };
 
-export default Rentals;
+export default rentals;

@@ -1,14 +1,11 @@
 import { client } from "./sanity.client";
 
-export async function querySearch(searchTerm: string) {
+export async function querySearch(searchTerm) {
   const query =
-    searchTerm === ""
+    searchTerm == ""
       ? `*[_type == "properties"]`
-      : `*[_type == "properties" && (title match $term || city match $term)]`;
-
-  const params = searchTerm ? { term: `${searchTerm}*` } : {};
-
-  const response = await client.fetch(query, params);
+      : `*[_type == "properties" && title match "${searchTerm}*" || city match "${searchTerm}*"]`;
+  const response = await client.fetch(query);
 
   return response;
 }

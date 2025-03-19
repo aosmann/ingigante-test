@@ -1,9 +1,8 @@
 import nc from "next-connect";
-import type { NextApiRequest, NextApiResponse } from "next";
 
-const handler = nc<NextApiRequest, NextApiResponse>();
+const handler = nc();
 
-handler.get((req, res) => {
+handler.get(async (req, res) => {
   const categories = [
     "Houses",
     "Townhomes",
@@ -13,7 +12,7 @@ handler.get((req, res) => {
     "Apartments",
     "Manufactured",
   ];
-  res.status(200).json(categories); // ✅ Use .json() instead of .send()
+  res.send(categories);
 });
 
 export default handler;
