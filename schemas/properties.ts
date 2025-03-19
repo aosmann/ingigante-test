@@ -1,3 +1,4 @@
+//../pages/schemas/properties.ts
 import { defineField, defineType } from "sanity";
 import { BsBuilding as icon } from "react-icons/bs";
 

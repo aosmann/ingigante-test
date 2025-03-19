@@ -12,13 +12,13 @@ export const getRecentPropertiesSale = async (limit = 5) => {
   const query = `*[_type == "properties"] | order(_createdAt desc)[0...$limit] {
     _id,
     title,
-    price,
+    sellPrice,
     location->{
       locationName
     },
     "image": mainImage.asset->url,
     slug,
-    tag
+    flash_text
   }`;
 
   const properties = await client.fetch(query, { limit });
@@ -26,10 +26,10 @@ export const getRecentPropertiesSale = async (limit = 5) => {
   return properties.map((p: any) => ({
     id: p._id,
     title: p.title,
-    price: p.price,
+    price: p.sellPrice,
     location: p.location?.locationName || "",
     image: p.image,
-    tag: p.tag,
+    tag: p.flash_text,
     link: `/property/${p.slug?.current}`,
   }));
 };
