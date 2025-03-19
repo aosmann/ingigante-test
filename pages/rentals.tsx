@@ -304,17 +304,13 @@ const rentals = ({ rentals, features, types, locations }) => {
           {rentalsList.length > 0 ? (
             rentalsList.map((property) => (
               <Link href={`/rental/${property.slug.current}`}>
-                <div className="bg-white rounded-lg shadow-lg overflow-hidden transition hover:shadow-xl duration-300 h-full flex flex-col justify-between"
-                  key={property._id}
-                  >
-
+                <div className="bg-white rounded-lg shadow-lg overflow-hidden transition hover:shadow-xl duration-300 h-full flex flex-col justify-between">
+                    {/* Image Section */}
                     <div className="relative">
                       <Image
-                        src={`${urlFor(
-                          property.mainImage
-                        ).url()}?w=390&h=290&fit=crop&crop=center`}
-                        alt="card"
-                        className="object-cover lg:object-center"
+                        src={`${urlFor(property.mainImage).url()}?w=390&h=290&fit=crop&crop=center`}
+                        alt={property.title}
+                        className="object-cover w-full h-[250px]"
                         width={390}
                         height={290}
                         priority
@@ -337,12 +333,8 @@ const rentals = ({ rentals, features, types, locations }) => {
                         </div>
                       )}
                     </div>
-                  
-                  <div className="px-6 py-4">
-                    <h1 className="font-bold text-[20px]">{property.title}</h1>
-                  </div>            
 
-                  {/* Content Section */}
+                    {/* Content Section */}
                     <div className="flex flex-col justify-between h-full p-4 space-y-2">
                       {/* Title */}
                       <h2 className="text-lg font-bold text-gray-900 line-clamp-2 leading-snug min-h-[3rem]">{property.title}</h2>
@@ -377,7 +369,7 @@ const rentals = ({ rentals, features, types, locations }) => {
                         )}
                       </div>
                     </div>
-                </div>
+                  </div>
               </Link>
             ))
           ) : (
