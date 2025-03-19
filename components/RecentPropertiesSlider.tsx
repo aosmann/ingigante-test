@@ -4,18 +4,20 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight, Heart, BedDouble, Bath, Ruler } from "lucide-react";
 
 interface Property {
-  _id: string;
+  id: string;
   title: string;
-  sellPrice: number;
-  location: { locationName: string };
-  mainImage: any;
+  price: number;
+  location: string;
+  image: string;
+  tag?: string;
   propertyType?: { typeName: string };
   beachfront?: string;
   rooms?: number;
   bathrooms?: number;
   area_total?: number;
   category?: string;
-  slug: { current: string };
+  slug?: { current: string };
+  link: string;
 }
 
 interface RecentPropertiesSliderProps {
@@ -75,13 +77,13 @@ const RecentPropertiesSlider: React.FC<RecentPropertiesSliderProps> = ({ title, 
       >
         {properties.map((property) => (
           <Link
-            key={property._id}
-            href={`/property/${property.slug.current}`}
+            key={property.id}
+            href={property.link}
             className="flex-shrink-0 min-w-[75%] sm:min-w-[60%] md:min-w-[45%] lg:min-w-[30%] max-w-sm bg-white rounded-lg shadow-lg overflow-hidden transition hover:shadow-xl duration-300 snap-start"
           >
             <div className="relative">
               <Image
-                src={`${property.mainImage?.asset?.url || "/fallback.jpg"}`}
+                src={property.image}
                 alt={property.title}
                 className="object-cover w-full h-[250px]"
                 width={390}
@@ -106,12 +108,12 @@ const RecentPropertiesSlider: React.FC<RecentPropertiesSliderProps> = ({ title, 
               <div>
                 <h2 className="text-lg font-bold text-gray-900 line-clamp-2 leading-snug">{property.title}</h2>
                 <p className="text-sm text-gray-600 line-clamp-1 min-h-[1.25rem]">
-                  {property.location?.locationName}, Nicaragua
+                  {property.location}, Nicaragua
                 </p>
               </div>
               <div className="mt-auto">
                 <p className="text-lg font-bold text-[#008975]">
-                  ${property.sellPrice?.toLocaleString()} / {property.category === "month" ? "month" : "day"}
+                  ${property.price.toLocaleString()} / {property.category === "month" ? "month" : "day"}
                 </p>
                 <div className="flex flex-wrap items-center text-sm text-gray-700 mt-2 gap-x-4 gap-y-2 border-t border-gray-200 pt-4">
                   {property.rooms && (
