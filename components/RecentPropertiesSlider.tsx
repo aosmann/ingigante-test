@@ -79,28 +79,29 @@ const RecentPropertiesSlider: React.FC<RecentPropertiesSliderProps> = ({ title, 
       >
         {properties.map((property) => (
           <Link
-            key={property.id}
-            href={property.link}
-            className="flex-shrink-0 w-72 bg-white border border-gray-200 rounded-lg shadow-md snap-start hover:shadow-lg transition-shadow duration-300"
-          >
-            <div className="relative h-48 w-full rounded-t-lg overflow-hidden">
-              <Image
-                src={property.image}
-                alt={property.title}
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div className="p-4">
-              {property.tag && (
-                <div className="inline-block text-xs text-white bg-primary px-2 py-1 rounded mb-2">
-                  {property.tag}
+                key={property.id}
+                href={property.link}
+                className="flex-shrink-0 min-w-[32%] md:min-w-[30%] lg:min-w-[28%] max-w-[300px] bg-white border border-gray-200 rounded-lg shadow-md snap-start hover:shadow-lg transition-shadow duration-300"
+                >
+            
+                <div className="relative h-48 w-full rounded-t-lg overflow-hidden">
+                <Image
+                    src={property.image}
+                    alt={property.title}
+                    fill
+                    className="object-cover"
+                />
                 </div>
-              )}
-              <h3 className="text-md font-bold text-gray-900 truncate mb-1">{property.title}</h3>
-              <p className="text-sm text-green-700 font-semibold mb-1">${property.price.toLocaleString()}</p>
-              <p className="text-sm text-gray-500">{property.location}</p>
-            </div>
+                <div className="p-4">
+                {property.tag && (
+                    <div className="inline-block text-xs text-white bg-primary px-2 py-1 rounded mb-2">
+                    {property.tag}
+                    </div>
+                )}
+                <h3 className="text-md font-bold text-gray-900 truncate mb-1">{property.title}</h3>
+                <p className="text-sm text-green-700 font-semibold mb-1">${property.price.toLocaleString()}</p>
+                <p className="text-sm text-gray-500">{property.location}</p>
+                </div>
           </Link>
         ))}
       </div>
