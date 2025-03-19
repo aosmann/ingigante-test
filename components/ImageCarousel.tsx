@@ -46,11 +46,11 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
   }, [isViewerOpen]);
 
   return (
-    <div className="grid grid-cols-4 grid-rows-2 gap-4 max-sm:grid-cols-2 max-sm:grid-rows-auto">
-      {/* Large Primary Image */}
+    <div className="grid grid-cols-4 grid-rows-2 gap-4 max-sm:grid-cols-2 max-sm:grid-rows-[auto_auto_auto]">
+      {/* Large Primary Image - force first in DOM order for mobile */}
       {images[0] && (
         <div
-          className="col-span-2 row-span-2 max-sm:col-span-2 max-sm:row-span-1 relative w-full h-96 sm:h-full rounded-lg overflow-hidden cursor-pointer"
+          className="col-span-2 row-span-2 max-sm:col-span-2 max-sm:row-span-1 order-1 relative w-full h-96 sm:h-full rounded-lg overflow-hidden cursor-pointer"
           onClick={() => openViewer(0)}
         >
           <Image
@@ -62,10 +62,10 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
         </div>
       )}
 
-      {/* Thumbnails in specific grid positions */}
+      {/* Thumbnails */}
       {images[1] && (
         <div
-          className="col-start-3 row-start-1 max-sm:col-span-1 relative h-44 w-full rounded-lg overflow-hidden cursor-pointer"
+          className="col-start-3 row-start-1 max-sm:col-span-1 max-sm:order-2 relative h-44 w-full rounded-lg overflow-hidden cursor-pointer"
           onClick={() => openViewer(1)}
         >
           <Image
@@ -79,7 +79,7 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
 
       {images[2] && (
         <div
-          className="col-start-4 row-start-1 max-sm:col-span-1 relative h-44 w-full rounded-lg overflow-hidden cursor-pointer"
+          className="col-start-4 row-start-1 max-sm:col-span-1 max-sm:order-3 relative h-44 w-full rounded-lg overflow-hidden cursor-pointer"
           onClick={() => openViewer(2)}
         >
           <Image
@@ -93,7 +93,7 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
 
       {images[3] && (
         <div
-          className="col-start-3 row-start-2 max-sm:col-span-1 relative h-44 w-full rounded-lg overflow-hidden cursor-pointer"
+          className="col-start-3 row-start-2 max-sm:col-span-1 max-sm:order-4 relative h-44 w-full rounded-lg overflow-hidden cursor-pointer"
           onClick={() => openViewer(3)}
         >
           <Image
@@ -107,7 +107,7 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
 
       {images[4] && (
         <div
-          className="col-start-4 row-start-2 max-sm:col-span-1 relative h-44 w-full rounded-lg overflow-hidden cursor-pointer"
+          className="col-start-4 row-start-2 max-sm:col-span-1 max-sm:order-5 relative h-44 w-full rounded-lg overflow-hidden cursor-pointer"
           onClick={() => openViewer(4)}
         >
           <Image
@@ -127,7 +127,7 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
         </div>
       )}
 
-      {/* Fullscreen Image Viewer Modal */}
+      {/* Fullscreen Viewer */}
       {isViewerOpen && (
         <div
           className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center px-2"
