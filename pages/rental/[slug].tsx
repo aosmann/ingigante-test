@@ -1,451 +1,175 @@
+// Refactored RentalDetails Page - Clean Layout Style
 import { PortableText } from "@portabletext/react";
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { MdOutlineArrowBack } from "react-icons/md";
-
-import "react-responsive-carousel/lib/styles/carousel.min.css";
-import RichTextComponent from "../../components/RichTextComponent";
-import { client, client_with_token } from "../../lib/sanity.client";
-import Map from "../../components/Map";
+import { BedDouble, Bath, Ruler, Car, Waves, Check } from "lucide-react";
 
 import ImageCarousel from "../../components/ImageCarousel";
+import RichTextComponent from "../../components/RichTextComponent";
+import Map from "../../components/Map";
+import { client, client_with_token } from "../../lib/sanity.client";
 
 export const getServerSideProps = async (pageContext) => {
   const pageSlug = pageContext.query.slug;
-
   const query = `*[ _type == "propertiesRent" && slug.current == $pageSlug][0]{
     _id,
-      ...,
-      location->,
-      propertyType->
-    }`;
-
+    ..., 
+    location->,
+    propertyType->
+  }`;
   const rentals = await client.fetch(query, { pageSlug });
-
-  let allImages = rentals.images.concat(rentals.mainImage);
-
-  if (!rentals) {
-    return {
-      props: null,
-      notFound: true,
-    };
-  } else {
-    return {
-      props: {
-        rentals,
-        allImages,
-      },
-    };
-  }
+  let allImages = rentals?.images.concat(rentals?.mainImage);
+  if (!rentals) return { props: null, notFound: true };
+  return { props: { rentals, allImages } };
 };
 
-const RentalDetails = ({ rentals, imagaes }: any) => {
+const RentalDetails = ({ rentals, allImages }) => {
   const formRef = useRef();
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' });
 
-  const submitContact = async (e: any) => {
+  const submitContact = async (e) => {
     e.preventDefault();
     const newContact = {
       _type: "contactForm",
-      firstName: e.target[0].value,
-      lastName: e.target[1].value,
-      email: e.target[3].value,
-      phone: e.target[2].value,
-      message: e.target[4].value,
-      property: {
-        _type: "reference",
-        _ref: rentals._id,
-      },
+      firstName: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      message: formData.message,
+      property: { _type: "reference", _ref: rentals._id },
     };
-    client_with_token
-      .create(newContact)
-      .then((result) => {
-        toast.success("Thank you for your message. We will get back shortly!", {
-          duration: 3000,
-        });
+    client_with_token.create(newContact)
+      .then(() => {
+        toast.success("Thank you for your message!", { duration: 3000 });
         formRef.current.reset();
       })
-      .catch((error) => {
-        toast.error("Something went wrong! Please try again");
-      });
+      .catch(() => toast.error("Something went wrong. Try again!"));
   };
 
   return (
-    
-    <div className="min-h-screen mt-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <Head>
-        <title>
-          {rentals.propertyType.typeName} {" for Rent in "}{" "}
-          {rentals.location.locationName}
-          {", Nicaragua"}
-        </title>
-
-        {/* Google Tag Manager */}
-          <script async src="https://www.googletagmanager.com/gtag/js?id=AW-11184375903"></script>
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', 'AW-11184375903');
-              `,
-            }}
-          />
-        
+        <title>{rentals?.title} | Property for Rent in {rentals?.location?.locationName}, Nicaragua</title>
       </Head>
 
-      <div className="space-y-10 flex flex-col px-4 justify-center items-center bg-gray-50">
-        <div className="flex flex-col items-top justify-center xl:flex-row xl:space-x-4 max-w-[1200px]">
-          <div className="w-full lg:w-[800px]">
-            <div className="space-y-4">
-              <Link href={"/rentals"} className="flex items-center text-[#484848] w-fit pl-[0.4rem] pr-[1rem] rounded">
-                <MdOutlineArrowBack size={20} />
-                <p className="text-lg ml-[0.1rem]">Back</p>
-              </Link>
-              <h1 className="text-[25px] leading-none sm:text-[35px] md:text-[35px] lg:text-[35px] text-normal mb-6 pb-6 text-normal">
-                {rentals.propertyType.typeName} {" for Rent in "}{" "}
-                {rentals.location.locationName}
-                {", Nicaragua"}
-              </h1>
-            </div>
-            
-            {/* Slider */}
-            <ImageCarousel images={rentals.images} />
-            
-            {/* Price */} {/* Details */}
-            <div className="text-left pt-4">
-            
-              {/* Flash Text (On demand) */}
-              <div className="flex items-center space-x-4">
-                <p className="font-normal bg-[#ffebeb] text-[#ff0000] w-fit rounded px-2">
-                  {rentals.flash_text}
-                </p>
-                
-                {rentals.price_old && rentals.price && (
-                  <p className="flex text-white bg-red-500 font-light rounded px-2">
-                    {Math.round(((rentals.price_old - rentals.price) / rentals.price_old) * 100)}% discount
-                  </p>
-                )}
+      {/* Back & Title Row */}
+      <div className="space-y-4 mb-6">
+        <Link href="/rentals" className="flex items-center text-gray-600 hover:text-primary">
+          <MdOutlineArrowBack className="mr-2" /> Back
+        </Link>
+        <div className="flex justify-between items-center">
+          <h1 className="text-lg text-gray-600">
+            {rentals?.propertyType?.typeName} for Rent in {rentals?.location?.locationName}
+          </h1>
+        </div>
+      </div>
+
+      {/* Gallery */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        <div className="relative h-[400px]">
+          <ImageCarousel images={allImages} />
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        {/* Property Info */}
+        <div className="lg:col-span-2">
+          <div className="bg-white rounded-xl shadow-sm p-6 space-y-6">
+            <div className="flex justify-between items-start">
+              <div>
+                <h2 className="text-3xl font-bold text-gray-900 mb-2">{rentals?.title}</h2>
+                <p className="text-2xl text-green-600 font-semibold">${rentals?.price}</p>
+                <p className="text-gray-600">{rentals?.location?.locationName}, Nicaragua</p>
               </div>
-            
-              <div className="flex items-end space-x-4 pt-3">
-                <h2 className="text-4xl font-normal">
-                  {"$"}
-                  {rentals.price}
-                  {"/"}
-                  {rentals.category === "month" ? "month" : "day"}
-                </h2>
-
-                {rentals.price_old && rentals.price && (
-                  <h2 className="text-2xl font-thin line-through opacity-60">
-                      {"$"}
-                      {rentals.price_old}
-                      {"/"}
-                      {rentals.category === "month" ? "month" : "day"}
-                    </h2>
-                )}
-
-              </div>
-
-            {/* Title */}
-              <div className="flex items-center text-xl font-normal text-gray-700 pt-3">
-                <p>
-                  {rentals.title}, {rentals.location.locationName}
-                  {", Nicaragua"}
-                </p>
-              </div>
-
-            {/* Mini details */}
-              <div className="flex items-center text-gray-500 font-normal">
-                {[
-                  rentals.rooms && `${rentals.rooms} rooms`,
-                  rentals.bathrooms && `${rentals.bathrooms} bathrooms`,
-                  rentals.area_usable && `${rentals.area_usable} m²`,
-                ]
-                  .filter(Boolean) // Remove falsy values (null, undefined, 0, "")
-                  .join(", ")}
-              </div>
-            </div>
-            <div className="space-y-4 pt-6 pr-[1rem]">
-              <p className="text-xl font-bold border-b pb-2 text-gray-700">
-                Details
-              </p>
-              <div className="space-y-2">
-                {rentals.location?.locationName && (
-                  <div className="flex justify-between border-b py-2">
-                    <p className="font-medium text-gray-700">City:</p>
-                    <p className="text-gray-500">
-                      {rentals.location.locationName}
-                    </p>
-                  </div>
-                )}
-
-                {rentals.propertyType?.typeName && (
-                  <div className="flex justify-between border-b py-2">
-                    <p className="font-medium text-gray-700">Type:</p>
-                    <p className="text-gray-500">
-                      {rentals.propertyType.typeName}
-                    </p>
-                  </div>
-                )}
-
-                {rentals.beachfront === "Yes" && (
-                  <div className="flex justify-between border-b py-2">
-                    <p className="font-medium text-gray-700">Beachfront:</p>
-                    <p className="text-gray-500">Yes</p>
-                  </div>
-                )}
-
-                {rentals.lotSize && (
-                  <div className="flex justify-between border-b py-2">
-                    <p className="font-medium text-gray-700">Land Area:</p>
-                    <p className="text-gray-500">{`${rentals.lotSize.toLocaleString()} m²`}</p>
-                  </div>
-                )}
-
-                {rentals.area_total && (
-                  <div className="flex justify-between border-b py-2">
-                    <p className="font-medium text-gray-700">Property Area:</p>
-                    <p className="text-gray-500">
-                      {`${rentals.area_total.toLocaleString()} m²`}
-                    </p>
-                  </div>
-                )}
-
-                {rentals.rooms && (
-                  <div className="flex justify-between border-b py-2">
-                    <p className="font-medium text-gray-700">Rooms:</p>
-                    <p className="text-gray-500">{rentals.rooms}</p>
-                  </div>
-                )}
-
-                {rentals.bathrooms && (
-                  <div className="flex justify-between border-b py-2">
-                    <p className="font-medium text-gray-700">Bathrooms:</p>
-                    <p className="text-gray-500">{rentals.bathrooms}</p>
-                  </div>
-                )}
-
-                {rentals.parking === "Yes" && (
-                  <div className="flex justify-between border-b py-2">
-                    <p className="font-medium text-gray-700">Parking:</p>
-                    <p className="text-gray-500">Yes</p>
-                  </div>
-                )}
-
-                {rentals.propertyId && (
-                  <div className="flex justify-between border-b py-2">
-                    <p className="font-medium text-gray-700">ID:</p>
-                    <p className="text-gray-500">{rentals.propertyId}</p>
-                  </div>
+              <div className="flex space-x-2">
+                <span className="px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+                  {rentals?.propertyType?.typeName}
+                </span>
+                {rentals?.beachfront === "Yes" && (
+                  <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                    Beachfront
+                  </span>
                 )}
               </div>
             </div>
-            <div className="space-y-4 pt-10 pb-4">
-              <p className="text-xl font-bold border-b pb-2 text-gray-700">
-                Description
-              </p>
-              <div className="space-y-2 text-gray-700">
-                <PortableText
-                  value={rentals.overview}
-                  components={RichTextComponent}
-                />
 
-                {rentals.vrview ? (
-                  <iframe
-                    height="400px"
-                    width="100%"
-                    allowFullScreen="true"
-                    src={rentals.vrview}
-                  ></iframe>
-                ) : (
-                  ""
-                )}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4 border-y">
+              {rentals?.rooms && (
+                <div className="flex items-center text-gray-600"><BedDouble className="mr-2" />{rentals.rooms} beds</div>
+              )}
+              {rentals?.bathrooms && (
+                <div className="flex items-center text-gray-600"><Bath className="mr-2" />{rentals.bathrooms} baths</div>
+              )}
+              {rentals?.area_total && (
+                <div className="flex items-center text-gray-600"><Ruler className="mr-2" />{rentals.area_total} m²</div>
+              )}
+              {rentals?.parking === "Yes" && (
+                <div className="flex items-center text-gray-600"><Car className="mr-2" />Parking</div>
+              )}
+            </div>
 
-                <Link href={"/contact"} className="underline block sm:hidden">
-                  Contact Us {">"}
-                </Link>
+            <div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Description</h3>
+              <div className="text-gray-700 text-sm">
+                <PortableText value={rentals?.overview} components={RichTextComponent} />
               </div>
             </div>
-            {/* Mapbox */}
-            <div className="flex justify-center py-4">
-              {/* <Image src={map} alt='map' /> */}
-              <Map location={rentals.maplocation} />
+
+            <div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Features</h3>
+              <ul className="grid grid-cols-2 gap-4 text-gray-700 text-sm">
+                {rentals?.parking === "Yes" && (
+                  <li className="flex items-center"><Car className="mr-2" />Parking Available</li>
+                )}
+                {rentals?.beachfront === "Yes" && (
+                  <li className="flex items-center"><Waves className="mr-2" />Beachfront Property</li>
+                )}
+                {rentals?.features?.map((feature, index) => (
+                  <li key={index} className="flex items-center"><Check className="mr-2 text-primary" />{feature}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="pt-6">
+              <Map location={rentals?.maplocation} />
             </div>
           </div>
+        </div>
 
-          <div className="mt-6 lg:mt-[6.4rem] space-y-6 w-full mb-20">
-
-            {/*CONTACT FORM*/}
-          <div className="bg-white rounded-lg shadow-sm p-6 text-gray-800 space-y-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Contact Us</h2>
+        {/* Contact Form */}
+        <div className="lg:col-span-1">
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">Interested in this property?</h3>
             <Toaster />
-            <form
-              className="space-y-4"
-              id="property"
-              ref={formRef}
-              onSubmit={submitContact}
-            >
-              <div>
-                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
-                <input
-                  type="text"
-                  name="firstName"
-                  id="firstName"
-                  placeholder="First Name"
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-                />
-              </div>
-              <div>
-                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
-                <input
-                  type="text"
-                  name="lastName"
-                  id="lastName"
-                  placeholder="Last Name"
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-                />
-              </div>
-              <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-                <input
-                  type="tel"
-                  name="phone"
-                  id="phone"
-                  placeholder="+1(500) 000 000"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-                />
-              </div>
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  placeholder="your@company.com"
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-                />
-              </div>
-              <div>
-                <label htmlFor="comment" className="block text-sm font-medium text-gray-700 mb-1">Message</label>
-                <textarea
-                  id="comment"
-                  name="comment"
-                  rows={5}
-                  placeholder="Leave us a message..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-                  required
-                ></textarea>
-              </div>
-          
-              <button
-                type="submit"
-                className="w-full py-3 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary/90 transition duration-300"
-              >
-                Send Message
+            <form onSubmit={submitContact} ref={formRef} className="space-y-4">
+              <input
+                type="text" name="name" placeholder="Name" required
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              />
+              <input
+                type="email" name="email" placeholder="Email" required
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              />
+              <input
+                type="tel" name="phone" placeholder="Phone"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              />
+              <textarea
+                name="message" placeholder="Message" rows={4} required
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
+                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+              />
+              <button type="submit" className="w-full py-3 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary/90">
+                Contact Agent
               </button>
             </form>
-          </div>
-
-            
-            
-
-          <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
-            <Link
-              href="https://ingigante.com/rental/hotel-ingigante-rent"
-              target="_blank"
-              >
-              {/* Image Section */}
-              <div className="h-40 relative">
-                <Image
-                  src="/assets/images/hotel-cover.webp"
-                  alt="Hotel Ingigante"
-                  className="h-full w-full object-cover"
-                  layout="fill" // Automatically fits container dimensions
-                  objectFit="cover"
-                />
-              </div>
-        
-              {/* Content Section */}
-              <div className="p-4">
-                <div className="bg-[#ffebeb] text-[#ff0000] w-fit rounded px-2">Promoted</div>
-                <h3 className="text-lg font-bold text-gray-800 pt-2">Hotel Ingigante</h3>
-                 <div className="flex items-center text-gray-500 font-normal mb-4">14 rooms, 14 bathrooms, 1,867.72 m²</div>
-        
-                {/* Buttons */}
-                <div className="flex gap-2">
-                  {/* Button to Check Hotel */}
-                  <a
-                    href="https://ingigante.com/rental/hotel-ingigante-rent"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 text-center border border-[#236253] text-green-800 py-2 rounded-md text-sm hover:bg-[#d4e8e3]"
-                  >
-                    Check hotel
-                  </a>
-        
-                  {/* Button to Book Now */}
-                  <a
-                    href="https://us2.cloudbeds.com/reservation/MBptIV"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 text-center bg-[#236253] text-white py-2 rounded-md text-sm hover:bg-[#134a3d]"
-                  >
-                    Book now
-                  </a>
-                </div>
-              </div>
-              </Link>
-            </div>
-
-
-            {/*Promoted box 2*/}
-              <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
-                <Link
-              href="https://ingigante.com/property/surf-ranch-popoyo-home"
-              target="_blank"
-              >
-                  
-                {/* Image Section */}
-                <div className="h-40 relative">
-                  <Image
-                    src="/assets/images/promoted-2.webp"
-                    alt="Surf Ranch Popoyo Home"
-                    className="h-full w-full object-cover"
-                    layout="fill" // Automatically fits container dimensions
-                    objectFit="cover"
-                  />
-                </div>
-          
-                {/* Content Section */}
-                <div className="p-4">
-                  <div className="bg-[#ffebeb] text-[#ff0000] w-fit rounded px-2">Hot SALE</div>
-                  <h3 className="text-lg font-bold text-gray-800 pt-2">Surf Ranch Popoyo Home</h3>
-                   <div className="flex items-center text-gray-500 font-normal mb-4">5 rooms, 4 bathrooms, 275 m²</div>
-          
-                  {/* Buttons */}
-                  <div className="flex gap-2">
-                    {/* Button to Check Hotel */}
-                    <a
-                      href="https://ingigante.com/property/surf-ranch-popoyo-home"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 text-center bg-[#236253] text-white py-2 rounded-md text-sm hover:bg-[#134a3d]"
-                    >
-                      Buy Home
-                    </a>
-                  </div>
-                </div>
-                </Link>
-              </div>
-            
-            
           </div>
         </div>
       </div>
