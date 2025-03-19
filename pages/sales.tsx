@@ -296,81 +296,32 @@ function sales({ propertiesList, types, locations }) {
                 className="relative max-w-sm rounded overflow-hidden shadow-md mx-auto h-full flex flex-col"
                 key={property._id}
               >
-                <Link href={`/property/${property.slug.current}`}>
-  <div className="bg-white rounded-lg shadow-lg overflow-hidden transition hover:shadow-xl duration-300 h-full flex flex-col justify-between">
-    {/* Image Section */}
-    <div className="relative">
-      <Image
-        src={`${urlFor(property.mainImage).url()}?w=390&h=290&fit=crop&crop=center`}
-        alt={property.title}
-        className="object-cover w-full h-[250px]"
-        width={390}
-        height={290}
-        priority
-      />
-
-      {/* Favorite Button */}
-      <button className="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md hover:scale-110 transition">
-        <Heart className="h-5 w-5 text-gray-600" />
-      </button>
-
-      {/* Property Type Badge */}
-      {property.propertyType?.typeName && (
-        <div className="absolute bottom-3 left-3 bg-[#008975] text-white text-xs px-3 py-1 rounded-md uppercase font-extrabold">
-          {property.propertyType.typeName}
-        </div>
-      )}
-
-      {/* Beachfront Tag (if applicable) */}
-      {property.beachfront === "Yes" && (
-        <div className="absolute bottom-3 right-3 bg-[#0171d0] text-white text-xs px-3 py-1 rounded-md uppercase font-extrabold">
-          Beachfront
-        </div>
-      )}
-    </div>
-
-    {/* Content Section */}
-    <div className="flex flex-col justify-between h-full p-4 space-y-2">
-      <div>
-        {/* Title */}
-        <h2 className="text-lg font-bold text-gray-900 line-clamp-2 leading-snug">{property.title}</h2>
-
-        {/* Location */}
-        <p className="text-sm text-gray-600 line-clamp-1 min-h-[1.25rem]">{property.location.locationName}, Nicaragua</p>
-      </div>
-
-      {/* Price */}
-      <div className="mt-auto">
-        <p className="text-lg font-bold text-[#008975]">
-          ${property.sellPrice?.toLocaleString()}
-        </p>
-
-        {/* Features */}
-        <div className="flex flex-wrap items-center text-sm text-gray-700 mt-2 gap-x-4 gap-y-2 border-t border-gray-200 pt-4">
-          {property.rooms && (
-            <div className="flex items-center gap-1">
-              <BedDouble className="h-4 w-4" />
-              <span>{property.rooms} beds</span>
-            </div>
-          )}
-          {property.bathrooms && (
-            <div className="flex items-center gap-1">
-              <Bath className="h-4 w-4" />
-              <span>{property.bathrooms} baths</span>
-            </div>
-          )}
-          {property.area_total && (
-            <div className="flex items-center gap-1">
-              <Ruler className="h-4 w-4" />
-              <span>{property.area_total} sqft</span>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  </div>
+                <Link
+                  href={`/property/${property.slug.current}`}
+                  key={property._id}
+                >
+                  <Image
+                    src={`${urlFor(
+                      property.mainImage
+                    ).url()}?w=390&h=290&fit=crop&crop=center`}
+                    alt="card"
+                    className="object-cover lg:object-center"
+                    width={390}
+                    height={290}
+                    priority
+                  />
+                  
+                  <div className="px-6 py-4">
+                    <h1 className="font-bold text-[20px]">{property.title}</h1>
+                  </div>
+                  
+                  <div className="px-6 py-4 text-[17px] mt-auto">
+                    <p className="text-secondary">
+                      {"$"}{property.sellPrice.toLocaleString()}
+                    </p>
+                    <p>{property.location.locationName}</p>
+                  </div>
                 </Link>
-
               </div>
             ))
           ) : (
