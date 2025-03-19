@@ -12,7 +12,7 @@ import ImageCarousel from "../../components/ImageCarousel";
 import RichTextComponent from "../../components/RichTextComponent";
 import { Car, Bath, BedDouble, Ruler } from "lucide-react";
 import RecentPropertiesSlider from "../../components/RecentPropertiesSlider";
-import { getRecentPropertiesSale } from "../../lib/getPropertiesSale";
+import { getRecentPropertiesSale } from "../../lib/getProperties";
 
 
 export const getServerSideProps = async (pageContext) => {
