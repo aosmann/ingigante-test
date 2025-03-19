@@ -79,7 +79,7 @@ const RecentPropertiesSlider: React.FC<RecentPropertiesSliderProps> = ({ title, 
           <Link
             key={property.id}
             href={property.link}
-            className="flex-shrink-0 min-w-[75%] sm:min-w-[60%] md:min-w-[45%] lg:min-w-[30%] max-w-sm bg-white rounded-lg shadow-lg overflow-hidden transition hover:shadow-xl duration-300 snap-start"
+            className="flex-shrink-0 min-w-[75%] sm:min-w-[60%] md:min-w-[45%] lg:min-w-[30%] max-w-sm bg-white rounded-lg shadow-lg overflow-hidden transition duration-300 snap-start"
           >
             <div className="relative">
               <Image
