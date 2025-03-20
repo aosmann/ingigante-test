@@ -77,13 +77,15 @@ const Offers = ({ properties }: any) => {
   return (
     <section className="text-primary flex flex-col bg-[#F4F4F4] justify-center items-center py-9 md:items-center">
       <div className="max-w-7xl mt-6 mb-10 px-4">
+        {/* 
         <div className="mb-10 px-4">
           <h2 className="text-[35px] font-bold">Featured Listings</h2>
           <p className="text-[16px] opacity-60">
             Fulfill your career dreams, enjoy all the achievements of the city
             center and luxury housing to the fullest
           </p>
-        </div>
+        </div>*/}
+        {/* 
         <div className="max-w-7xl w-screen space-x-4">
           <Slider {...settings}>
             {properties.map((property) => (
@@ -122,29 +124,7 @@ const Offers = ({ properties }: any) => {
                   </div>
                 </div>
 
-                {/*
-                <div className="max-w-sm rounded overflow-hidden mx-auto bg-white">
-                  <Image
-                    src={`${urlFor(
-                      property.mainImage
-                    ).url()}?w=390&h=290&fit=crop&crop=center`}
-                    alt="card"
-                    className="object-cover lg:object-center"
-                    width={390}
-                    height={290}
-                  />
-                  <div className="px-6 py-4 text-left">
-                    <h1 className="text-[20px]">{property.title}</h1>
-                  </div>
-                  <div className="px-6 py-4 text-[17px] text-left">
-                    <p className="opacity-60 pb-1">{property.propertyType.typeName}</p>
-                    <p className="opacity-60 pb-1">in {property.location.locationName}</p>
-                    <p className="text-secondary font-bold">
-                      {"$"}{property.sellPrice.toLocaleString()}
-                    </p>
-                  </div>
-                  </div>
-                  */}
+                
               </Link>
             ))}
           </Slider>
@@ -156,6 +136,7 @@ const Offers = ({ properties }: any) => {
             </button>
           </Link>
         </div>
+        */}
         <div>
             <RecentPropertiesSlider
             title="Recently Added Properties"
