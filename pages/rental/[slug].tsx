@@ -160,12 +160,12 @@ const RentalDetails = ({ rentals, allImages, recentProperties }: any) => {
           </div>
         </div>
       </div>
-      {/* */}
-      <RecentPropertiesSlider
+      {/* <RecentPropertiesSlider
         title="Recently Added Properties"
         properties={properties}
         seeAllLink="/properties"
-      />
+      /> */}
+     
  
     </div>
   );
