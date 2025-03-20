@@ -40,7 +40,7 @@ const Reference = ({ references }) => {
         <Slider {...settings}>
           {references.map((reference) => (
             <div key={reference._id} className="px-4">
-              <div className="bg-[#F4F4F4] p-6 sm:p-8 h-full rounded-xl shadow-md flex flex-col justify-between min-h-[300px] text-left">
+              <div className="bg-[#F4F4F4] p-6 sm:p-8 h-full rounded-xl flex flex-col justify-between min-h-[300px] text-left">
                 <div className="flex-1">
                   <GoQuote className="text-4xl text-gray-300 mb-4" />
                   <p className="text-gray-700 text-sm leading-relaxed">{reference.referenceText}</p>

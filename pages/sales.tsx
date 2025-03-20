@@ -313,15 +313,16 @@ function sales({ propertiesList, types, locations }) {
                     
                     {/* Image Section */}
                     <div className="relative">
-                    <Image
-                      src={urlFor(property.mainImage).url()}
-                      alt={property.title}
-                      className="object-cover"
-                      fill
-                      loading={index < 3 ? "eager" : "lazy"}
-                      priority={index < 3}
-                    />
-                  
+                      <Image
+                        src={`${urlFor(
+                          property.mainImage
+                        ).url()}?w=390&h=290&fit=crop&crop=center`}
+                        alt="card"
+                        className="object-cover w-full h-[250px]"
+                        width={390}
+                        height={290}
+                        priority
+                      />                    
 
                       {/* Property Type Badge */}
                       <div className="absolute bottom-3 left-3 bg-[#008975] text-white text-xs px-3 py-1 rounded-md uppercase font-extrabold">
