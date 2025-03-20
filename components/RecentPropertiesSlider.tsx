@@ -1,3 +1,5 @@
+//RecentPropertiesSlider.tsx
+
 import Link from "next/link";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, Heart, BedDouble, Bath, Ruler } from "lucide-react";

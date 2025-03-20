@@ -158,7 +158,11 @@ const RentalDetails = ({ rentals, allImages, recentProperties }: any) => {
           </div>
         </div>
       </div>
-      
+      <RecentPropertiesSlider
+        title="Recently Added Properties for Sale"
+        properties={recentProperties}
+        seeAllLink="/properties"
+      />
 
     </div>
   );
