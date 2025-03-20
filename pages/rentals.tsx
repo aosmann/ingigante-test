@@ -329,10 +329,6 @@ const rentals = ({ rentals, features, types, locations }) => {
                         priority
                       />
 
-                      {/* Favorite Button */}
-                      <button className="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md hover:scale-110 transition">
-                        <Heart className="h-5 w-5 text-gray-600" />
-                      </button>
 
                       {/* Property Type Badge */}
                       <div className="absolute bottom-3 left-3 bg-[#008975] text-white text-xs px-3 py-1 rounded-md uppercase font-extrabold">
