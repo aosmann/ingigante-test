@@ -4,26 +4,29 @@ import Image from "next/image";
 
 const OurTeam = ({ teamMembers }) => {
   return (
-    <section className="text-primary flex flex-col bg-white justify-center items-center">
-      <div className="max-w-7xl mt-10 mb-10 px-4 text-center">
-        <div className="mb-10">
-          <h1 className="text-[35px] sm:text-[50px] ">Our Team</h1>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-16 mb-8 sm:mb-2 place-content-center">
+    <section className="bg-white py-16">
+      <div className="max-w-7xl mx-auto px-4 text-center">
+        <h2 className="text-3xl sm:text-4xl font-bold text-primary mb-12">Our Team</h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-12 place-items-center">
           {teamMembers.map((member) => (
-            <div className="max-w-sm overflow-hidden mx-auto" key={member._id}>
-              <div className="relative w-[240px] h-[297px]">
+            <div
+              key={member._id}
+              className="bg-white rounded-xl shadow-md hover:shadow-lg transition duration-300 w-full max-w-xs text-center"
+            >
+              <div className="relative w-full h-72 overflow-hidden rounded-t-xl">
                 <Image
                   src={urlFor(member.image).url()}
-                  alt="card"
+                  alt={member.name}
                   fill
-                  style={{ objectFit: "cover" }}
-                  key={member._id}
+                  className="object-cover"
                 />
               </div>
 
-              <h1 className="font-bold text-[20px] mt-3">{member.name}</h1>
-              <p>{member.position}</p>
+              <div className="p-4">
+                <h3 className="text-lg font-semibold text-gray-800">{member.name}</h3>
+                <p className="text-sm text-gray-500">{member.position}</p>
+              </div>
             </div>
           ))}
         </div>

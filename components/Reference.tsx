@@ -3,35 +3,24 @@ import Slider from "react-slick";
 import { GoQuote } from "react-icons/go";
 
 const Reference = ({ references }) => {
-  var settings = {
+  const settings = {
     dots: true,
     infinite: true,
+    autoplay: true,
+    autoplaySpeed: 5000,
+    speed: 600,
     slidesToShow: 2,
     slidesToScroll: 2,
-    autoplay: true,
-    autoplaySpeed: 4000,
-    speed: 500,
-    initialSlide: 0,
     responsive: [
       {
         breakpoint: 1024,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 2,
-          infinite: true,
-          dots: true,
         },
       },
       {
-        breakpoint: 640,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          initialSlide: 1,
-        },
-      },
-      {
-        breakpoint: 480,
+        breakpoint: 768,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
@@ -39,27 +28,26 @@ const Reference = ({ references }) => {
       },
     ],
   };
+
   return (
-    <section className="text-primary bg-white mt-10 mb-10 items-center justify-center xl:flex py-14">
-      <div className="max-w-7xl px-4">
-        <h1 className="text-[35px] lg:text-[50px]">References</h1>
-        <p className="text-[17px] sm:text-[20px]">
+    <section className="bg-white py-16">
+      <div className="max-w-7xl mx-auto px-4 text-center">
+        <h2 className="text-3xl sm:text-4xl font-bold text-primary mb-2">References</h2>
+        <p className="text-base sm:text-lg text-gray-600 mb-10">
           Here is what our customers say about us.
         </p>
 
-        <Slider {...settings} className="mt-5 w-full">
+        <Slider {...settings}>
           {references.map((reference) => (
-            <div key={reference._id} className="px-2">
-              <div className="bg-[#F4F4F4] p-6 h-full flex flex-col min-h-[300px]">
+            <div key={reference._id} className="px-4">
+              <div className="bg-[#F4F4F4] p-6 sm:p-8 h-full rounded-xl shadow-md flex flex-col justify-between min-h-[300px] text-left">
                 <div className="flex-1">
-                  <GoQuote className="text-3xl opacity-30 mb-4" />
-                  <p className="text-justify">{reference.referenceText}</p>
+                  <GoQuote className="text-4xl text-gray-300 mb-4" />
+                  <p className="text-gray-700 text-sm leading-relaxed">{reference.referenceText}</p>
                 </div>
-                <div className="pt-6 border-t border-gray-200 mt-6">
-                  <h3 className="text-[20px] font-bold">
-                    {reference.clientName}
-                  </h3>
-                  <p>{reference.propertyName}</p>
+                <div className="mt-6 border-t pt-4 border-gray-300">
+                  <h3 className="text-lg font-semibold text-gray-800">{reference.clientName}</h3>
+                  <p className="text-sm text-gray-500">{reference.propertyName}</p>
                 </div>
               </div>
             </div>
