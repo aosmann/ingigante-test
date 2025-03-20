@@ -312,17 +312,14 @@ function sales({ propertiesList, types, locations }) {
                   <div className="bg-white rounded-lg shadow-lg overflow-hidden transition hover:shadow-xl duration-300 h-full flex flex-col justify-between">
                     
                     {/* Image Section */}
-                    <div className="relative">
+                    <div className="relative w-full aspect-[16/10] overflow-hidden">
                       <Image
-                        src={`${urlFor(
-                          property.mainImage
-                        ).url()}?w=390&h=290&fit=crop&crop=center`}
-                        alt="card"
-                        className="object-cover w-full h-[250px]"
-                        width={390}
-                        height={290}
+                        src={`${urlFor(property.mainImage).url()}?w=800&h=500&fit=crop&crop=center`}
+                        alt={property.title}
+                        fill
+                        className="object-cover"
                         priority
-                      />                    
+                      />                   
 
                       {/* Property Type Badge */}
                       <div className="absolute bottom-3 left-3 bg-[#008975] text-white text-xs px-3 py-1 rounded-md uppercase font-extrabold">

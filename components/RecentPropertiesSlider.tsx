@@ -15,11 +15,19 @@ import { client } from "../lib/sanity.client";
 import { GetStaticProps } from "next";
 
 export async function getRecentPropertiesSale(limit = 5) {
-    const query = `*[_type == "properties"] | order(_createdAt desc)[0...$limit]{
-      ...,
-      location->,
-      propertyType->
-    }`;
+  const query = `*[_type == "properties" && defined(sellPrice)] | order(_createdAt desc)[0...5] {
+    _id,
+    title,
+    sellPrice,
+    location->{locationName},
+    mainImage,
+    propertyType->{typeName},
+    beachfront,
+    rooms,
+    bathrooms,
+    area_total,
+    slug
+  }`;
     const params = { limit };
     const response = await client.fetch(query, params);
     return response;
@@ -48,20 +56,6 @@ interface RecentPropertiesSliderProps {
   properties: Property[];
   seeAllLink?: string;
 }
-
-const query = `*[_type == "properties" && defined(sellPrice)] | order(_createdAt desc)[0...5] {
-  _id,
-  title,
-  sellPrice,
-  location->{locationName},
-  mainImage,
-  propertyType->{typeName},
-  beachfront,
-  rooms,
-  bathrooms,
-  area_total,
-  slug
-}`;
 
 const RecentPropertiesSlider: React.FC<RecentPropertiesSliderProps> = ({ title, description, properties, seeAllLink }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
