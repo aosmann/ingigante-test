@@ -1,5 +1,5 @@
 //RecentPropertiesSlider.tsx 
-
+//test
 import Link from "next/link";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, Heart, BedDouble, Bath, Ruler } from "lucide-react";
@@ -39,7 +39,7 @@ interface Property {
     area_total?: number;
     slug?: { current: string };
   }
-  
+   
   
 
 interface RecentPropertiesSliderProps {
