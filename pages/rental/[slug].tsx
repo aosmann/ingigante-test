@@ -37,6 +37,13 @@ export const getServerSideProps = async (pageContext) => {
   };
 };
 
+export async function getStaticProps() {
+  const properties = await getProperties({}); // or filter some recent ones
+  return {
+    props: { properties },
+  };
+}
+
 const RentalDetails = ({ rentals, allImages, recentProperties }: any) => {
   const formRef = useRef();
   const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '', phone: '', message: '' });
@@ -159,8 +166,8 @@ const RentalDetails = ({ rentals, allImages, recentProperties }: any) => {
         </div>
       </div>
       <RecentPropertiesSlider
-        title="Recently Added Properties for Sale"
-        properties={recentProperties}
+        title="Recently Added Properties"
+        properties={properties}
         seeAllLink="/properties"
       />
 
