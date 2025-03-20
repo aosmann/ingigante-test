@@ -7,7 +7,6 @@ import { FiChevronDown, FiSearch } from "react-icons/fi";
 import Head from "next/head";
 import urlFor from "../lib/urlFor";
 
-
 import { useRouter } from "next/router";
 
 import { client } from "../lib/sanity.client";
@@ -34,16 +33,6 @@ interface RecentPropertiesSliderProps {
   title: string;
   properties: Property[];
   seeAllLink?: string;
-}
-
-export async function getProperties() {
-  const query = `*[_type == "properties"] | order(_createdAt desc){
-    ...,
-    location->,
-    propertyType->
-  }`
-  const response = await client.fetch(query);
-  return response;
 }
 
 

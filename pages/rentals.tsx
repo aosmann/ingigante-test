@@ -7,10 +7,13 @@ import urlFor from "../lib/urlFor";
 import Image from "next/image";
 import Select from "react-select";
 import { getPropertiesRent } from "../lib/api";
+import { getProperties } from "../lib/api";
+import RecentPropertiesSlider from "../components/RecentPropertiesSlider";
 import { useRouter } from "next/router";
 import { BedDouble, Bath, Ruler, Heart } from "lucide-react";
 
 export const getStaticProps = async () => {
+  
   const rentals =
     await client.fetch(`*[_type == "propertiesRent" && _id in path("drafts.**") == false && _id in path("live.**")]{
     ...,
@@ -33,15 +36,21 @@ export const getStaticProps = async () => {
     ...,
   }`);
 
+  const properties = await getProperties({});
+
   return {
     props: {
       rentals,
       features,
       types,
       locations,
+      revalidate: 60,
     },
   };
 };
+
+
+
 
 const rentals = ({ rentals, features, types, locations }) => {
   const inputRef = useRef(null);
