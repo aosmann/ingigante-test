@@ -309,17 +309,19 @@ function sales({ propertiesList, types, locations }) {
                 key={property._id}
               >
                   <Link key={property._id} href={`/property/${property.slug.current}`} className="block">
-                  <div className="bg-white rounded-lg shadow-lg overflow-hidden transition hover:shadow-xl duration-300 h-full flex flex-col justify-between">
+                  <div className="bg-white rounded-lg shadow-lg hover:shadow-xl transition duration-300 overflow-hidden flex flex-col h-full">
                     
                     {/* Image Section */}
-                    <div className="relative w-full aspect-[16/10] overflow-hidden">
-                      <Image
-                        src={`${urlFor(property.mainImage).url()}?w=800&h=500&fit=crop&crop=center`}
-                        alt={property.title}
-                        fill
-                        className="object-cover"
-                        priority
-                      />                   
+                    <div className="relative">
+                    <Image
+                      src={urlFor(property.mainImage).url()}
+                      alt={property.title}
+                      className="object-cover"
+                      fill
+                      loading={index < 3 ? "eager" : "lazy"}
+                      priority={index < 3}
+                    />
+                  
 
                       {/* Property Type Badge */}
                       <div className="absolute bottom-3 left-3 bg-[#008975] text-white text-xs px-3 py-1 rounded-md uppercase font-extrabold">
