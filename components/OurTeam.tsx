@@ -12,9 +12,9 @@ const OurTeam = ({ teamMembers }) => {
           {teamMembers.map((member) => (
             <div
               key={member._id}
-              className="bg-white rounded-xl shadow-md hover:shadow-lg transition duration-300 w-full max-w-xs text-center"
+              className="transition duration-300 w-full max-w-xs text-center"
             >
-              <div className="relative w-full h-72 overflow-hidden rounded-t-xl">
+              <div className="relative w-full h-[23rem] overflow-hidden">
                 <Image
                   src={urlFor(member.image).url()}
                   alt={member.name}

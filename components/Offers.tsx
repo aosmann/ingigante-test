@@ -139,7 +139,8 @@ const Offers = ({ properties }: any) => {
         */}
         <div>
             <RecentPropertiesSlider
-            title="Recently Added Properties"
+            title="Featured Listings"
+            description="Discover our featured properties"
             properties={properties}
             seeAllLink="/properties"
           />

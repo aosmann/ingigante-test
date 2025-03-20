@@ -44,12 +44,13 @@ interface Property {
 
 interface RecentPropertiesSliderProps {
   title: string;
+  description: string;
   properties: Property[];
   seeAllLink?: string;
 }
 
 
-const RecentPropertiesSlider: React.FC<RecentPropertiesSliderProps> = ({ title, properties, seeAllLink }) => {
+const RecentPropertiesSlider: React.FC<RecentPropertiesSliderProps> = ({ title, description, properties, seeAllLink }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: "left" | "right") => {
@@ -67,14 +68,14 @@ const RecentPropertiesSlider: React.FC<RecentPropertiesSliderProps> = ({ title, 
       <div className="flex items-center justify-between mb-4 border-t border-gray-200 pt-6">
         <div className="items-center gap-3">
           <p className="text-xl font-semibold text-gray-800">{title}</p>
-          <p className="opacity-60">Discover our latest properties</p>
+          <p className="opacity-60">{description}</p>
         </div>
 
         <div className="flex items-center gap-3">
             {seeAllLink && (
                 <Link href={seeAllLink}>
                     <button className="p-2 border border-gray-300 rounded-md hover:bg-gray-100 text-sm text-primary hover:text-primary/80">
-                    See All
+                    See All Listings
                     </button>
                 </Link>
             )}
