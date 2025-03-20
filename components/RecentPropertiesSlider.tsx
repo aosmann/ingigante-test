@@ -49,6 +49,19 @@ interface RecentPropertiesSliderProps {
   seeAllLink?: string;
 }
 
+const query = `*[_type == "properties" && defined(sellPrice)] | order(_createdAt desc)[0...5] {
+  _id,
+  title,
+  sellPrice,
+  location->{locationName},
+  mainImage,
+  propertyType->{typeName},
+  beachfront,
+  rooms,
+  bathrooms,
+  area_total,
+  slug
+}`;
 
 const RecentPropertiesSlider: React.FC<RecentPropertiesSliderProps> = ({ title, description, properties, seeAllLink }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -114,9 +127,7 @@ const RecentPropertiesSlider: React.FC<RecentPropertiesSliderProps> = ({ title, 
                 />
 
 
-              <button className="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md hover:scale-110 transition">
-                <Heart className="h-5 w-5 text-gray-600" />
-              </button>
+              
               {property.propertyType?.typeName && (
                 <div className="absolute bottom-3 left-3 bg-[#008975] text-white text-xs px-3 py-1 rounded-md uppercase font-extrabold">
                   {property.propertyType.typeName}

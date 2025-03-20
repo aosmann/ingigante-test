@@ -5,16 +5,16 @@ import Image from "next/image";
 const OurTeam = ({ teamMembers }) => {
   return (
     <section className="bg-white py-16">
-      <div className="max-w-7xl mx-auto px-4 text-center">
+      <div className="max-w-4xl mx-auto px-4 text-center">
         <h2 className="text-3xl sm:text-4xl font-bold text-primary mb-12">Our Team</h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-12 place-items-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 gap-12 place-items-center">
           {teamMembers.map((member) => (
             <div
               key={member._id}
               className="transition duration-300 w-full max-w-xs text-center"
             >
-              <div className="relative w-full h-[23rem] overflow-hidden">
+              <div className="relative w-full aspect-[16/23] overflow-hidden">
                 <Image
                   src={urlFor(member.image).url()}
                   alt={member.name}

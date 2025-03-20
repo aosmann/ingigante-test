@@ -77,66 +77,7 @@ const Offers = ({ properties }: any) => {
   return (
     <section className="text-primary flex flex-col bg-[#F4F4F4] justify-center items-center py-9 md:items-center">
       <div className="max-w-7xl mt-6 mb-10 px-4">
-        {/* 
-        <div className="mb-10 px-4">
-          <h2 className="text-[35px] font-bold">Featured Listings</h2>
-          <p className="text-[16px] opacity-60">
-            Fulfill your career dreams, enjoy all the achievements of the city
-            center and luxury housing to the fullest
-          </p>
-        </div>*/}
-        {/* 
-        <div className="max-w-7xl w-screen space-x-4">
-          <Slider {...settings}>
-            {properties.map((property) => (
-              <Link
-                href={`/property/${property.slug.current}`}
-                key={property._id}
-              >
-                <div className="max-w-sm h-[450px] rounded overflow-hidden mx-auto bg-white">
-                  <div className="h-[290px]">
-                    <Image
-                      src={`${urlFor(
-                        property.mainImage
-                      ).url()}?w=390&h=290&fit=crop&crop=center`}
-                      alt="card"
-                      className="object-cover lg:object-center w-full h-full"
-                      width={390}
-                      height={290}
-                    />
-                  </div>
-                  <div className="px-6 py-4 text-left h-[80px]">
-                    <h1 className="text-[20px] line-clamp-2">
-                      {property.title}
-                    </h1>
-                  </div>
-                  <div className="px-6 py-4 text-[17px] text-left">
-                    <p className="opacity-60 pb-1">
-                      {property.propertyType.typeName}
-                    </p>
-                    <p className="opacity-60 pb-1">
-                      in {property.location.locationName}
-                    </p>
-                    <p className="text-secondary font-bold">
-                      {"$"}
-                      {property.sellPrice.toLocaleString()}
-                    </p>
-                  </div>
-                </div>
-
-                
-              </Link>
-            ))}
-          </Slider>
-        </div>
-        <div className="flex items-center justify-center mt-10">
-          <Link href={"/sales"}>
-            <button className="py-2 px-4 border-primary border-2 rounded-md text-[16px]">
-              Show Sale Listings
-            </button>
-          </Link>
-        </div>
-        */}
+        
         <div>
             <RecentPropertiesSlider
             title="Featured Listings"
