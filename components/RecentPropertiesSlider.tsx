@@ -25,7 +25,7 @@ export async function getRecentPropertiesSale(limit = 5) {
     return response;
   }
 
-
+ 
 interface Property {
     _id: string;
     title: string;
