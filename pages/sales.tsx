@@ -92,9 +92,12 @@ function sales({ propertiesList, types, locations }) {
   const [location, setLocation] = useState(
     router.query ? router.query.loc : null
   );
+  const [loading, setLoading] = useState(false);
+
 
   useEffect(() => {
     async function fetchProperties() {
+      setLoading(true);
       const data = await getProperties({
         category,
         minBedrooms,
@@ -123,6 +126,7 @@ function sales({ propertiesList, types, locations }) {
       }
   
       setProperties(sortedData);
+      setLoading(false);
     }
 
     fetchProperties();
@@ -300,8 +304,13 @@ function sales({ propertiesList, types, locations }) {
          
         </div>
       </div>
-      <div className="max-w-7xl w-full mt-14">        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+      <div className="max-w-7xl w-full mt-14">   
+        {loading ? (
+          <div className="text-center text-gray-400 py-12 text-lg">
+            Loading properties...
+          </div>
+        ) : (     
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8 px-4">
           {properties.length > 0 ? (
             properties.map((property) => (
               <div
@@ -383,13 +392,14 @@ function sales({ propertiesList, types, locations }) {
                     </div>
                     
                   </div>
-                </Link>                
+                  </Link>                
               </div>
             ))
           ) : (
             <h1 className="text-center text-gray-500">No Results Found!</h1>
           )}
         </div>
+        )}
       </div>
     </div>
   );
