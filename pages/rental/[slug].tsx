@@ -37,14 +37,6 @@ export const getServerSideProps = async (pageContext) => {
   };
 };
 
-export async function getStaticProps() {
-  const properties = await getProperties({});
-  return {
-    props: { properties },
-    revalidate: 60,
-  };
-}
-
 const RentalDetails = ({ rentals, allImages, recentProperties }: any) => {
   const formRef = useRef();
   const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '', phone: '', message: '' });
