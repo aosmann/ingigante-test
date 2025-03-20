@@ -24,7 +24,7 @@ export const getServerSideProps = async (pageContext) => {
 
   let allImages = rentals?.images?.concat(rentals?.mainImage) || [];
 
-  const recentProperties = await getRecentPropertiesSale(5); // 👈 new line
+  const properties = await getProperties({}); // Or use a filtered helper like getRecentPropertiesSale
 
   if (!rentals) return { props: null, notFound: true };
 
@@ -32,7 +32,7 @@ export const getServerSideProps = async (pageContext) => {
     props: {
       rentals,
       allImages,
-      recentProperties, // 👈 pass as prop
+      properties, // 👈 pass as prop
     },
   };
 };
@@ -67,6 +67,9 @@ const RentalDetails = ({ rentals, allImages, recentProperties }: any) => {
       })
       .catch(() => toast.error("Something went wrong. Please try again."));
   };
+
+  const properties = await getRecentPropertiesSale(5);
+
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

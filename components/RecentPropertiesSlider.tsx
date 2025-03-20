@@ -14,6 +14,17 @@ import { useRouter } from "next/router";
 import { client } from "../lib/sanity.client";
 import { GetStaticProps } from "next";
 
+export async function getRecentPropertiesSale(limit = 5) {
+    const query = `*[_type == "properties"] | order(_createdAt desc)[0...$limit]{
+      ...,
+      location->,
+      propertyType->
+    }`;
+    const params = { limit };
+    const response = await client.fetch(query, params);
+    return response;
+  }
+
 
 interface Property {
     _id: string;

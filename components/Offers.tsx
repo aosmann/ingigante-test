@@ -4,17 +4,6 @@ import urlFor from "../lib/urlFor";
 import Slider from "react-slick";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
-import RecentPropertiesSlider from "../components/RecentPropertiesSlider"; // Adjust the path based on your folder structure
-import { getProperties } from "../lib/api";
-
-
-export async function getStaticProps() {
-  const properties = await getProperties({}); // or filter some recent ones
-  return {
-    props: { properties },
-  };
-}
-
 const Offers = ({ properties }: any) => {
   const NextArrow = ({ onClick }: { onClick?: () => void }) => (
     <div
@@ -71,8 +60,6 @@ const Offers = ({ properties }: any) => {
       },
     ],
   };
-
-  
 
   return (
     <section className="text-primary flex flex-col bg-[#F4F4F4] justify-center items-center py-9 md:items-center">
@@ -155,13 +142,6 @@ const Offers = ({ properties }: any) => {
               Show Sale Listings
             </button>
           </Link>
-        </div>
-        <div>
-            <RecentPropertiesSlider
-            title="Recently Added Properties"
-            properties={properties}
-            seeAllLink="/properties"
-          />
         </div>
       </div>
     </section>
