@@ -13,6 +13,7 @@ import RichTextComponent from "../../components/RichTextComponent";
 import { Car, Bath, BedDouble, Ruler } from "lucide-react";
 import RecentPropertiesSlider from "../../components/RecentPropertiesSlider";
 import { getRecentPropertiesSale } from "../../lib/getProperties";
+import { getProperties } from "../../lib/api";
 
 
 export const getServerSideProps = async (pageContext) => {
@@ -35,6 +36,14 @@ export const getServerSideProps = async (pageContext) => {
     },
   };
 };
+
+export async function getStaticProps() {
+  const properties = await getProperties({});
+  return {
+    props: { properties },
+    revalidate: 60,
+  };
+}
 
 const RentalDetails = ({ rentals, allImages, recentProperties }: any) => {
   const formRef = useRef();

@@ -7,8 +7,6 @@ import urlFor from "../lib/urlFor";
 import Image from "next/image";
 import Select from "react-select";
 import { getPropertiesRent } from "../lib/api";
-import { getProperties } from "../lib/api";
-import RecentPropertiesSlider from "../components/RecentPropertiesSlider";
 import { useRouter } from "next/router";
 import { BedDouble, Bath, Ruler, Heart } from "lucide-react";
 
@@ -36,15 +34,12 @@ export const getStaticProps = async () => {
     ...,
   }`);
 
-  const properties = await getProperties({});
-
   return {
     props: {
       rentals,
       features,
       types,
       locations,
-      revalidate: 60,
     },
   };
 };
