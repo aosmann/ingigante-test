@@ -33,30 +33,40 @@ const PropertyDetails = ({ property, allImages }: any) => {
 
   const submitContact = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = e.currentTarget;
-
+  
     const newContact = {
       _type: "contactForm",
-      firstName: (form.elements.namedItem("firstName") as HTMLInputElement)?.value,
-      lastName: (form.elements.namedItem("lastName") as HTMLInputElement)?.value,
-      email: (form.elements.namedItem("email") as HTMLInputElement)?.value,
-      phone: (form.elements.namedItem("phone") as HTMLInputElement)?.value,
-      message: (form.elements.namedItem("comment") as HTMLTextAreaElement)?.value,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      phone: formData.phone,
+      message: formData.message,
       property: {
         _type: "reference",
         _ref: property._id,
       },
     };
-
+  
     try {
       await client_with_token.create(newContact);
       toast.success("Thank you for your message. We will get back shortly!", { duration: 3000 });
-      formRef.current?.reset();
+  
+      // Reset form
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        message: '',
+      });
+  
+      formRef.current?.reset(); // Optional
     } catch (error) {
       console.error("Contact form submission error:", error);
       toast.error("Something went wrong! Please try again");
     }
   };
+  
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -138,68 +148,17 @@ const PropertyDetails = ({ property, allImages }: any) => {
         </div>
 
         <div className="lg:col-span-1">
-        <div className="bg-[#F4F4F4] rounded p-6 text-[#143D30] ">
-              <p className="text-lg text-bold text-gray-700">Contact Us</p>
-              <Toaster />
-              <form
-                className="space-y-4 mt-4"
-                id="property"
-                ref={formRef}
-                onSubmit={submitContact}
-              >
-                <div className="flex flex-col">
-                  <label htmlFor="firstName">First Name</label>
-                  <input
-                    type="text"
-                    name="firstName"
-                    id="firstName"
-                    placeholder="First Name"
-                    required
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label htmlFor="lastName">Last Name</label>
-                  <input
-                    type="text"
-                    name="lastName"
-                    id="lastName"
-                    placeholder="Last Name"
-                    required
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label htmlFor="phone">Phone Number</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    id="phone"
-                    placeholder="+1(500) 000 000"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label htmlFor="email">Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    placeholder="your@company.com"
-                    required
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label htmlFor="comment">Message</label>
-                  <textarea
-                    id="comment"
-                    name="comment"
-                    rows={10}
-                    placeholder="Leave us a message..."
-                  ></textarea>
-                </div>
-                <button className="text-btn w-full py-3.5 border-[3px] rounded-md border-btn">
-                  Send Message
-                </button>
-              </form>
-            </div>
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Interested in this property?</h2>
+            <form onSubmit={submitContact} ref={formRef} className="space-y-4">
+              <input type="text" required name="firstName" placeholder="First Name" value={formData.firstName} onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary" />
+              <input type="text" required name="lastName" placeholder="Last Name" value={formData.lastName} onChange={(e) => setFormData({ ...formData, lastName: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary" />
+              <input type="email" required name="email" placeholder="Email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary" />
+              <input type="tel" name="phone" placeholder="Phone" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary" />
+              <textarea rows={4} required name="message" placeholder="Message" value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary"></textarea>
+              <button type="submit" className="w-full py-3 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary/90">Contact Agent</button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
