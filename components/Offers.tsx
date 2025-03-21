@@ -94,12 +94,12 @@ const Offers = ({ properties }: any) => {
             }
 
             return (
-              <div
-                className="bg-white rounded-lg shadow-lg overflow-hidden transition hover:shadow-xl duration-300 h-full flex flex-col justify-between"
-                key={property._id}
+              <Link
+                key={`${property._id}-${index}`}
+                href={`/property/${property.slug.current}`}
+                className="flex-shrink-0 snap-start min-w-[75%] sm:min-w-[60%] md:min-w-[45%] lg:min-w-[30%] max-w-sm bg-white rounded-lg shadow-md overflow-hidden transition duration-300"
               >
-                  <Link key={property._id} href={`/property/${property.slug.current}`} className="block h-full">
-                  <div className="flex flex-col h-full">
+                <div className="flex flex-col h-full">
                     
                     {/* Image Section */}
                     <div className="relative">
@@ -173,8 +173,7 @@ const Offers = ({ properties }: any) => {
                     </div>
                     
                   </div>
-                  </Link>                
-              </div>
+              </Link>
             );
           })}
         </div>
