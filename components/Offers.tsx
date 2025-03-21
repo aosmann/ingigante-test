@@ -2,23 +2,31 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, BedDouble, Bath, Ruler } from "lucide-react";
 import urlFor from "../lib/urlFor";
-import { useRef, useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const Offers = ({ properties }: any) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollIndex, setScrollIndex] = useState(0);
+  const scrollAmount = 340; // Adjust based on card width
 
-  const scrollAmount = 340; // You can fine-tune this width
-  const cardCount = properties.length;
+  // Clone first 3 cards for infinite loop illusion
+  const clonedCards = properties.slice(0, 3);
+  const allCards = [...properties, ...clonedCards];
 
-  // Manual scroll
   const scroll = (direction: "left" | "right") => {
     if (!scrollRef.current) return;
 
-    const newIndex =
-      direction === "right"
-        ? (scrollIndex + 1) % cardCount
-        : (scrollIndex - 1 + cardCount) % cardCount;
+    let newIndex = direction === "right" ? scrollIndex + 1 : scrollIndex - 1;
+
+    // Forward infinite scroll loop logic
+    if (newIndex >= properties.length + 1) {
+      // Reset scroll instantly to beginning (first real card)
+      scrollRef.current.scrollTo({ left: 0, behavior: "auto" });
+      newIndex = 1;
+    } else if (newIndex < 0) {
+      // Optional: prevent going backwards
+      newIndex = 0;
+    }
 
     scrollRef.current.scrollTo({
       left: newIndex * scrollAmount,
@@ -28,20 +36,19 @@ const Offers = ({ properties }: any) => {
     setScrollIndex(newIndex);
   };
 
-  // 🔁 Auto scroll on interval
+  // Auto-scroll every few seconds
   useEffect(() => {
     const interval = setInterval(() => {
       scroll("right");
-    }, 5000); // change every 5 seconds
+    }, 5000); // 5 seconds
 
-    return () => clearInterval(interval); // cleanup
-  }, [scrollIndex]); // Keep updating scrollIndex in sync
-
+    return () => clearInterval(interval);
+  }, [scrollIndex]);
 
   return (
     <section className="w-full py-12 bg-[#F4F4F4]">
       <div className="max-w-7xl mx-auto px-4">
-        {/* Header and Controls */}
+        {/* Header + Controls */}
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-3xl font-bold text-gray-900">Featured Listings</h2>
@@ -75,9 +82,9 @@ const Offers = ({ properties }: any) => {
           ref={scrollRef}
           className="flex space-x-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 scrollbar-hide"
         >
-          {properties.map((property: any) => (
+          {allCards.map((property: any, index: number) => (
             <Link
-              key={property._id}
+              key={`${property._id}-${index}`} // ensure unique keys
               href={`/property/${property.slug.current}`}
               className="flex-shrink-0 snap-start min-w-[75%] sm:min-w-[60%] md:min-w-[45%] lg:min-w-[30%] max-w-sm bg-white rounded-lg shadow-md overflow-hidden transition duration-300"
             >
@@ -101,7 +108,7 @@ const Offers = ({ properties }: any) => {
                 )}
               </div>
 
-              {/* Content */}
+              {/* Card Content */}
               <div className="flex flex-col justify-between p-4 space-y-2">
                 <div>
                   <h2 className="text-lg font-bold text-gray-900 line-clamp-2 leading-snug">
@@ -141,7 +148,6 @@ const Offers = ({ properties }: any) => {
                   )}
                 </div>
               </div>
-
             </Link>
           ))}
         </div>
