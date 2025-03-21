@@ -6,16 +6,37 @@ import { useRef } from "react";
 
 const Offers = ({ properties }: any) => {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [scrollIndex, setScrollIndex] = useState(0);
 
+  const scrollAmount = 340; // You can fine-tune this width
+  const cardCount = properties.length;
+
+  // Manual scroll
   const scroll = (direction: "left" | "right") => {
-    if (scrollRef.current) {
-      const scrollAmount = 320;
-      scrollRef.current.scrollBy({
-        left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth",
-      });
-    }
+    if (!scrollRef.current) return;
+
+    const newIndex =
+      direction === "right"
+        ? (scrollIndex + 1) % cardCount
+        : (scrollIndex - 1 + cardCount) % cardCount;
+
+    scrollRef.current.scrollTo({
+      left: newIndex * scrollAmount,
+      behavior: "smooth",
+    });
+
+    setScrollIndex(newIndex);
   };
+
+  // 🔁 Auto scroll on interval
+  useEffect(() => {
+    const interval = setInterval(() => {
+      scroll("right");
+    }, 5000); // change every 5 seconds
+
+    return () => clearInterval(interval); // cleanup
+  }, [scrollIndex]); // Keep updating scrollIndex in sync
+
 
   return (
     <section className="w-full py-12 bg-[#F4F4F4]">
