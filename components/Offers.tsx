@@ -32,8 +32,8 @@ const Offers = ({ properties }: any) => {
     autoplaySpeed: 4000,
     speed: 500,
     initialSlide: 0,
-    nextArrow: <NextArrow />, 
-    prevArrow: <PrevArrow />, 
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
     responsive: [
       {
         breakpoint: 1024,
@@ -65,21 +65,23 @@ const Offers = ({ properties }: any) => {
   return (
     <section className="text-primary flex flex-col bg-[#F4F4F4] justify-center items-center py-9 md:items-center">
       <div className="max-w-7xl mt-6 mb-10 px-4 w-full">
-        <div className="flex items-center justify-between px-4 mb-6">
-          <div>
-            <h2 className="text-[35px] font-bold">Featured Listings</h2>
-            <p className="text-[16px] opacity-60">
-              Fulfill your career dreams, enjoy all the achievements of the city center and luxury housing to the fullest
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link href="/sales">
-              <button className="p-2 border border-gray-300 rounded-md hover:bg-gray-100 text-sm text-primary hover:text-primary/80">
-                See All Listings
-              </button>
-            </Link>
-            <PrevArrow />
-            <NextArrow />
+        <div className="relative mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="text-[35px] font-bold">Featured Listings</h2>
+              <p className="text-[16px] opacity-60">
+                Fulfill your career dreams, enjoy all the achievements of the city center and luxury housing to the fullest
+              </p>
+            </div>
+            <div className="flex items-center gap-3 mt-4 sm:mt-0">
+              <Link href="/sales">
+                <button className="p-2 border border-gray-300 rounded-md hover:bg-gray-100 text-sm text-primary hover:text-primary/80">
+                  See All Listings
+                </button>
+              </Link>
+              <PrevArrow />
+              <NextArrow />
+            </div>
           </div>
         </div>
 
@@ -110,7 +112,7 @@ const Offers = ({ properties }: any) => {
                   )}
                 </div>
 
-                <div className="flex flex-col justify-between h-full p-4 space-y-2">
+                <div className="flex flex-col justify-between h-full p-4 space-y-2 text-left">
                   <div>
                     <h2 className="text-lg font-bold text-gray-900 line-clamp-2 leading-snug">{property.title}</h2>
                     <p className="text-sm text-gray-600 line-clamp-1 min-h-[1.25rem]">
@@ -140,8 +142,8 @@ const Offers = ({ properties }: any) => {
                     {property.area_total && (
                       <div className="flex items-center gap-1">
                         <Ruler className="h-4 w-4" />
-                        <span>{property.area_total.toLocaleString()} sqft</span>
-                        </div>
+                        <span>{property.area_total} sqft</span>
+                      </div>
                     )}
                   </div>
                 </div>
