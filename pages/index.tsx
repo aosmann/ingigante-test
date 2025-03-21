@@ -17,7 +17,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
       propertyType->{
         typeName
       }
-    } | order(_createdAt asc)`
+    } | order(_createdAt desc)`
   );
   
   const references = await client.fetch(
