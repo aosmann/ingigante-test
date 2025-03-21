@@ -8,7 +8,7 @@ const Offers = ({ properties }: any) => {
   const NextArrow = ({ onClick }: { onClick?: () => void }) => (
     <button
       onClick={onClick}
-      className="p-2 border border-gray-300 rounded-md hover:bg-gray-100 absolute top-1/2 right-[-25px] z-10 transform -translate-y-1/2"
+      className="p-2 border border-gray-300 rounded-md hover:bg-gray-100"
     >
       <ChevronRight size={20} />
     </button>
@@ -17,7 +17,7 @@ const Offers = ({ properties }: any) => {
   const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
     <button
       onClick={onClick}
-      className="p-2 border border-gray-300 rounded-md hover:bg-gray-100 absolute top-1/2 left-[-25px] z-10 transform -translate-y-1/2"
+      className="p-2 border border-gray-300 rounded-md hover:bg-gray-100"
     >
       <ChevronLeft size={20} />
     </button>
@@ -26,7 +26,7 @@ const Offers = ({ properties }: any) => {
   const settings = {
     dots: false,
     infinite: true,
-    slidesToShow: properties.length >= 4 ? 4 : properties.length,
+    slidesToShow: 3.2,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 4000,
@@ -38,7 +38,7 @@ const Offers = ({ properties }: any) => {
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 3,
+          slidesToShow: 2.2,
           slidesToScroll: 1,
           infinite: true,
           dots: true,
@@ -47,7 +47,7 @@ const Offers = ({ properties }: any) => {
       {
         breakpoint: 640,
         settings: {
-          slidesToShow: 1,
+          slidesToShow: 1.2,
           slidesToScroll: 1,
           initialSlide: 1,
         },
@@ -55,7 +55,7 @@ const Offers = ({ properties }: any) => {
       {
         breakpoint: 480,
         settings: {
-          slidesToShow: 1,
+          slidesToShow: 1.2,
           slidesToScroll: 1,
         },
       },
@@ -64,15 +64,26 @@ const Offers = ({ properties }: any) => {
 
   return (
     <section className="text-primary flex flex-col bg-[#F4F4F4] justify-center items-center py-9 md:items-center">
-      <div className="max-w-7xl mt-6 mb-10 px-4">
-        <div className="mb-10 px-4">
-          <h2 className="text-[35px] font-bold">Featured Listings</h2>
-          <p className="text-[16px] opacity-60">
-            Fulfill your career dreams, enjoy all the achievements of the city center and luxury housing to the fullest
-          </p>
+      <div className="max-w-7xl mt-6 mb-10 px-4 w-full">
+        <div className="flex items-center justify-between px-4 mb-6">
+          <div>
+            <h2 className="text-[35px] font-bold">Featured Listings</h2>
+            <p className="text-[16px] opacity-60">
+              Fulfill your career dreams, enjoy all the achievements of the city center and luxury housing to the fullest
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Link href="/sales">
+              <button className="p-2 border border-gray-300 rounded-md hover:bg-gray-100 text-sm text-primary hover:text-primary/80">
+                See All Listings
+              </button>
+            </Link>
+            <PrevArrow />
+            <NextArrow />
+          </div>
         </div>
 
-        <div className="max-w-7xl w-screen space-x-4">
+        <div className="max-w-7xl w-full overflow-hidden">
           <Slider {...settings}>
             {properties.map((property) => (
               <Link
@@ -137,14 +148,6 @@ const Offers = ({ properties }: any) => {
               </Link>
             ))}
           </Slider>
-        </div>
-
-        <div className="flex items-center justify-center mt-10">
-          <Link href="/sales">
-            <button className="py-2 px-4 border-primary border-2 rounded-md text-[16px]">
-              Show Sale Listings
-            </button>
-          </Link>
         </div>
       </div>
     </section>
