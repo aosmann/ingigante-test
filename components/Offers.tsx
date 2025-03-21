@@ -81,7 +81,7 @@ const Offers = ({ properties }: any) => {
               </div>
 
               {/* Content */}
-              <div className="flex flex-col justify-between h-full p-4 space-y-2">
+              <div className="flex flex-col justify-between p-4 space-y-2">
                 <div>
                   <h2 className="text-lg font-bold text-gray-900 line-clamp-2 leading-snug">
                     {property.title}
