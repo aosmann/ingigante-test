@@ -30,25 +30,19 @@ export const getServerSideProps = async (pageContext) => {
 
 const PropertyDetails = ({ property, allImages }: any) => {
   const formRef = useRef();
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    message: '',
-  });
+  const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '', phone: '', message: '' });
 
   const submitContact = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Submit triggered");
+    const form = e.currentTarget;
 
     const newContact = {
       _type: "contactForm",
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-      phone: formData.phone,
-      message: formData.message,
+      firstName: (form.elements.namedItem("firstName") as HTMLInputElement)?.value,
+      lastName: (form.elements.namedItem("lastName") as HTMLInputElement)?.value,
+      email: (form.elements.namedItem("email") as HTMLInputElement)?.value,
+      phone: (form.elements.namedItem("phone") as HTMLInputElement)?.value,
+      message: (form.elements.namedItem("comment") as HTMLTextAreaElement)?.value,
       property: {
         _type: "reference",
         _ref: property._id,
@@ -56,23 +50,14 @@ const PropertyDetails = ({ property, allImages }: any) => {
     };
 
     try {
-      console.log("Creating contact: ", newContact);
       await client_with_token.create(newContact);
-      toast.success("Thank you for your message!");
-
-      setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        message: '',
-      });
+      toast.success("Thank you for your message. We will get back shortly!", { duration: 3000 });
+      formRef.current?.reset();
     } catch (error) {
-      console.error("Submission error:", error);
-      toast.error("Something went wrong!");
+      console.error("Contact form submission error:", error);
+      toast.error("Something went wrong! Please try again");
     }
   };
-  
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
