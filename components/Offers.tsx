@@ -140,8 +140,8 @@ const Offers = ({ properties }: any) => {
                     {property.area_total && (
                       <div className="flex items-center gap-1">
                         <Ruler className="h-4 w-4" />
-                        <span>{property.area_total} sqft</span>
-                      </div>
+                        <span>{property.area_total.toLocaleString()} sqft</span>
+                        </div>
                     )}
                   </div>
                 </div>

@@ -107,7 +107,7 @@ const PropertyDetails = ({ property, allImages }: any) => {
                 {property.area_total && (
                   <div className="flex items-center gap-2">
                     <Ruler className="h-5 w-5" />
-                    <span>{property.area_total} m² total</span>
+                    <span>{property.area_total.toLocaleString()} m² total</span>
                   </div>
                 )}
                 {property.parking === "Yes" && (

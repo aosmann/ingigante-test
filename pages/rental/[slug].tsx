@@ -112,7 +112,8 @@ const RentalDetails = ({ rentals, allImages, recentProperties }: any) => {
                 {rentals.area_total && (
                   <div className="flex items-center gap-2">
                     <Ruler className="h-5 w-5" />
-                    <span>{rentals.area_total} m² total</span>
+                    <span>{rentals.area_total.toLocaleString()} m² total</span>
+
                   </div>
                 )}
                 {rentals.parking === "Yes" && (

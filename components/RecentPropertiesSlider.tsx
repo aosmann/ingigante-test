@@ -169,7 +169,7 @@ const RecentPropertiesSlider: React.FC<RecentPropertiesSliderProps> = ({ title, 
                 {property.area_total && (
                   <div className="flex items-center gap-1">
                     <Ruler className="h-4 w-4" />
-                    <span>{property.area_total} sqft</span>
+                    <span>{property.area_total.toLocaleString()} sqft</span>
                   </div>
                 )}
               </div>
