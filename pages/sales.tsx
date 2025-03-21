@@ -317,8 +317,8 @@ function sales({ propertiesList, types, locations }) {
                 className="bg-white rounded-lg shadow-lg overflow-hidden transition hover:shadow-xl duration-300 h-full flex flex-col justify-between"
                 key={property._id}
               >
-                  <Link key={property._id} href={`/property/${property.slug.current}`} className="block">
-                  <div className="bg-white rounded-lg shadow-lg hover:shadow-xl transition duration-300 overflow-hidden flex flex-col h-full">
+                  <Link key={property._id} href={`/property/${property.slug.current}`} className="block h-full">
+                  <div className="flex flex-col h-full">
                     
                     {/* Image Section */}
                     <div className="relative">
