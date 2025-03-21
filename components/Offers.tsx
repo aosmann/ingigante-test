@@ -5,24 +5,6 @@ import Slider from "react-slick";
 import { ChevronLeft, ChevronRight, BedDouble, Bath, Ruler } from "lucide-react";
 
 const Offers = ({ properties }: any) => {
-  const NextArrow = ({ onClick }: { onClick?: () => void }) => (
-    <button
-      onClick={onClick}
-      className="p-2 border border-gray-300 rounded-md hover:bg-gray-100"
-    >
-      <ChevronRight size={20} />
-    </button>
-  );
-
-  const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
-    <button
-      onClick={onClick}
-      className="p-2 border border-gray-300 rounded-md hover:bg-gray-100"
-    >
-      <ChevronLeft size={20} />
-    </button>
-  );
-
   const settings = {
     dots: false,
     infinite: true,
@@ -32,8 +14,6 @@ const Offers = ({ properties }: any) => {
     autoplaySpeed: 4000,
     speed: 500,
     initialSlide: 0,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
     responsive: [
       {
         breakpoint: 1024,
@@ -62,31 +42,36 @@ const Offers = ({ properties }: any) => {
     ],
   };
 
+  let sliderRef: any = null;
+
   return (
     <section className="text-primary flex flex-col bg-[#F4F4F4] justify-center items-center py-9 md:items-center">
       <div className="max-w-7xl mt-6 mb-10 px-4 w-full">
-        <div className="relative mb-6">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h2 className="text-[35px] font-bold">Featured Listings</h2>
-              <p className="text-[16px] opacity-60">
-                Fulfill your career dreams, enjoy all the achievements of the city center and luxury housing to the fullest
-              </p>
-            </div>
-            <div className="flex items-center gap-3 mt-4 sm:mt-0">
-              <Link href="/sales">
-                <button className="p-2 border border-gray-300 rounded-md hover:bg-gray-100 text-sm text-primary hover:text-primary/80">
-                  See All Listings
-                </button>
-              </Link>
-              <PrevArrow />
-              <NextArrow />
-            </div>
+        <div className="flex items-start justify-between mb-6">
+          <div>
+            <h2 className="text-[35px] font-bold">Featured Listings</h2>
+            <p className="text-[16px] opacity-60">
+              Fulfill your career dreams, enjoy all the achievements of the city center and luxury housing to the fullest
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 mt-2">
+            <Link href="/sales">
+              <button className="p-2 border border-gray-300 rounded-md hover:bg-gray-100 text-sm text-primary hover:text-primary/80">
+                See All Listings
+              </button>
+            </Link>
+            <button onClick={() => sliderRef?.slickPrev()} className="p-2 border border-gray-300 rounded-md hover:bg-gray-100">
+              <ChevronLeft size={20} />
+            </button>
+            <button onClick={() => sliderRef?.slickNext()} className="p-2 border border-gray-300 rounded-md hover:bg-gray-100">
+              <ChevronRight size={20} />
+            </button>
           </div>
         </div>
 
         <div className="max-w-7xl w-full overflow-hidden">
-          <Slider {...settings}>
+          <Slider ref={(slider) => (sliderRef = slider)} {...settings}>
             {properties.map((property) => (
               <Link
                 href={`/property/${property.slug.current}`}
