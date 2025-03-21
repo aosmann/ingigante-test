@@ -14,10 +14,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
     `*[_type == "properties" && _id in path("drafts.**") == false && featured == true]{
       ...,
       location->,
-      propertyType->
     } | order(_createdAt asc)`
   );
-  
   const references = await client.fetch(
     `*[_type == "references" && _id in path("drafts.**") == false]`
   );
