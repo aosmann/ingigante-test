@@ -18,7 +18,7 @@ const Offers = ({ properties }: any) => {
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 2.2,
+          slidesToShow: 1,
           slidesToScroll: 1,
           infinite: true,
           dots: true,
@@ -29,7 +29,7 @@ const Offers = ({ properties }: any) => {
       {
         breakpoint: 640,
         settings: {
-          slidesToShow: 1.2,
+          slidesToShow: 1,
           slidesToScroll: 1,
           initialSlide: 1,
           centerMode: false,
@@ -39,7 +39,7 @@ const Offers = ({ properties }: any) => {
       {
         breakpoint: 480,
         settings: {
-          slidesToShow: 1.2,
+          slidesToShow: 2.2,
           slidesToScroll: 1,
           centerMode: false,
 
