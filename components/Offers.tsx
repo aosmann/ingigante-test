@@ -14,9 +14,6 @@ const Offers = ({ properties }: any) => {
     autoplaySpeed: 4000,
     speed: 500,
     initialSlide: 0,
-    centerMode: false, // <-- critical fix
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
     responsive: [
       {
         breakpoint: 1024,
@@ -25,7 +22,8 @@ const Offers = ({ properties }: any) => {
           slidesToScroll: 1,
           infinite: true,
           dots: true,
-          centerMode: false, // repeat for each breakpoint
+          centerMode: false,
+
         },
       },
       {
@@ -35,6 +33,7 @@ const Offers = ({ properties }: any) => {
           slidesToScroll: 1,
           initialSlide: 1,
           centerMode: false,
+
         },
       },
       {
@@ -43,11 +42,11 @@ const Offers = ({ properties }: any) => {
           slidesToShow: 1.2,
           slidesToScroll: 1,
           centerMode: false,
+
         },
       },
     ],
   };
-  
 
   let sliderRef: any = null;
 
