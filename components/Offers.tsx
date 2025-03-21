@@ -81,11 +81,11 @@ const Offers = ({ properties }: any) => {
                 <Link
                   key="see-all-card"
                   href="/sales"
-                  className="flex-shrink-0 snap-start min-w-[75%] sm:min-w-[60%] md:min-w-[45%] lg:min-w-[30%] max-w-sm bg-gradient-to-r from-blue-600 to-blue-400 text-white rounded-lg shadow-md overflow-hidden transition duration-300 flex flex-col justify-center items-center text-center p-6"
+                  className="flex-shrink-0 snap-start min-w-[75%] sm:min-w-[60%] md:min-w-[45%] bg-primary lg:min-w-[30%] max-w-sm bg-gradient-to-r from-[#b2a978] to-[#cec597] text-white rounded-lg shadow-md overflow-hidden transition duration-300 flex flex-col justify-center items-center text-center p-6"
                 >
                   <h2 className="text-xl font-bold mb-2">See All Listings</h2>
-                  <p className="text-sm opacity-90 mb-4">Browse all our stunning beachfront & luxury homes.</p>
-                  <span className="inline-block bg-white text-blue-600 font-semibold px-4 py-2 rounded-md hover:bg-gray-100 transition">
+                  <p className="text-sm opacity-90 mb-4">Browse all our stunning beachfront & luxury listings.</p>
+                  <span className="inline-block bg-white text-[#b2a978] font-semibold px-4 py-2 rounded-md hover:bg-gray-100 transition">
                     View Listings →
                   </span>
                 </Link>
