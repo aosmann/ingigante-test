@@ -94,66 +94,87 @@ const Offers = ({ properties }: any) => {
             }
 
             return (
-              <Link
-                key={`${property._id}-${index}`}
-                href={`/property/${property.slug.current}`}
-                className="flex-shrink-0 snap-start min-w-[75%] sm:min-w-[60%] md:min-w-[45%] lg:min-w-[30%] max-w-sm bg-white rounded-lg shadow-md overflow-hidden transition duration-300"
+              <div
+                className="bg-white rounded-lg shadow-lg overflow-hidden transition hover:shadow-xl duration-300 h-full flex flex-col justify-between"
+                key={property._id}
               >
-                <div className="relative w-full h-[250px]">
-                  <Image
-                    src={`${urlFor(property.mainImage).url()}?w=390&h=290&fit=crop&crop=center`}
-                    alt={property.title}
-                    fill
-                    className="object-cover"
-                  />
-                  {property.propertyType?.typeName && (
-                    <div className="absolute bottom-3 left-3 bg-[#008975] text-white text-xs px-3 py-1 rounded-md uppercase font-extrabold">
-                      {property.propertyType.typeName}
+                  <Link key={property._id} href={`/property/${property.slug.current}`} className="block h-full">
+                  <div className="flex flex-col h-full">
+                    
+                    {/* Image Section */}
+                    <div className="relative">
+                      <Image
+                        src={`${urlFor(
+                          property.mainImage
+                        ).url()}?w=390&h=290&fit=crop&crop=center`}
+                        alt="card"
+                        className="object-cover w-full h-[250px]"
+                        width={390}
+                        height={290}
+                        priority
+                      />                    
+
+                      {/* Property Type Badge */}
+                      <div className="absolute bottom-3 left-3 bg-[#008975] text-white text-xs px-3 py-1 rounded-md uppercase font-extrabold">
+                        {property.propertyType.typeName}
+                      </div>
+
+                      {/* Beachfront Tag (if applicable) */}
+                      {property.beachfront === "Yes" && (
+                        <div className="absolute bottom-3 right-3 bg-[#0171d0] text-white text-xs px-3 py-1 rounded-md uppercase font-extrabold">
+                          Beachfront
+                        </div>
+                      )}
                     </div>
-                  )}
-                  {property.beachfront === "Yes" && (
-                    <div className="absolute bottom-3 right-3 bg-[#0171d0] text-white text-xs px-3 py-1 rounded-md uppercase font-extrabold">
-                      Beachfront
+
+
+                    {/* Content Section */}
+                    <div className="flex flex-col justify-between h-full p-4 space-y-2">
+                      <div>
+                        {/* Title */}
+                        <h2 className="text-lg font-bold text-gray-900 line-clamp-2 leading-snug">
+                          {property.title}
+                        </h2>
+
+                        {/* Location */}
+                        <p className="text-sm text-gray-600 line-clamp-1 min-h-[1.25rem]">
+                          {property.location.locationName}, Nicaragua
+                        </p>
+                      </div>
+
+                      {/* Price */}
+                      <div className="mt-auto">
+                        <p className="text-lg font-bold text-[#008975]">
+                          ${property.sellPrice.toLocaleString()}
+                        </p>
+
+                        {/* Features */}
+                        <div className="flex flex-wrap items-center text-sm text-gray-700 mt-2 gap-x-4 gap-y-2 border-t border-gray-200 pt-4">
+                          {property.rooms && (
+                            <div className="flex items-center gap-1">
+                              <BedDouble className="h-4 w-4" />
+                              <span>{property.rooms} beds</span>
+                            </div>
+                          )}
+                          {property.bathrooms && (
+                            <div className="flex items-center gap-1">
+                              <Bath className="h-4 w-4" />
+                              <span>{property.bathrooms} baths</span>
+                            </div>
+                          )}
+                          {property.area_total && (
+                            <div className="flex items-center gap-1">
+                              <Ruler className="h-4 w-4" />
+                              <span>{property.area_total} sqft</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                  )}
-                </div>
-
-                <div className="flex flex-col justify-between p-4 space-y-2">
-                  <div>
-                    <h2 className="text-lg font-bold text-gray-900 line-clamp-2 leading-snug">{property.title}</h2>
-                    <p className="text-sm text-gray-600 line-clamp-1 min-h-[1.25rem]">
-                      {property.location?.locationName}, Nicaragua
-                    </p>
+                    
                   </div>
-
-                  {property.sellPrice && (
-                    <p className="text-lg font-bold text-green-700">
-                      ${property.sellPrice?.toLocaleString()}
-                    </p>
-                  )}
-
-                  <div className="flex flex-wrap items-center text-sm text-gray-700 mt-2 gap-x-4 gap-y-2 border-t border-gray-200 pt-4">
-                    {property.rooms && (
-                      <div className="flex items-center gap-1">
-                        <BedDouble className="h-4 w-4" />
-                        <span>{property.rooms} beds</span>
-                      </div>
-                    )}
-                    {property.bathrooms && (
-                      <div className="flex items-center gap-1">
-                        <Bath className="h-4 w-4" />
-                        <span>{property.bathrooms} baths</span>
-                      </div>
-                    )}
-                    {property.area_total && (
-                      <div className="flex items-center gap-1">
-                        <Ruler className="h-4 w-4" />
-                        <span>{property.area_total.toLocaleString()} sqft</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </Link>
+                  </Link>                
+              </div>
             );
           })}
         </div>
