@@ -7,11 +7,10 @@ import { useEffect, useRef, useState } from "react";
 const Offers = ({ properties }: any) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const scrollAmount = 340;
-
-  // Duplicate full array to create seamless loop illusion
-  const allCards = [...properties, ...properties];
-
   const [autoScrollIndex, setAutoScrollIndex] = useState(0);
+
+  // Add CTA card to end
+  const allCards = [...properties, { isSeeAllCard: true }];
 
   const scrollToIndex = (index: number, smooth = true) => {
     if (!scrollRef.current) return;
@@ -23,31 +22,23 @@ const Offers = ({ properties }: any) => {
 
   const handleNext = () => {
     const nextIndex = autoScrollIndex + 1;
+    if (nextIndex >= allCards.length) return;
     setAutoScrollIndex(nextIndex);
     scrollToIndex(nextIndex);
-
-    // Loop trigger: when we reach middle point (start of second copy), reset silently
-    if (nextIndex >= properties.length) {
-      // After animation ends, jump instantly to beginning
-      setTimeout(() => {
-        if (scrollRef.current) {
-          scrollRef.current.scrollTo({ left: 0, behavior: "auto" });
-          setAutoScrollIndex(0);
-        }
-      }, 500); // wait for scroll animation to finish
-    }
   };
 
   const handlePrev = () => {
     const prevIndex = autoScrollIndex - 1;
-    if (prevIndex < 0) return; // optional: block backward scroll
+    if (prevIndex < 0) return;
     setAutoScrollIndex(prevIndex);
     scrollToIndex(prevIndex);
   };
 
   useEffect(() => {
     const interval = setInterval(() => {
-      handleNext();
+      const nextIndex = (autoScrollIndex + 1) % allCards.length;
+      setAutoScrollIndex(nextIndex);
+      scrollToIndex(nextIndex);
     }, 5000);
     return () => clearInterval(interval);
   }, [autoScrollIndex]);
@@ -78,73 +69,92 @@ const Offers = ({ properties }: any) => {
           </div>
         </div>
 
-        {/* Slider */}
+        {/* Cards Slider */}
         <div
           ref={scrollRef}
           className="flex space-x-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 scrollbar-hide"
         >
-          {allCards.map((property: any, index: number) => (
-            <Link
-              key={`${property._id}-${index}`}
-              href={`/property/${property.slug.current}`}
-              className="flex-shrink-0 snap-start min-w-[75%] sm:min-w-[60%] md:min-w-[45%] lg:min-w-[30%] max-w-sm bg-white rounded-lg shadow-md overflow-hidden transition duration-300"
-            >
-              <div className="relative w-full h-[250px]">
-                <Image
-                  src={`${urlFor(property.mainImage).url()}?w=390&h=290&fit=crop&crop=center`}
-                  alt={property.title}
-                  fill
-                  className="object-cover"
-                />
-                {property.propertyType?.typeName && (
-                  <div className="absolute bottom-3 left-3 bg-green-600 text-white text-xs px-3 py-1 rounded-md uppercase font-extrabold">
-                    {property.propertyType.typeName}
-                  </div>
-                )}
-                {property.beachfront === "Yes" && (
-                  <div className="absolute bottom-3 right-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-md uppercase font-extrabold">
-                    Beachfront
-                  </div>
-                )}
-              </div>
+          {allCards.map((property: any, index: number) => {
+            if (property.isSeeAllCard) {
+              // See All Listings Card
+              return (
+                <Link
+                  key="see-all-card"
+                  href="/sales"
+                  className="flex-shrink-0 snap-start min-w-[75%] sm:min-w-[60%] md:min-w-[45%] lg:min-w-[30%] max-w-sm bg-gradient-to-r from-blue-600 to-blue-400 text-white rounded-lg shadow-md overflow-hidden transition duration-300 flex flex-col justify-center items-center text-center p-6"
+                >
+                  <h2 className="text-xl font-bold mb-2">See All Listings</h2>
+                  <p className="text-sm opacity-90 mb-4">Browse all our stunning beachfront & luxury homes.</p>
+                  <span className="inline-block bg-white text-blue-600 font-semibold px-4 py-2 rounded-md hover:bg-gray-100 transition">
+                    View Listings →
+                  </span>
+                </Link>
+              );
+            }
 
-              <div className="flex flex-col justify-between p-4 space-y-2">
-                <div>
-                  <h2 className="text-lg font-bold text-gray-900 line-clamp-2 leading-snug">{property.title}</h2>
-                  <p className="text-sm text-gray-600 line-clamp-1 min-h-[1.25rem]">
-                    {property.location?.locationName}, Nicaragua
-                  </p>
-                </div>
-
-                {property.sellPrice && (
-                  <p className="text-lg font-bold text-green-700">
-                    ${property.sellPrice?.toLocaleString()}
-                  </p>
-                )}
-
-                <div className="flex flex-wrap items-center text-sm text-gray-700 mt-2 gap-x-4 gap-y-2 border-t border-gray-200 pt-4">
-                  {property.rooms && (
-                    <div className="flex items-center gap-1">
-                      <BedDouble className="h-4 w-4" />
-                      <span>{property.rooms} beds</span>
+            return (
+              <Link
+                key={`${property._id}-${index}`}
+                href={`/property/${property.slug.current}`}
+                className="flex-shrink-0 snap-start min-w-[75%] sm:min-w-[60%] md:min-w-[45%] lg:min-w-[30%] max-w-sm bg-white rounded-lg shadow-md overflow-hidden transition duration-300"
+              >
+                <div className="relative w-full h-[250px]">
+                  <Image
+                    src={`${urlFor(property.mainImage).url()}?w=390&h=290&fit=crop&crop=center`}
+                    alt={property.title}
+                    fill
+                    className="object-cover"
+                  />
+                  {property.propertyType?.typeName && (
+                    <div className="absolute bottom-3 left-3 bg-green-600 text-white text-xs px-3 py-1 rounded-md uppercase font-extrabold">
+                      {property.propertyType.typeName}
                     </div>
                   )}
-                  {property.bathrooms && (
-                    <div className="flex items-center gap-1">
-                      <Bath className="h-4 w-4" />
-                      <span>{property.bathrooms} baths</span>
-                    </div>
-                  )}
-                  {property.area_total && (
-                    <div className="flex items-center gap-1">
-                      <Ruler className="h-4 w-4" />
-                      <span>{property.area_total.toLocaleString()} sqft</span>
+                  {property.beachfront === "Yes" && (
+                    <div className="absolute bottom-3 right-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-md uppercase font-extrabold">
+                      Beachfront
                     </div>
                   )}
                 </div>
-              </div>
-            </Link>
-          ))}
+
+                <div className="flex flex-col justify-between p-4 space-y-2">
+                  <div>
+                    <h2 className="text-lg font-bold text-gray-900 line-clamp-2 leading-snug">{property.title}</h2>
+                    <p className="text-sm text-gray-600 line-clamp-1 min-h-[1.25rem]">
+                      {property.location?.locationName}, Nicaragua
+                    </p>
+                  </div>
+
+                  {property.sellPrice && (
+                    <p className="text-lg font-bold text-green-700">
+                      ${property.sellPrice?.toLocaleString()}
+                    </p>
+                  )}
+
+                  <div className="flex flex-wrap items-center text-sm text-gray-700 mt-2 gap-x-4 gap-y-2 border-t border-gray-200 pt-4">
+                    {property.rooms && (
+                      <div className="flex items-center gap-1">
+                        <BedDouble className="h-4 w-4" />
+                        <span>{property.rooms} beds</span>
+                      </div>
+                    )}
+                    {property.bathrooms && (
+                      <div className="flex items-center gap-1">
+                        <Bath className="h-4 w-4" />
+                        <span>{property.bathrooms} baths</span>
+                      </div>
+                    )}
+                    {property.area_total && (
+                      <div className="flex items-center gap-1">
+                        <Ruler className="h-4 w-4" />
+                        <span>{property.area_total.toLocaleString()} sqft</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>
