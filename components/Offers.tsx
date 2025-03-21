@@ -10,7 +10,8 @@ const Offers = ({ properties }: any) => {
   const [autoScrollIndex, setAutoScrollIndex] = useState(0);
 
   // Add CTA card to end
-  const allCards = [...properties, { isSeeAllCard: true }];
+  const allCards = [...properties.slice().reverse(), { isSeeAllCard: true }];
+
 
   const scrollToIndex = (index: number, smooth = true) => {
     if (!scrollRef.current) return;
