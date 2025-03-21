@@ -90,11 +90,15 @@ const Offers = ({ properties }: any) => {
                     {property.location?.locationName}, Nicaragua
                   </p>
                 </div>
+
+                {/* Price */}
                 {property.sellPrice && (
                   <p className="text-lg font-bold text-green-700">
                     ${property.sellPrice?.toLocaleString()}
                   </p>
                 )}
+
+                {/* Features */}
                 <div className="flex flex-wrap items-center text-sm text-gray-700 mt-2 gap-x-4 gap-y-2 border-t border-gray-200 pt-4">
                   {property.rooms && (
                     <div className="flex items-center gap-1">
@@ -116,6 +120,7 @@ const Offers = ({ properties }: any) => {
                   )}
                 </div>
               </div>
+
             </Link>
           ))}
         </div>
