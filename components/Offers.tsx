@@ -106,12 +106,12 @@ const Offers = ({ properties }: any) => {
                     className="object-cover"
                   />
                   {property.propertyType?.typeName && (
-                    <div className="absolute bottom-3 left-3 bg-green-600 text-white text-xs px-3 py-1 rounded-md uppercase font-extrabold">
+                    <div className="absolute bottom-3 left-3 bg-[#008975] text-white text-xs px-3 py-1 rounded-md uppercase font-extrabold">
                       {property.propertyType.typeName}
                     </div>
                   )}
                   {property.beachfront === "Yes" && (
-                    <div className="absolute bottom-3 right-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-md uppercase font-extrabold">
+                    <div className="absolute bottom-3 right-3 bg-[#0171d0] text-white text-xs px-3 py-1 rounded-md uppercase font-extrabold">
                       Beachfront
                     </div>
                   )}
