@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, BedDouble, Bath, Ruler } from "lucide-react";
 import urlFor from "../lib/urlFor";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 
 const Offers = ({ properties }: any) => {
   const scrollRef = useRef<HTMLDivElement>(null);
