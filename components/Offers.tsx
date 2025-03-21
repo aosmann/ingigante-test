@@ -48,27 +48,35 @@ const Offers = ({ properties }: any) => {
     <section className="w-full py-12 bg-[#F4F4F4]">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
           <div>
-            <h2 className="text-3xl font-bold text-gray-900">Featured Listings</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Featured Listings</h2>
             <p className="text-gray-600 mt-1 text-sm">
               Fulfill your career dreams, enjoy all the achievements of the city center and luxury housing to the fullest
             </p>
           </div>
-          <div className="flex items-center gap-3">
+
+          <div className="flex flex-wrap gap-3 md:justify-end">
             <Link href="/sales">
-              <button className="p-2 border border-gray-300 rounded-md hover:bg-gray-100 text-sm text-primary hover:text-primary/80">
+              <button className="p-2 border border-gray-300 rounded-md hover:bg-gray-100 text-sm text-primary hover:text-primary/80 w-full sm:w-auto">
                 See All Listings
               </button>
             </Link>
-            <button onClick={handlePrev} className="p-2 border border-gray-300 rounded-md hover:bg-gray-100">
+            <button
+              onClick={handlePrev}
+              className="p-2 border border-gray-300 rounded-md hover:bg-gray-100"
+            >
               <ChevronLeft size={20} />
             </button>
-            <button onClick={handleNext} className="p-2 border border-gray-300 rounded-md hover:bg-gray-100">
+            <button
+              onClick={handleNext}
+              className="p-2 border border-gray-300 rounded-md hover:bg-gray-100"
+            >
               <ChevronRight size={20} />
             </button>
           </div>
         </div>
+
 
         {/* Cards Slider */}
         <div
