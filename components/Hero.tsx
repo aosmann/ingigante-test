@@ -34,7 +34,7 @@ const Hero = ({ propertyType, locations }) => {
   return (
     <section className="bg-gradient-to-r from-[#09231b] to-[#133d30] py-16 flex flex-col justify-center items-center top-0 sm:mt-4 m--1 overflow-y-hidden z-10">
       <div className="flex flex-col space-y-5 lg:items-center justify-center max-w-7xl lg:flex-row p-4 relative items-center">
-        <div className="space-y-4 md:mb-20 sm:mb-10">
+        <div className="order-2 lg:order-1 space-y-4 md:mb-20 sm:mb-10">
           <h1
             className="text-[35px] lg:text-[64px] text-secondary font-bely uppercase leading-snug"
             id="customFont"
@@ -46,14 +46,11 @@ const Hero = ({ propertyType, locations }) => {
             dedicated to helping our clients achieve their real estate goals.
           </p>
         </div>
-        <div className="w-[300px] sm:w-[400px] md:w-[400px] lg:w-[500px] xl:w-[550px] 2xl:w-[650px]">
-          <Image
-            src={hero}
-            alt="hero"
-            className="pt-4 "
-          />
-        </div>
-        
+        <Image
+          src={hero}
+          alt="hero"
+          className="order-1 lg:order-2 w-[300px] sm:w-[400px] md:w-[400px] lg:w-[500px] xl:w-[550px] 2xl:w-[650px]"
+        />
         <div className="bg-[#F4F4F4] p-4 rounded mt-6 lg:absolute lg:w-2/3 w-full lg:bottom-14 lg:left-4 xl:bottom-20 2xl:bottom-34 max-w-[47rem] z-50">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between lg:space-x-4 ">
             <div className="relative mb-6 lg:mb-0 lg:w-full z-20">
