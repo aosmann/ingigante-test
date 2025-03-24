@@ -46,11 +46,11 @@ const Hero = ({ propertyType, locations }) => {
             dedicated to helping our clients achieve their real estate goals.
           </p>
         </div>
-        <div className="pt-4">
+        <div className="w-[300px] sm:w-[400px] md:w-[400px] lg:w-[500px] xl:w-[550px] 2xl:w-[650px]">
           <Image
             src={hero}
             alt="hero"
-            className="w-[300px] sm:w-[400px] md:w-[400px] lg:w-[500px] xl:w-[550px] 2xl:w-[650px]"
+            className="pt-4 "
           />
         </div>
         
