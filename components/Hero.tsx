@@ -32,7 +32,7 @@ const Hero = ({ propertyType, locations }) => {
   ];
 
   return (
-    <section className="bg-primary py-16 flex flex-col justify-center items-center top-0 sm:mt-4 m--1 overflow-y-hidden z-10">
+    <section className="bg-gradient-to-r from-[#09231b] to-[#133d30] py-16 flex flex-col justify-center items-center top-0 sm:mt-4 m--1 overflow-y-hidden z-10">
       <div className="flex flex-col space-y-5 lg:items-center justify-center max-w-7xl lg:flex-row p-4 relative items-center">
         <div className="space-y-4 md:mb-20 sm:mb-10">
           <h1
